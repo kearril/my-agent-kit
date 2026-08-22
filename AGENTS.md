@@ -5,21 +5,20 @@
 ## 项目地图
 
 - 这是一个使用 Astro 构建的个人数字花园，内容包括 Prompt、Skill、MCP、网站收藏、项目和 Note。
-- 生产静态部署平台为 Cloudflare Pages，规范公开地址为 `https://kearril.com`。
+- 当前处于真实内容准备与首发校验阶段；计划使用 Cloudflare Pages 和 `https://kearril.com`，但尚未公开部署。
 - 页面以 Astro 静态输出为主，Markdown / MDX 与 Content Collections 是内容来源。
 - 所有公开条目统一采用不可变 slug 与 `/entries/<slug>/` 规范路由，站点自动计算双向关联与反向链接。
 - React 只用于需要浏览器状态、事件或浏览器 API 的局部 Explore Island，并提供基础静态回退。
-- 站点自动生成规范 `/feed.xml`、`sitemap-index.xml` 和 `/robots.txt`。
+- 站点构建生成 `/feed.xml`、`sitemap-index.xml` 和 `/robots.txt`，仅在公开部署后作为外部发现入口。
 ## 开始任务前
 
 1. 先阅读 `README.md` 和本文件。
 2. 只读取与任务相关的文档：
-   - 任务涉及 AI 协作流程：`docs/AI-WORKFLOW.md`
    - 任务涉及代码、依赖或验证：`docs/DEVELOPMENT.md`
    - 任务涉及条目或 schema：`docs/CONTENT.md`
    - 任务涉及视觉或交互：`docs/DESIGN.md`
    - 任务涉及部署：`docs/DEPLOYMENT.md`
-   - 任务涉及已确认方向：`docs/DECISIONS.md`
+   - 任务涉及已确认架构方向：对应的 `docs/adr/` 记录。
 3. 非平凡任务先说明计划、范围、验收条件和需要确认的假设，再修改文件。
 4. 修改前读取目标文件及其直接依赖，不凭文件名猜测实现。
 

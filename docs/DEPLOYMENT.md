@@ -1,7 +1,6 @@
-# Cloudflare Pages 部署与运维手册
+# Cloudflare Pages 首发准备手册
 
-本文档是 Paracosm Garden 生产部署与持续运维的权威操作手册。
-
+本文档记录已确认的未来部署方案与正式上线步骤。它不是当前运行状态：截至内容准备阶段，尚未创建公开 GitHub 仓库、Cloudflare Pages 项目、DNS 绑定或线上站点。
 ## 1. 架构与部署模型
 
 ```text
@@ -22,7 +21,18 @@ GitHub public repository (paracosm-garden)
 - **预览机制**：非 `main` 分支或 PR 自动生成独立 Cloudflare Preview 预览部署。
 - **安全与边界**：不使用 GitHub Actions 部署密钥、不使用 `CNAME` 文件、不手工上传 `dist/` 目录；GitHub 公开仓库是公开源码与内容的唯一事实来源。
 
-## 2. 准备工作
+## 2. 启动部署的前提
+
+同时满足以下条件后才执行第 4 节。
+
+- 首批正式公开内容已替换本地演示条目。
+- 已用真实内容检查首页、条目页、Explore、RSS 与 sitemap。
+- 已确认公开仓库、内容、图片、链接和 Git 历史不含不愿长期公开的信息。
+- 已确认首发文案、精选条目、许可证策略和公开边界。
+
+在此之前，只运行本地 `pnpm test && pnpm build`；不创建远程仓库、不连接 Pages，也不改动 `kearril.com` 的 DNS。
+
+## 3. 准备工作
 
 - **源码与构建环境**：Node.js `>= 22.12.0`、pnpm `>= 9`、Astro `>= 7`。
 - **域名管理**：`kearril.com` 的 DNS 解析由 Cloudflare 管理。
@@ -31,7 +41,7 @@ GitHub public repository (paracosm-garden)
   pnpm test && pnpm build
   ```
 
-## 3. 初始上线步骤（Ordered Procedure）
+## 4. 正式上线步骤
 
 ### 第一步：创建并推送 GitHub 公开仓库
 
@@ -83,7 +93,7 @@ GitHub public repository (paracosm-garden)
 - [ ] **Robots 规则**：访问 `https://kearril.com/robots.txt` 规则正确并指向 `https://kearril.com/sitemap-index.xml`。
 - [ ] **Sitemap 站点地图**：访问 `https://kearril.com/sitemap-index.xml`（及 `sitemap-0.xml`）正确收录所有公开条目路由，且无草稿泄露。
 
-## 4. 日常维护与发布流
+## 5. 日常维护与发布流
 
 | 变更类型 | 推荐流程 | 质量验证门槛 |
 | --- | --- | --- |
@@ -91,7 +101,7 @@ GitHub public repository (paracosm-garden)
 | **页面布局、样式、组件或路由调整** | 创建 feature 分支，提 PR | 本地测试 + Cloudflare Preview 移动端/桌面端检查无误后合并 |
 | **依赖升级或全局架构配置** | 分支开发，更新 lockfile | `pnpm install`、`pnpm test && pnpm build`、Preview 冒烟检查 |
 
-## 5. 故障排查与恢复
+## 6. 故障排查与恢复
 
 - **构建失败**：在 Cloudflare Pages 控制台查看 Build Log，常见原因为 Node 版本未达标、Markdown Frontmatter 缺少必填字段（如 `slug`、`publishedAt`）或 `related` 引用了不存在的 slug。本地先运行 `pnpm test && pnpm build` 复现并修复。
 - **域名未生效**：检查 Cloudflare DNS 记录是否为 Proxied 状态，确认 SSL/TLS 加密模式为 Full 或 Strict。
