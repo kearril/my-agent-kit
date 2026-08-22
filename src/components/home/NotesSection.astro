@@ -1,0 +1,46 @@
+---
+import { getNoteSlug, type NoteEntry } from '../../lib/entries';
+
+interface Props {
+	entries: NoteEntry[];
+}
+
+const { entries } = Astro.props;
+const formatDate = (date: Date) => new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+---
+
+<section id="notes" class="section section--yellow" aria-labelledby="notes-title">
+	<div class="section-heading">
+		<div>
+			<div class="eyebrow eyebrow--black">
+				<span>FIELD JOURNAL</span>
+			</div>
+			<h2 id="notes-title" class="section-title-two-tone">
+				<span class="title-black">FIELD</span>
+				<span class="title-red">NOTES</span>
+			</h2>
+		</div>
+		<p>一些写下来的观察、实践与还在形成的想法，支持桌面端悬浮浮卡与独立长文页。</p>
+	</div>
+	{entries.length > 0 ? (
+		<div class="note-list">
+			{entries.map((entry) => (
+				<article class="note-row">
+					<div class="note-meta">
+						<span class="mini-badge mini-badge--mcp">{entry.data.category}</span>
+						<time datetime={entry.data.createdAt.toISOString()}>{formatDate(entry.data.createdAt)}</time>
+					</div>
+					<h3>{entry.data.title}</h3>
+					<p class="note-hover-preview" aria-hidden="true">{entry.data.summary}</p>
+					<details>
+						<summary>预览</summary>
+						<p>{entry.data.summary}</p>
+					</details>
+					<a class="button button--red" href={`/notes/${getNoteSlug(entry)}`}>阅读文章</a>
+				</article>
+			))}
+		</div>
+	) : (
+		<p class="empty-state">第一篇文章会在这里落下。</p>
+	)}
+</section>

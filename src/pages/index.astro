@@ -1,29 +1,27 @@
 ---
-import '../styles/global.css';
+import AboutSection from '../components/home/AboutSection.astro';
+import ExploreSection from '../components/home/ExploreSection.astro';
+import FeaturedSection from '../components/home/FeaturedSection.astro';
+import Hero from '../components/home/Hero.astro';
+import NotesSection from '../components/home/NotesSection.astro';
+import UpdatesSection from '../components/home/UpdatesSection.astro';
+import SiteFooter from '../components/layout/SiteFooter.astro';
+import SiteHeader from '../components/layout/SiteHeader.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getHomepageEntries } from '../lib/entries';
+
+const { featured, recent, notes } = await getHomepageEntries();
 ---
 
-<html lang="zh-CN">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="Paracosm Garden 是一个收纳工具、灵感、项目与实践记录的个人数字花园。" />
-		<title>Paracosm Garden</title>
-	</head>
-	<body class="min-h-screen bg-stone-50 text-stone-950 antialiased">
-		<main class="mx-auto flex min-h-screen max-w-5xl flex-col justify-center gap-6 px-6 py-16">
-			<p class="text-sm font-bold uppercase tracking-[0.2em] text-red-600">Paracosm Garden</p>
-			<h1 class="max-w-3xl text-5xl font-black tracking-tight sm:text-7xl">个人数字花园正在生长。</h1>
-			<p class="max-w-2xl text-lg leading-8 text-stone-600">
-				这里将收纳 Prompt、Skill、MCP、网站收藏和项目记录。视觉系统与探索交互将在内容模型确定后逐步建立。
-			</p>
-			<div class="flex flex-wrap gap-3 text-sm font-bold">
-				<span class="border-2 border-stone-950 bg-yellow-300 px-3 py-2">Astro</span>
-				<span class="border-2 border-stone-950 bg-cyan-300 px-3 py-2">TypeScript</span>
-				<span class="border-2 border-stone-950 bg-pink-300 px-3 py-2">Content Collections</span>
-			</div>
-		</main>
-	</body>
-</html>
+<BaseLayout title="Paracosm Garden" description="Paracosm Garden 是一个公开生长的个人数字花园。">
+	<SiteHeader />
+	<main id="top">
+		<Hero />
+		<AboutSection />
+		<FeaturedSection entries={featured} />
+		<UpdatesSection entries={recent} />
+		<NotesSection entries={notes} />
+		<ExploreSection />
+	</main>
+	<SiteFooter />
+</BaseLayout>

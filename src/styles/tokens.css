@@ -1,0 +1,14 @@
+:root {
+	--black:#000;
+	--white:#fff;
+	--red:#ff6b6b;
+	--teal:#4ecdc4;
+	--yellow:#ffe66d;
+	--mint:#95e1d3;
+	--coral:#f38181;
+	--dark:#111827;
+	--muted:#374151;
+	background:var(--white);
+	color:var(--black);
+	font-family:JetBrains Mono, Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, PingFang SC, Hiragino Sans GB, Microsoft YaHei, monospace
+}

@@ -44,12 +44,12 @@ style_slug: neo-brutalist-playful
 ### 边框、阴影和形状
 
 ```text
-边框：border-4 border-black
-圆角：rounded-none
-小阴影：shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-中阴影：shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
-大阴影：shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
-彩色阴影：shadow-[6px_6px_0px_0px_rgba(255,107,107,1)]
+边框：border: 4px solid var(--black)
+圆角：border-radius: 0
+小阴影：box-shadow: 4px 4px 0 var(--black)
+中阴影：box-shadow: 6px 6px 0 var(--black)
+大阴影：box-shadow: 8px 8px 0 var(--black)
+彩色阴影：box-shadow: 6px 6px 0 var(--red)
 ```
 
 阴影必须是实色硬边偏移，不能使用模糊阴影。卡片、按钮、输入框、弹窗都保持直角。
@@ -81,10 +81,20 @@ style_slug: neo-brutalist-playful
 
 按钮应具备完整的硬边反馈：
 
-```html
-<button class="rounded-none border-4 border-black bg-[#ff6b6b] font-black text-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none focus:outline-none focus:shadow-[6px_6px_0px_0px_rgba(78,205,196,1)] active:translate-x-[4px] active:translate-y-[4px]">
-  操作
-</button>
+```css
+.button {
+  min-height: 44px;
+  border: 4px solid var(--black);
+  border-radius: 0;
+  background: var(--red);
+  color: var(--black);
+  box-shadow: 6px 6px 0 var(--black);
+  font-weight: 900;
+}
+
+.button:hover { transform: translate(3px, 3px); box-shadow: none; }
+.button:focus-visible { outline: 4px solid var(--black); box-shadow: 6px 6px 0 var(--teal); }
+.button:active { transform: translate(4px, 4px); box-shadow: none; }
 ```
 
 可以增加 `hover:scale-105`，但不能让缩放造成内容溢出或布局跳动。按钮的触控区域不小于 44px。
@@ -93,32 +103,44 @@ style_slug: neo-brutalist-playful
 
 条目卡片是数字花园的主要容器：
 
-```html
-<article class="rounded-none border-4 border-black bg-white p-4 md:p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:translate-x-[3px] hover:translate-y-[3px]">
-  <h3 class="font-black uppercase text-xl md:text-2xl">条目标题</h3>
-  <p class="font-mono text-sm md:text-base text-gray-700">条目摘要</p>
-</article>
+```css
+.entry-card {
+  border: 4px solid var(--black);
+  border-radius: 0;
+  background: var(--white);
+  box-shadow: 6px 6px 0 var(--teal);
+  padding: clamp(16px, 3vw, 24px);
+}
+
+.entry-card:hover { transform: translate(3px, 3px); }
 ```
 
 卡片可以按类型或索引使用不同强调色，但结构、边框和交互语言保持一致。点击卡片打开大卡片弹窗，不依赖卡片上的小型难点按钮作为唯一入口。
 
 ### 输入框和筛选控件
 
-```html
-<input class="rounded-none border-4 border-black font-mono focus:outline-none focus:shadow-[6px_6px_0px_0px_rgba(78,205,196,1)] transition-all" placeholder="搜索条目" />
+```css
+.search-input {
+  min-height: 44px;
+  border: 4px solid var(--black);
+  border-radius: 0;
+  font: inherit;
+}
+
+.search-input:focus-visible { outline: 4px solid var(--black); box-shadow: 6px 6px 0 var(--teal); }
 ```
 
 搜索框、类型筛选、标签筛选和排序控件都必须有清晰的标签、键盘焦点和移动端可操作尺寸。不要依赖 placeholder 代替可访问名称。
 
 ### 大卡片弹窗
 
-- 使用 `rounded-none border-4 border-black bg-white`。
+- 使用直角、4px 纯黑边框和白色背景。
 - 遮罩可以使用纯黑半透明色，但不能使用 `backdrop-blur`。
 - 弹窗打开时锁定背景滚动，关闭后恢复原滚动位置。
 - 支持关闭按钮、背景点击和 Esc 关闭。
 - 打开后焦点进入弹窗，关闭后焦点回到触发卡片。
 - 移动端接近全屏，桌面端保持适合阅读的最大宽度。
-- 弹窗内容包括类型、来源、状态、摘要、正文、资产链接、标签、关联条目和更新时间。
+- 条目弹窗内容包括类型、来源、摘要、正文、资产链接、标签、关联条目和更新时间；不显示已移除的 `status` 字段。
 
 ### 图标和装饰
 
@@ -128,13 +150,24 @@ style_slug: neo-brutalist-playful
 
 首页不是传统的分类目录，而是一个可持续增长的探索入口：
 
-1. Hero：说明这是一个个人数字花园，并建立强烈的色块和标题记忆点。
-2. 探索工具栏：搜索、类型筛选、标签筛选和排序。
-3. 条目网格：默认只显示部分卡片。
-4. 加载更多：继续追加条目，不跳转到单独的探索地址。
-5. 大卡片弹窗：在当前页面阅读和操作条目。
+1. 固定导航：站点名回到 Hero，锚点依次指向关于、精选、更新、Notes 和探索。
+2. Hero：使用 `I grow what fascinates me.` 与中文副文案建立强烈的色块和标题记忆点；右侧是 Prompt、Skill、MCP、Note 的装饰性拼贴，不伪装成真实条目。
+3. 精选收录：读取 `featuredOrder: 1` 至 `6` 的真实条目，以六张等尺寸卡片展示。
+4. 近期更新：展示 5 条非 Note 条目的简洁时间流，按 `updatedAt` 排列。
+5. Notes：位于近期更新与探索之间，展示文章横条；不区分主次。桌面端 hover 或键盘聚焦时显示摘要浮卡，移动端通过“预览”展开同样内容；“阅读文章”进入独立文章页。
+6. 探索：只收录 Prompt、Skill、MCP、Website 和 Project；使用搜索、类型筛选、标签筛选、条目网格和加载更多，不创建单独的探索地址。
+7. 关于与页脚：About 位于 Hero 与精选之间，承担个人花园的简短说明；黑底页脚承接站点信息。许可证未正式确定前，不展示具体许可证或内容再授权声明。
 
-首页区块使用 `py-12 md:py-20 lg:py-28` 的节奏；卡片网格使用 `gap-4 md:gap-6`。类型和标签的颜色可以多彩，但不能改变扁平条目模型。
+首页区块使用 `py-12 md:py-20 lg:py-28` 的节奏；卡片网格使用 `gap-4 md:gap-6`。类型和标签的颜色可以多彩，但不能改变扁平条目模型。Note 的 `category` 作为文章主分类显示，不替代多标签。
+
+### 响应式规则
+
+- 桌面端显示完整锚点导航；移动端保留站点名与 44px 以上的菜单按钮，展开同一组锚点。
+- Hero 在移动端先显示文案与“开始探索”，装饰拼贴移至下方，不能遮挡文本或造成横向溢出。
+- 精选区桌面端为 6 张等尺寸卡片；窄屏按阅读顺序改为单列或双列，不压缩触控目标。
+- 类型筛选在移动端保持单行可横向滚动；标签默认显示少量常用项，通过“更多标签”展开。
+- Notes 横条在移动端改为纵向信息顺序；摘要浮卡不依赖 hover，必须可通过“预览”展开。
+- 大卡片弹窗移动端接近全屏；独立 Note 页面直接承载长正文，不放进条目弹窗。
 
 ## 交互与动效
 
@@ -144,7 +177,7 @@ style_slug: neo-brutalist-playful
 transition-all duration-300 ease-out
 hover:translate-x-[3px] hover:translate-y-[3px]
 active:translate-x-[4px] active:translate-y-[4px]
-focus:shadow-[6px_6px_0px_0px_rgba(78,205,196,1)]
+focus-visible: outline: 4px solid var(--black); box-shadow: 6px 6px 0 var(--teal)
 ```
 
 可以使用轻微缩放、方向变化和青、粉、黄之间的硬边阴影变化，始终将旋转控制在 3 度以内。
@@ -160,14 +193,14 @@ focus:shadow-[6px_6px_0px_0px_rgba(78,205,196,1)]
 
 ## 绝对禁止
 
-- 圆角：除 `rounded-none` 外，不使用任何圆角
+- 圆角：统一使用 `border-radius: 0`
 - 模糊阴影：不使用 `shadow-sm`、`shadow`、`shadow-md`、`shadow-lg` 等默认模糊阴影
 - 渐变：不使用 `bg-gradient-*` 或渐变文字
 - 柔和灰色：不使用 `bg-gray-50`、`bg-gray-100`、`text-gray-300`、`text-gray-400`、`text-gray-500`
 - 轻量字体：不使用 `font-light`、`font-thin`、`font-normal`
 - 玻璃态：不使用 `backdrop-blur`
 - 过度旋转：不得超过 3 度
-- Emoji 或直接输入的符号字符装饰
+- Emoji 或直接输入的符号字符装饰；需要图标时使用 Lucide 等 SVG 图标或 CSS 几何形状
 - 嵌套卡片
 - 依赖颜色单独表达状态
 - 没有 reduced-motion 方案的装饰性动效
@@ -186,10 +219,10 @@ focus:shadow-[6px_6px_0px_0px_rgba(78,205,196,1)]
 
 ### Token 检查
 
-- [ ] 按钮有 `rounded-none border-4 border-black`。
+- [ ] 按钮为直角，并使用 4px 纯黑边框。
 - [ ] 按钮有硬边阴影、hover 位移、active 反馈和 focus 状态。
-- [ ] 卡片有 `rounded-none border-4 border-black bg-white`。
-- [ ] 输入控件有 `rounded-none border-4 border-black font-mono` 和清晰焦点。
+- [ ] 卡片为直角、白底、4px 纯黑边框。
+- [ ] 输入控件为直角、4px 纯黑边框，并有清晰焦点。
 - [ ] 页面使用规定的区块、容器和卡片间距。
 
 ### 禁止项检查
@@ -197,8 +230,8 @@ focus:shadow-[6px_6px_0px_0px_rgba(78,205,196,1)]
 - [ ] 没有圆角、模糊阴影、渐变或玻璃态。
 - [ ] 没有柔和灰色、轻量字体或 Inter、Roboto、Geist。
 - [ ] 没有超过 3 度的旋转。
-- [ ] 没有 emoji 或直接输入的符号字符装饰。
-- [ ] 没有嵌套卡片或单侧粗边框装饰条。
+- [ ] 没有 emoji 或直接输入的符号字符装饰；图标使用 SVG 或 CSS 几何形状。
+- [ ] 没有嵌套卡片；单侧粗边只用于文章正文的二级标题与引用块。
 - [ ] 没有 bounce / elastic 默认动效。
 
 ### 响应式与无障碍检查

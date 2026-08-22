@@ -1,0 +1,39 @@
+---
+import type { GardenEntry } from '../../lib/entries';
+
+interface Props {
+	entries: GardenEntry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<section id="featured" class="section section--white" aria-labelledby="featured-title">
+	<div class="section-heading">
+		<div>
+			<div class="eyebrow">
+				<span>COLOR SYSTEM</span>
+			</div>
+			<h2 id="featured-title" class="section-title-two-tone">
+				<span class="title-black">HANDPICKED</span>
+				<span class="title-teal">ENTRIES</span>
+			</h2>
+		</div>
+		<p>纯黑边框搭配 5 种强调色。彩色硬阴影在红、青、黄、薄荷和珊瑚之间跳跃——这就是 Color Ping-Pong。</p>
+	</div>
+	{entries.length > 0 ? (
+		<div class="featured-grid">
+			{entries.map((entry) => (
+				<article class="entry-card">
+					<div class="entry-card-header">
+						<span class:list={['mini-badge', `mini-badge--${entry.data.type}`]}>{entry.data.type}</span>
+					</div>
+					<h3>{entry.data.title}</h3>
+					<p>{entry.data.summary}</p>
+				</article>
+			))}
+		</div>
+	) : (
+		<p class="empty-state">第一批精选正在培育中。</p>
+	)}
+</section>

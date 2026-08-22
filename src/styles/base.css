@@ -1,0 +1,210 @@
+* {
+	box-sizing:border-box;
+	border-radius:0!important
+}
+html {
+	scroll-behavior:smooth;
+	background:var(--white)
+}
+body {
+	background:var(--white);
+	min-width:320px;
+	color:var(--black);
+	-webkit-font-smoothing:antialiased;
+	margin:0;
+	overflow-x:hidden
+}
+a, button, input, summary {
+	font:inherit
+}
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible {
+	outline:4px solid var(--black);
+	outline-offset:4px;
+	box-shadow:6px 6px 0 var(--teal)!important
+}
+.hero h1, .section h2, .article-content h1, .entry-card h3, .note-row h3, .activity-main-header h3, .widget-card h4, .prose :is(h2, h3) {
+	text-transform:uppercase;
+	font-family:Impact, Haettenschweiler, Arial Black, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif;
+	font-weight:900
+}
+.section {
+	border-bottom:8px solid var(--black);
+	padding:clamp(48px, 8vw, 100px) clamp(16px, 5vw, 72px)
+}
+.section--teal {
+	background:var(--teal)
+}
+.section--white {
+	background:var(--white)
+}
+.section--coral {
+	background:var(--coral)
+}
+.section--yellow {
+	background:var(--yellow)
+}
+.section--mint {
+	background:var(--mint)
+}
+.section-heading {
+	justify-content:space-between;
+	align-items:flex-end;
+	gap:32px;
+	margin-bottom:40px;
+	display:flex
+}
+.section-heading>p {
+	max-width:640px;
+	margin:0;
+	font-size:clamp(1rem, 1.8vw, 1.2rem);
+	font-weight:700;
+	line-height:1.75
+}
+.section-title-two-tone {
+	letter-spacing:-.01em;
+	flex-wrap:wrap;
+	align-items:center;
+	gap:12px;
+	margin:0;
+	font-size:clamp(2.4rem, 6vw, 5rem);
+	line-height:1.1;
+	display:flex
+}
+.title-black {
+	color:var(--black)
+}
+.title-red {
+	color:var(--red)
+}
+.title-teal {
+	color:var(--teal)
+}
+.title-yellow {
+	color:var(--yellow)
+}
+.title-coral {
+	color:var(--coral)
+}
+.eyebrow {
+	border:3px solid var(--black);
+	background:var(--red);
+	color:var(--black);
+	letter-spacing:.08em;
+	text-transform:uppercase;
+	box-shadow:4px 4px 0 var(--black);
+	align-items:center;
+	gap:8px;
+	width:fit-content;
+	margin:0 0 16px;
+	padding:6px 14px;
+	font-size:.8rem;
+	font-weight:900;
+	display:inline-flex
+}
+.eyebrow--yellow {
+	background:var(--yellow);
+	color:var(--black)
+}
+.eyebrow--black {
+	background:var(--black);
+	color:var(--white);
+	box-shadow:4px 4px 0 var(--red)
+}
+.button {
+	border:4px solid var(--black);
+	min-height:48px;
+	box-shadow:6px 6px 0 var(--black);
+	color:var(--white);
+	text-transform:uppercase;
+	cursor:pointer;
+	justify-content:center;
+	align-items:center;
+	padding:10px 24px;
+	font-size:1rem;
+	font-weight:900;
+	text-decoration:none;
+	transition:transform .18s ease-out, box-shadow .18s ease-out, background-color .18s ease-out;
+	display:inline-flex;
+	position:relative;
+	transform:rotate(-1deg)
+}
+.button:before, .button:after {
+	border:2px solid var(--black);
+	content:"";
+	pointer-events:none;
+	width:10px;
+	height:10px;
+	transition:transform .18s ease-out;
+	position:absolute
+}
+.button:before {
+	background:var(--yellow);
+	top:-7px;
+	right:-7px
+}
+.button:after {
+	background:var(--mint);
+	bottom:-7px;
+	left:-7px
+}
+.button:hover {
+	box-shadow:8px 8px 0 var(--yellow);
+	transform:translate(-2px, -2px)rotate(1deg)
+}
+.button:active {
+	box-shadow:none!important;
+	transform:translate(4px, 4px)rotate(0)!important
+}
+.button--red {
+	background:var(--red);
+	color:var(--black)
+}
+.button--yellow {
+	background:var(--yellow);
+	color:var(--black);
+	box-shadow:6px 6px 0 var(--black)
+}
+.button--yellow:hover {
+	box-shadow:8px 8px 0 var(--red)
+}
+.button--coral {
+	background:var(--coral);
+	color:var(--black)
+}
+.mini-badge {
+	border:2px solid var(--black);
+	background:var(--white);
+	color:var(--black);
+	letter-spacing:.08em;
+	text-transform:uppercase;
+	box-shadow:2px 2px 0 var(--black);
+	align-items:center;
+	padding:2px 8px;
+	font-size:.72rem;
+	font-weight:900;
+	display:inline-flex
+}
+.mini-badge--prompt {
+	background:var(--red);
+	color:var(--black)
+}
+.mini-badge--skill {
+	background:var(--yellow);
+	color:var(--black)
+}
+.mini-badge--mcp {
+	background:var(--teal);
+	color:var(--black)
+}
+.mini-badge--website {
+	background:var(--mint);
+	color:var(--black)
+}
+.mini-badge--project {
+	background:var(--coral);
+	color:var(--black)
+}
+.mini-badge--note {
+	background:var(--white);
+	color:var(--black)
+}

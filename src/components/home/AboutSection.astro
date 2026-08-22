@@ -1,0 +1,87 @@
+---
+import { Check } from '@lucide/astro';
+---
+
+<section id="about" class="section section--white" aria-labelledby="about-title">
+	<div class="section-heading">
+		<div>
+			<div class="eyebrow eyebrow--black">
+				<span>DESIGN PHILOSOPHY</span>
+			</div>
+			<h2 id="about-title" class="section-title-two-tone">
+				<span class="title-black">ABOUT</span>
+				<span class="title-red">GARDEN</span>
+			</h2>
+		</div>
+		<p>一个真实生长的个人数字花园。展示俏皮野兽派在实际界面与工作流中的应用：彩色卡片 + 彩色阴影 + 旋转装饰。</p>
+	</div>
+	<div class="activity-board-container">
+		<div class="activity-main-board">
+			<div class="activity-main-header">
+				<h3>今日原则 · MANIFESTO</h3>
+				<span class="activity-badge-btn">3 项准则</span>
+			</div>
+			<div class="activity-task-list">
+				<div class="activity-task-row">
+					<div class="activity-task-content">
+						<span class="activity-check-box"><Check size={16} strokeWidth={3} aria-hidden="true" /></span>
+						<span><strong>真实可用：</strong>每一条收录都来自真实工作流，拒绝未经检验的理论摆件。</span>
+					</div>
+					<span class="mini-badge mini-badge--prompt">PRACTICE</span>
+				</div>
+				<div class="activity-task-row">
+					<div class="activity-task-content">
+						<span class="activity-check-box"><Check size={16} strokeWidth={3} aria-hidden="true" /></span>
+						<span><strong>持续迭代：</strong>记录想法与工具演进的瞬间，把未完成状态作为花园养分。</span>
+					</div>
+					<span class="mini-badge mini-badge--mcp">EVOLVE</span>
+				</div>
+				<div class="activity-task-row">
+					<div class="activity-task-content">
+						<span class="activity-check-box"><Check size={16} strokeWidth={3} aria-hidden="true" /></span>
+						<span><strong>开放记录：</strong>持续分享花园的架构、Prompt 与思考过程。</span>
+					</div>
+					<span class="mini-badge mini-badge--website">SHARE</span>
+				</div>
+			</div>
+		</div>
+		<div class="activity-widgets">
+			<div class="widget-card widget-card--coral">
+				<div class="widget-header-row">
+					<h4>收录进度 / PROGRESS</h4>
+					<span class="mini-badge mini-badge--prompt">LIVE</span>
+				</div>
+				<div class="widget-stat-large">5+ 维度</div>
+				<div class="widget-progress-bar">
+					<div class="widget-progress-fill" style="width: 75%;"></div>
+				</div>
+			</div>
+			<div class="widget-card widget-card--teal">
+				<div class="widget-header-row">
+					<h4>公开计划 / IN PUBLIC</h4>
+					<span class="mini-badge mini-badge--skill">ONGOING</span>
+				</div>
+				<div class="widget-stat-large">LICENSE TBD</div>
+				<div class="widget-meter-blocks">
+					<span class="meter-block"></span>
+					<span class="meter-block"></span>
+					<span class="meter-block"></span>
+					<span class="meter-block"></span>
+					<span class="meter-block"></span>
+				</div>
+			</div>
+			<div class="widget-card widget-card--mint">
+				<div class="widget-header-row">
+					<h4>花园维度 / CATEGORIES</h4>
+				</div>
+				<div class="widget-tag-cloud">
+					<span class="mini-badge mini-badge--prompt">PROMPT</span>
+					<span class="mini-badge mini-badge--skill">SKILL</span>
+					<span class="mini-badge mini-badge--mcp">MCP</span>
+					<span class="mini-badge mini-badge--website">WEBSITE</span>
+					<span class="mini-badge mini-badge--project">PROJECT</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

@@ -43,7 +43,7 @@
 README.md
 AGENTS.md
 .github/
-└── copilot-instructions.md
+├── copilot-instructions.md
 docs/
 ├── README.md
 ├── AI-WORKFLOW.md

@@ -1,0 +1,43 @@
+---
+import { getEntry, render } from 'astro:content';
+import SiteHeader from '../../components/layout/SiteHeader.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getNoteSlug, getPublicNotes } from '../../lib/entries';
+
+export async function getStaticPaths() {
+	const notes = await getPublicNotes();
+
+	return notes.map((entry) => ({
+		params: { slug: getNoteSlug(entry) },
+		props: { entryId: entry.id },
+	}));
+}
+
+const { entryId } = Astro.props as { entryId: string };
+const entry = await getEntry('entries', entryId);
+
+if (!entry || entry.data.type !== 'note') {
+	throw new Error(`Could not find Note entry "${entryId}".`);
+}
+
+const { Content } = await render(entry);
+const formatDate = (date: Date) =>
+	new Intl.DateTimeFormat('zh-CN', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+	}).format(date);
+---
+
+<BaseLayout title={`${entry.data.title} | Paracosm Garden`} description={entry.data.summary}>
+	<SiteHeader article />
+	<main class="article-shell">
+		<article class="article-content">
+			<p class="eyebrow eyebrow--coral">{entry.data.type === 'note' ? entry.data.category : ''}</p>
+			<h1>{entry.data.title}</h1>
+			<p class="article-summary">{entry.data.summary}</p>
+			<time datetime={entry.data.createdAt.toISOString()}>{formatDate(entry.data.createdAt)}</time>
+			<div class="prose"><Content /></div>
+		</article>
+	</main>
+</BaseLayout>

@@ -6,7 +6,7 @@
 
 - Astro 7：页面与静态构建
 - TypeScript：开发语言
-- Tailwind CSS 4：样式系统
+- 原生模块化 CSS：设计 token、基础规则与页面样式
 - Markdown / MDX：内容编写
 - Astro Content Collections：内容组织与校验
 - React Islands：只为局部交互提供浏览器端状态
@@ -33,4 +33,4 @@ pnpm preview
 
 ## 当前状态
 
-基础工程已初始化，Astro、React、MDX 和 Tailwind 已接入。当前首页是用于验证构建链路的占位页面，内容集合、卡片详情弹窗、筛选和“加载更多”将在内容模型确认后实现。
+首页与独立 Note 文章页的静态框架已建立，并可通过本地演示条目验证精选、近期更新与 Notes 展示。Content Collections 已支持扁平条目、精选排序和 Note 主分类；真实个人内容尚未入库。搜索、筛选、加载更多与条目弹窗等需要浏览器状态的功能，将在第一批真实内容准备后以 React Island 实现。

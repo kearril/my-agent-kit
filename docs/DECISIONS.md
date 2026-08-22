@@ -37,3 +37,52 @@
 - 决定：根目录 `AGENTS.md` 作为编码代理的全局权威规则；`docs/AI-WORKFLOW.md` 记录 AI 协作流程；主题文档分别维护开发、内容、设计和部署规则；`.github/copilot-instructions.md` 只做兼容入口。
 - 原因：官方实践强调全局指令应短、具体、基于真实项目；路径专属规则和按需 prompt 用于隔离上下文，避免把所有内容塞进一个长文件。
 - 影响：修改规则时只改权威来源；一次性任务不进入全局指令；未来目录边界稳定后再增加路径专属 instruction。
+
+## 2026-08-21：确定第一版条目模型
+
+- 决定：条目类型为 `prompt`、`skill`、`mcp`、`website`、`app`、`project`、`note`；所有类型先共用同一组基础字段：`title`、`type`、`summary`、`tags`、`source`、`links`、`related`、`createdAt`、`updatedAt`、`featured`、`draft`。
+- 决定：正文直接使用 Markdown / MDX body，不创建单独的正文 Frontmatter 字段；`status` 不进入初始模型；`slug` 由内容文件名或内容集合生成。
+- 决定：暂不添加类型专属字段，也不使用自由 `extra` / `metadata` 对象；未来通过 `type` 扩展 schema。
+- 原因：先让收纳动作足够轻量，同时保留严格校验和自然演进的接口。只有需要筛选、排序或固定展示的信息才升级为字段。
+
+## 2026-08-21：修正 App 与 Project 的边界
+
+- 决定：`app` 不再是独立 type；初始 type 修正为 `prompt`、`skill`、`mcp`、`website`、`project`、`note`。
+- 决定：`project` 表示具有明确目标和持续边界的完整工作单元，而不是所有 Skill、MCP、App 的笼统分类。自制 App 归入 `project`；外部 App 作为 `website` 条目并加 `app` 标签。
+- 决定：Skill、MCP、App 等产物在第一版通过 `related` 与对应 Project 关联，不新增项目归属字段。
+- 替代关系：本记录替代上一条“确定第一版条目模型”中将 `app` 设为独立 type 的部分；其余基础字段和扩展策略保持不变。
+- 原因：让 `type` 始终保留可用的内容形态筛选价值，同时允许一个项目关联多种不同产物。
+
+## 2026-08-21：首页结构与 Notes 阅读方式
+
+- 决定：首页顺序为固定导航、Hero、精选收录、近期更新、Notes、探索、关于和页脚。
+- 决定：精选区使用 `featuredOrder: 1` 至 `9` 编排，前 3 项为大卡、后 6 项为小卡；该字段替代原有的 `featured` 布尔字段。
+- 决定：近期更新只展示非 Note 条目；探索区也只包含 Prompt、Skill、MCP、Website 和 Project。
+- 决定：Note 在首页以平等的文章横条展示。桌面端 hover / focus 显示摘要浮卡，移动端通过“预览”展开；“阅读文章”进入独立文章页，而不是弹窗。
+- 原因：让精选承担人工策展，更新与探索承担工具和收藏的浏览，而长文章拥有更适合阅读和分享的独立空间。
+
+## 2026-08-21：为 Note 增加单一主分类
+
+- 决定：每篇 Note 具备一个必填 `category`，作为文章主分类；`tags` 保持多选的细粒度描述能力。
+- 原因：AI、科研等文章领域需要在 Notes 区被稳定识别和未来筛选，不能只依赖多义且无主次的标签。
+- 影响：Content Collections 对 Note 校验 `category`，其他五类条目不允许携带该字段。
+
+## 2026-08-21：按页面、组件与内容层分离职责
+
+- 决定：`src/pages/` 只负责路由和页面组装；`src/layouts/` 提供文档壳；`src/components/layout/` 放跨页面框架；`src/components/home/` 放首页区块；`src/lib/` 集中内容查询、排序和跨条目校验。
+- 决定：只有需要浏览器状态的交互才进入 `src/components/islands/` 并使用 React；首页 Hero、精选、更新和 Notes 等保持 Astro 静态组件。
+- 原因：让内容、展示和交互各自可独立修改，避免单个首页文件或客户端 React 承担所有职责。
+
+## 2026-08-22：首页视觉重构后的结构校准
+
+- 决定：首页顺序调整为固定导航、Hero、About、精选收录、近期更新、Notes、探索和页脚；导航按同一阅读顺序排列。
+- 决定：Hero 的“开始探索”进入精选区；精选区固定展示 `featuredOrder: 1` 至 `6` 的六张等尺寸卡片。
+- 决定：文章正文中的二级标题与引用块允许使用单侧粗边，作为长文阅读层级的专属例外；普通组件仍禁止将单侧粗边作为装饰。
+- 决定：项目公开构建，但许可证与内容再授权条款尚未确定；在添加正式 `LICENSE` 前，不展示具体许可证名称或“自由派生”等声明。
+- 原因：保留经过认可的视觉重构成果，同时让数据模型、首页交互、法律表述和设计规范保持一致。
+
+## 2026-08-22：移除 Tailwind CSS，采用原生模块化 CSS
+
+- 决定：移除 Tailwind CSS 及其 Vite 插件；页面样式统一由 `src/styles/` 下的 token、基础规则、布局、区块、文章与响应式 CSS 模块维护。
+- 原因：当前实现没有实际使用 Tailwind utility class，保留它只会增加依赖、构建产物和两套样式心智模型。
+- 影响：设计文档使用框架无关的 CSS 属性描述视觉要求；React Island 后续复用既有 CSS class 与 token，而不引入第二套样式语言。

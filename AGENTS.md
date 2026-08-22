@@ -7,7 +7,7 @@
 - 这是一个使用 Astro 构建的个人数字花园，内容包括 Prompt、Skill、MCP、网站收藏和项目。
 - 页面以 Astro 静态输出为主，Markdown / MDX 与 Content Collections 是内容来源。
 - React 只用于需要浏览器状态、事件或浏览器 API 的局部 Island。
-- 当前首页仍是基础占位页，正式内容集合、卡片、筛选和弹窗尚未实现。
+- 首页与独立 Note 文章页的静态展示框架已完成，包含内容集合驱动的精选、近期更新与 Notes；搜索、筛选、加载更多和条目弹窗等交互仍待以 React Island 实现。
 
 ## 开始任务前
 

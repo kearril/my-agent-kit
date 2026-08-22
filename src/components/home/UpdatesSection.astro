@@ -1,0 +1,38 @@
+---
+import type { GardenEntry } from '../../lib/entries';
+
+interface Props {
+	entries: GardenEntry[];
+}
+
+const { entries } = Astro.props;
+const formatDate = (date: Date) => new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+---
+
+<section id="updates" class="section section--mint" aria-labelledby="updates-title">
+	<div class="section-heading">
+		<div>
+			<div class="eyebrow eyebrow--black">
+				<span>TIMELINE</span>
+			</div>
+			<h2 id="updates-title" class="section-title-two-tone">
+				<span class="title-black">RECENT</span>
+				<span class="title-yellow">UPDATES</span>
+			</h2>
+		</div>
+		<p>最近被补充、整理或重新理解的内容，按时间流实时沉淀到花园中。</p>
+	</div>
+	{entries.length > 0 ? (
+		<ol class="update-list">
+			{entries.map((entry) => (
+				<li>
+					<time datetime={entry.data.updatedAt.toISOString()}>{formatDate(entry.data.updatedAt)}</time>
+					<span class:list={['mini-badge', `mini-badge--${entry.data.type}`]}>{entry.data.type}</span>
+					<strong>{entry.data.title}</strong>
+				</li>
+			))}
+		</ol>
+	) : (
+		<p class="empty-state">新的工具、项目与收藏会从这里出现。</p>
+	)}
+</section>
