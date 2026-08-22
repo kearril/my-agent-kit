@@ -101,12 +101,12 @@
 		grid-column:auto;
 		min-height:0
 	}
-	.update-list li {
+	.update-item {
 		grid-template-columns:1fr auto;
 		gap:10px;
 		padding:16px 14px
 	}
-	.update-list li strong {
+	.update-item strong {
 		grid-column:1/-1
 	}
 	.note-row {
@@ -149,6 +149,19 @@
 		gap:36px;
 		padding:40px 20px
 	}
+	.article-shell {
+		padding:32px 16px
+	}
+	.article-content {
+		padding:24px 16px
+	}
+	.article-meta {
+		flex-direction:column;
+		gap:8px
+	}
+	.article-connection-header {
+		flex-wrap:wrap
+	}
 }
 @media (prefers-reduced-motion:reduce) {
 	*, :before, :after {
@@ -156,7 +169,7 @@
 		transition-duration:.01ms!important;
 		animation-duration:.01ms!important
 	}
-	.wordmark:hover, .desktop-nav a:hover, .plain-link:hover, .button:hover, .button:active, .entry-card:hover, .note-row:hover, .note-row:focus-within, .stat-card:hover, .widget-card:hover, .activity-task-row:hover, .hero:hover .collage-card--prompt, .hero:hover .collage-card--skill, .hero:hover .collage-card--mcp, .hero:hover .collage-card--note, .hero:hover .shape--square, .hero:hover .shape--diamond, .hero:hover .shape--cross {
+	.wordmark:hover, .desktop-nav a:hover, .plain-link:hover, .button:hover, .button:active, .entry-card:hover, .note-row:hover, .note-row:focus-within, .stat-card:hover, .widget-card:hover, .activity-task-row:hover, .article-link-list li a:hover, .article-connection-list li a:hover, .hero:hover .collage-card--prompt, .hero:hover .collage-card--skill, .hero:hover .collage-card--mcp, .hero:hover .collage-card--note, .hero:hover .shape--square, .hero:hover .shape--diamond, .hero:hover .shape--cross {
 		transform:none!important
 	}
 }

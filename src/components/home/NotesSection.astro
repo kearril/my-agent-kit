@@ -1,5 +1,6 @@
 ---
-import { getNoteSlug, type NoteEntry } from '../../lib/entries';
+import { getEntryPath } from '../../lib/entry-path';
+import type { NoteEntry } from '../../lib/entries';
 
 interface Props {
 	entries: NoteEntry[];
@@ -30,13 +31,13 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat('zh-CN', { year: 'num
 						<span class="mini-badge mini-badge--mcp">{entry.data.category}</span>
 						<time datetime={entry.data.createdAt.toISOString()}>{formatDate(entry.data.createdAt)}</time>
 					</div>
-					<h3>{entry.data.title}</h3>
+					<h3><a class="note-title-link" href={getEntryPath(entry)}>{entry.data.title}</a></h3>
 					<p class="note-hover-preview" aria-hidden="true">{entry.data.summary}</p>
 					<details>
 						<summary>预览</summary>
 						<p>{entry.data.summary}</p>
 					</details>
-					<a class="button button--red" href={`/notes/${getNoteSlug(entry)}`}>阅读文章</a>
+					<a class="button button--red" href={getEntryPath(entry)}>阅读文章</a>
 				</article>
 			))}
 		</div>

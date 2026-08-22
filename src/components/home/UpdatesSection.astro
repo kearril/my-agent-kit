@@ -1,4 +1,5 @@
 ---
+import { getEntryPath } from '../../lib/entry-path';
 import type { GardenEntry } from '../../lib/entries';
 
 interface Props {
@@ -26,9 +27,11 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat('zh-CN', { year: 'num
 		<ol class="update-list">
 			{entries.map((entry) => (
 				<li>
-					<time datetime={entry.data.updatedAt.toISOString()}>{formatDate(entry.data.updatedAt)}</time>
-					<span class:list={['mini-badge', `mini-badge--${entry.data.type}`]}>{entry.data.type}</span>
-					<strong>{entry.data.title}</strong>
+					<a class="update-item" href={getEntryPath(entry)}>
+						<time datetime={entry.data.updatedAt.toISOString()}>{formatDate(entry.data.updatedAt)}</time>
+						<span class:list={['mini-badge', `mini-badge--${entry.data.type}`]}>{entry.data.type}</span>
+						<strong>{entry.data.title}</strong>
+					</a>
 				</li>
 			))}
 		</ol>

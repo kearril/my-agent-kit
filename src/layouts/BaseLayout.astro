@@ -4,9 +4,10 @@ import '../styles/global.css';
 interface Props {
 	title: string;
 	description: string;
+	canonicalPath?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, canonicalPath } = Astro.props;
 ---
 
 <!doctype html>
@@ -18,6 +19,7 @@ const { title, description } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<title>{title}</title>
+		{canonicalPath ? <link rel="canonical" href={Astro.site ? new URL(canonicalPath, Astro.site).href : canonicalPath} /> : null}
 	</head>
 	<body>
 		<slot />
