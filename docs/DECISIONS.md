@@ -86,3 +86,31 @@
 - 决定：移除 Tailwind CSS 及其 Vite 插件；页面样式统一由 `src/styles/` 下的 token、基础规则、布局、区块、文章与响应式 CSS 模块维护。
 - 原因：当前实现没有实际使用 Tailwind utility class，保留它只会增加依赖、构建产物和两套样式心智模型。
 - 影响：设计文档使用框架无关的 CSS 属性描述视觉要求；React Island 后续复用既有 CSS class 与 token，而不引入第二套样式语言。
+
+## 2026-08-23：Cloudflare Pages 作为 kearril.com 的静态部署目标
+
+- 决定：生产环境采用 Cloudflare Pages 静态托管，规范公开域名为 `https://kearril.com`，`www.kearril.com` 永久重定向至根域名。
+- 替代关系：明确替代 2026-08-21 决定的“初始部署使用 GitHub Pages”。
+- 原因：Cloudflare Pages 提供更优异的全球边缘静态分发能力、开箱即用的 HTTPS 与域名管理、无缝的 GitHub Git 集成与免配置 Branch Preview Deployment，且不产生维护负担与服务器成本。
+- 影响：构建输出目录为 `dist`，构建命令为 `pnpm build`；不使用 GitHub Actions 部署脚本、不使用 CNAME 文件、不手动上传 dist；生产发布通过 Git push / PR 合并驱动。
+
+## 2026-08-23：统一条目不可变 Slug 与 /entries/<slug>/ 规范路由
+
+- 决定：所有六种公开条目统一使用必填、全站唯一且不可变的小写 ASCII kebab-case slug，并统一使用 `/entries/<slug>/` 作为规范公开访问路径。
+- 替代关系：明确替代 2026-08-21 决定的“slug 由内容文件名生成”以及“仅 Note 拥有独立文章页 `/notes/<slug>/`”。
+- 原因：将公开身份与物理文件名彻底解耦，使条目可任意重构仓库目录或修改标题而不破坏已发布的稳定链接；所有类型条目在数字花园中均拥有平等的独立阅读与被引用能力。
+- 影响：物理文件名不再决定公开路由；站点构建期自动计算双向关联与反向链接（Backlinks）；废除旧 `/notes/<slug>/` 路由；`related` 字段仅使用目标条目的 slug 字符串。
+
+## 2026-08-23：静态核心架构配合局部 Explore Island 与静态回退
+
+- 决定：站点保持 Astro 静态生成核心，首页 Explore 区域采用“静态回退内容 + 局部 React Island（`ExploreIsland.tsx`）交互增强”架构。所有卡片直链规范 `/entries/<slug>/` 页面。
+- 替代关系：明确替代 2026-08-21 决定的“点击卡片仅打开弹窗”及“Explore 排除 Note 条目”。
+- 原因：保证在禁用了 JavaScript、网络波动或搜索引擎爬虫抓取时，所有公开条目均能直接通过 HTML 链接被完整索引与访问；React 仅用于提供即时搜索、精确类型/标签筛选与加载更多的增强体验。
+- 影响：Explore 索引在构建期生成，包含所有公开条目类型（含 Note）；仅携带搜索筛选必要字段，不泄漏草稿或完整正文；弹窗仅作为辅助快捷视图，不可替代独立规范页面。
+
+## 2026-08-23：坚守原生模块化 CSS 作为唯一样式系统
+
+- 决定：确认并巩固原生模块化 CSS 为站点唯一的样式系统，严格禁止再次引入 Tailwind CSS、CSS-in-JS 或第三方 UI 组件库。
+- 替代关系：重申并强化 2026-08-22 决定的“移除 Tailwind CSS，采用原生模块化 CSS”。
+- 原因：原生 CSS custom properties、现代 CSS 模块化与语义 class 能够精准、轻量且无黑盒地表达俏皮野兽派设计规范，React Island 与 Astro 页面完全共享一套设计 token。
+- 影响：所有新组件与交互状态均直接复用 `src/styles/` 中的 tokens 与 CSS class，保持零样式运行时与极速构建。

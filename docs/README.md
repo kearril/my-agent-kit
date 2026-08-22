@@ -6,27 +6,26 @@
 
 | 任务 | 必读文档 |
 | --- | --- |
-| 了解项目、安装和命令 | `README.md` |
+| 了解项目、技术栈、公开地址与命令 | `README.md` |
 | 让 AI 开始一个非平凡任务 | `AGENTS.md`、`docs/AI-WORKFLOW.md` |
-| 修改页面、组件、依赖或代码 | `AGENTS.md`、`docs/DEVELOPMENT.md` |
-| 修改条目、字段、标签或内容集合 | `docs/CONTENT.md` |
+| 修改页面、组件、依赖、测试或代码 | `AGENTS.md`、`docs/DEVELOPMENT.md` |
+| 修改条目、不可变 slug、字段、标签或内容集合 | `docs/CONTENT.md` |
 | 修改颜色、布局、组件状态或动效 | `docs/DESIGN.md` |
-| 修改部署、域名或构建发布 | `docs/DEPLOYMENT.md` |
-| 重新讨论已确认的方向 | `docs/DECISIONS.md` |
+| 配置 Cloudflare Pages 部署、`kearril.com` 域名或构建上线 | `docs/DEPLOYMENT.md` |
+| 查阅或更新已确认的长期架构决策 | `docs/DECISIONS.md` |
 
 ## 权威来源矩阵
 
 | 内容 | 权威位置 | 不应该放在哪里 |
 | --- | --- | --- |
-| 项目简介和快速开始 | `README.md` | 不放进 AI 长规则 |
+| 项目简介、公开规范地址与快速开始 | `README.md` | 不放进 AI 长规则 |
 | 编码代理的全局行为 | `AGENTS.md` | 不在其他工具专属规则文件中复制 |
 | AI 协作流程和验收模板 | `docs/AI-WORKFLOW.md` | 不塞进每个组件文件 |
-| 代码实现纪律 | `docs/DEVELOPMENT.md` | 不重复写进每个页面说明 |
-| 内容类型和字段 | `docs/CONTENT.md` 与最终 schema | 不以卡片组件中的临时对象为准 |
+| 代码实现与质量门槛 | `docs/DEVELOPMENT.md` | 不重复写进每个页面说明 |
+| 内容类型、不可变 slug、字段与标签规则 | `docs/CONTENT.md` 与 schema | 不以卡片组件中的临时对象为准 |
 | 视觉和交互语言 | `docs/DESIGN.md` | 不以第三方组件库默认样式为准 |
 | 长期决策和取舍 | `docs/DECISIONS.md` | 不只留在聊天记录里 |
-| 部署和上线清单 | `docs/DEPLOYMENT.md` | 不只写在 workflow 注释里 |
-
+| Cloudflare Pages 部署与上线操作手册 | `docs/DEPLOYMENT.md` | 不只留在平台控制台或聊天记录里 |
 ## 更新规则
 
 - 新增一个长期规则前，先寻找是否已有对应权威来源。

@@ -1,7 +1,7 @@
 # 长期运营数字花园架构设计
 
 - 日期：2026-08-23
-- 状态：已确认，待实施
+- 状态：已实施并通过验证（Tasks 1–5 全部落地并建立 Vitest 行为测试保护）
 - 决策范围：内容身份、公开路由、静态发布、资源存储、探索交互、搜索发现与验证
 
 ## 目标
@@ -225,15 +225,13 @@ src/styles/
 
 | 改动 | 证据 |
 | --- | --- |
-| 内容、schema、slug、关联、静态路由、RSS、sitemap | `pnpm build`。 |
+| 纯逻辑函数（路径生成、关联图谱、反向链接与索引生成） | `pnpm test`（Vitest 单元测试覆盖 `tests/lib/`）。 |
+| 内容、schema、slug、关联、静态路由、RSS、sitemap | `pnpm build`（Astro 静态构建）。 |
 | 页面、CSS、响应式、条目页 | Cloudflare Preview 的桌面与移动端检查。 |
 | Explore Island | Preview 验证搜索、筛选、加载更多、空状态、键盘焦点及无 JavaScript 基础链接。 |
 | 首发域名与发布 | 检查 `kearril.com`、`www` 跳转、HTTPS、条目页、RSS 与 sitemap。 |
-| `src/lib/` 中未来复杂的排序、backlink 或索引逻辑 | 出现可观察的复杂边界后添加行为级单元测试。 |
 
-- 首版不为了形式引入完整测试、lint 或格式化工具链。
-- `pnpm build` 是当前自动化质量门槛；它覆盖 Collection schema、引用、静态页面和发布产物。
-- Cloudflare Pages 和域名绑定可迁移；迁移时保持 GitHub 仓库、`kearril.com` 与 slug 路径不变。
+- `pnpm test && pnpm build` 是当前的自动化质量门槛；覆盖纯逻辑契约、Collection schema、引用校验、静态页面和发布产物。
 - 公开仓库不应是唯一备份；内容与少量图片需要保留本地工作副本及一份独立可恢复备份。
 
 ## 实施迁移边界

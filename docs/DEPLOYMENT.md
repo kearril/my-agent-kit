@@ -1,46 +1,98 @@
-# 部署方案
+# Cloudflare Pages 部署与运维手册
 
-## 当前决定
+本文档是 Paracosm Garden 生产部署与持续运维的权威操作手册。
 
-初始版本采用：
+## 1. 架构与部署模型
 
 ```text
-GitHub 仓库 → GitHub Actions → pnpm build → GitHub Pages
+GitHub public repository (paracosm-garden)
+                  │ push / merge to main
+                  ▼
+   Cloudflare Pages Git Integration
+   (Node 22.12.0 + pnpm build -> dist)
+                  │ automatic edge distribution
+                  ▼
+         https://kearril.com
+         (www.kearril.com 永久重定向)
 ```
 
-网站先以纯静态站点运行，不引入服务器、数据库或后台管理系统。条目通过 Markdown / MDX 和 Content Collections 管理，更新内容后由 GitHub Actions 自动构建并发布。
+- **托管平台**：Cloudflare Pages 静态托管（`output: 'static'`，产物目录 `dist`）。
+- **规范域名**：`https://kearril.com`。
+- **发布机制**：由 Cloudflare Pages 的原生 GitHub Git 集成驱动，每次向 `main` 推送自动触发生产构建。
+- **预览机制**：非 `main` 分支或 PR 自动生成独立 Cloudflare Preview 预览部署。
+- **安全与边界**：不使用 GitHub Actions 部署密钥、不使用 `CNAME` 文件、不手工上传 `dist/` 目录；GitHub 公开仓库是公开源码与内容的唯一事实来源。
 
-## 选择理由
+## 2. 准备工作
 
-- 与 Astro 的静态输出天然匹配
-- 初始成本低，维护面小
-- 内容和代码都在 Git 中，适合个人数字花园的长期积累
-- GitHub Actions 可以在推送后自动完成构建和发布
-- 未来如果需要 API、登录、动态数据或更复杂的边缘能力，再迁移到 Cloudflare 或 Vercel
+- **源码与构建环境**：Node.js `>= 22.12.0`、pnpm `>= 9`、Astro `>= 7`。
+- **域名管理**：`kearril.com` 的 DNS 解析由 Cloudflare 管理。
+- **本地质量确认**：提交前确保本地通过测试与静态构建：
+  ```bash
+  pnpm test && pnpm build
+  ```
 
-## 当前未启用的部分
+## 3. 初始上线步骤（Ordered Procedure）
 
-仓库目前还没有绑定远程 GitHub 仓库，也没有最终确定仓库名、个人域名或 GitHub Pages 地址，因此暂不写入 `site`、`base` 和正式发布 workflow。这样可以避免先生成一个需要返工的地址配置。
+### 第一步：创建并推送 GitHub 公开仓库
 
-确定远程仓库后，需要完成：
+1. 在 GitHub 上创建名为 `paracosm-garden` 的公开仓库（Public Repository）。
+2. 将本地默认主分支设为 `main`。
+3. 添加远程仓库地址并推送源码：
+   ```bash
+   git remote add origin git@github.com:<username>/paracosm-garden.git
+   git branch -M main
+   git push -u origin main
+   ```
 
-1. 在 `astro.config.mjs` 设置正式的 `site`。
-2. 如果使用项目页地址，设置与仓库名一致的 `base`；如果使用用户页仓库或自定义域名，按实际地址调整。
-3. 添加 GitHub Pages workflow。
-4. 在 GitHub 仓库设置中启用 Pages，并将构建来源设为 GitHub Actions。
-5. 推送一次后检查首页、资源路径、刷新和移动端展示。
+### 第二步：在 Cloudflare Pages 创建项目
 
-## 本地发布前检查
+1. 登录 Cloudflare Dashboard，进入 **Workers & Pages** > **Create application** > **Pages** > **Connect to Git**。
+2. 选择授权的 GitHub 账号并选择 `paracosm-garden` 仓库。
+3. 配置构建设置：
+   - **Project Name**：`paracosm-garden`
+   - **Production branch**：`main`
+   - **Framework preset**：`Astro`（或 `None`）
+   - **Build command**：`pnpm build`
+   - **Build output directory**：`dist`
+   - **Environment variables**：添加环境变量 `NODE_VERSION`，值设为 `22.12.0`。
+4. 点击 **Save and Deploy**，等待首次生产构建完成。
 
-```bash
-pnpm install
-pnpm build
-pnpm preview
-```
+### 第三步：配置自定义域名与重定向
 
-Astro 的构建产物位于 `dist/`，它是发布输出，不提交到仓库。正式部署前应确认所有内容链接、图片路径和自定义字体在静态路径下可用。
+1. 进入 Pages 项目设置中的 **Custom domains** 选项卡。
+2. 点击 **Set up a custom domain**，输入根域名 `kearril.com`。
+3. 允许 Cloudflare 自动创建/更新对应的 DNS 记录（CNAME/Apex 记录指向 Pages）。
+4. 再次点击 **Set up a custom domain**，添加 `www.kearril.com`。
+5. 在 Cloudflare DNS 或 Page Rules / Redirect Rules 中，配置 `www.kearril.com` 永久重定向（301/308）至 `https://kearril.com`，确保全站唯一规范入口。
 
-## 参考
+### 第四步：等待域名解析与 HTTPS 证书签发
 
-- [Astro 部署总览](https://docs.astro.build/en/guides/deploy/)
-- [Astro GitHub Pages 部署指南](https://docs.astro.build/en/guides/deploy/github/)
+1. 等待 Cloudflare 完成域名所有权验证与 SSL/TLS 证书签发（状态变为 Active / Success）。
+2. **严禁使用通配符 DNS（Wildcard DNS `*.kearril.com`）** 指向此静态站点，避免未分配子域名被错误解析或污染缓存。
+
+### 第五步：线上验收与冒烟检查清单（Post-Deployment Checklist）
+
+在生产域名生效后，按序验证以下 8 项关键契约：
+
+- [ ] **Git 自动化集成**：向 `main` 推送提交能够自动触发生产构建；分支推送能够生成 Preview URL。
+- [ ] **生产构建成功**：Cloudflare 构建日志中无错误，`dist` 静态产物正常输出。
+- [ ] **根域名访问**：访问 `https://kearril.com` 正常加载首页（包含 Hero、About、精选、更新、Notes 与 Explore 区块）。
+- [ ] **www 重定向**：访问 `http://www.kearril.com` 与 `https://www.kearril.com` 均自动 301/308 重定向到 `https://kearril.com`。
+- [ ] **规范条目路由**：任意条目页面访问路径形如 `https://kearril.com/entries/<slug>/`，主动关联与反向链接正常渲染。
+- [ ] **RSS 订阅源**：访问 `https://kearril.com/feed.xml` 返回合法的 XML 格式且包含公开条目。
+- [ ] **Robots 规则**：访问 `https://kearril.com/robots.txt` 规则正确并指向 `https://kearril.com/sitemap-index.xml`。
+- [ ] **Sitemap 站点地图**：访问 `https://kearril.com/sitemap-index.xml`（及 `sitemap-0.xml`）正确收录所有公开条目路由，且无草稿泄露。
+
+## 4. 日常维护与发布流
+
+| 变更类型 | 推荐流程 | 质量验证门槛 |
+| --- | --- | --- |
+| **常规条目编写与内容修订** | 在 `src/content/entries/` 修改，确认 slug 与 frontmatter 合法后直接 push `main` | 本地 `pnpm test && pnpm build` |
+| **页面布局、样式、组件或路由调整** | 创建 feature 分支，提 PR | 本地测试 + Cloudflare Preview 移动端/桌面端检查无误后合并 |
+| **依赖升级或全局架构配置** | 分支开发，更新 lockfile | `pnpm install`、`pnpm test && pnpm build`、Preview 冒烟检查 |
+
+## 5. 故障排查与恢复
+
+- **构建失败**：在 Cloudflare Pages 控制台查看 Build Log，常见原因为 Node 版本未达标、Markdown Frontmatter 缺少必填字段（如 `slug`、`publishedAt`）或 `related` 引用了不存在的 slug。本地先运行 `pnpm test && pnpm build` 复现并修复。
+- **域名未生效**：检查 Cloudflare DNS 记录是否为 Proxied 状态，确认 SSL/TLS 加密模式为 Full 或 Strict。
+- **草稿防泄露**：确保 `draft: true` 的条目没有设置 `publishedAt`，且未合并到 `main` 分支的私密材料不得推送到公开远程仓库。

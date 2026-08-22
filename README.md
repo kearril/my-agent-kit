@@ -17,6 +17,7 @@
 ```bash
 pnpm install
 pnpm dev
+pnpm test
 pnpm build
 pnpm preview
 ```
@@ -31,13 +32,20 @@ pnpm preview
 - [内容模型](./docs/CONTENT.md)
 - [决策记录](./docs/DECISIONS.md)
 
+## 规范公开地址与部署
+
+- 规范公开地址：`https://kearril.com`（`www.kearril.com` 永久重定向至根域名）
+- 部署平台：Cloudflare Pages（连接 GitHub 公开仓库，生产分支 `main`，构建命令 `pnpm build`，输出目录 `dist`）
+- 统一条目路由：`/entries/<slug>/`，所有公开条目均拥有独立的规范页面与双向关联/反向链接
+- 发现与订阅：自动生成规范 `/feed.xml`、`sitemap-index.xml`（及 `sitemap-0.xml`）与 `/robots.txt`
+- 公开边界：GitHub 公开仓库是公开源码与内容的唯一事实来源；未公开或草稿内容不进入公开远程分支
+
 ## 当前状态
 
-首页与独立 Note 文章页的静态框架已建立，并可通过本地演示条目验证精选、近期更新与 Notes 展示。Content Collections 已支持扁平条目、精选排序和 Note 主分类；真实个人内容尚未入库。搜索、筛选、加载更多与条目弹窗等需要浏览器状态的功能，将在第一批真实内容准备后以 React Island 实现。
+全站静态核心、内容集合校验（带不可变 slug、三日期模型与可空 tags）、统一规范条目路由 `/entries/<slug>/`、主动关联与反向链接计算、首页各区块（Hero、About、精选、近期更新、Notes、静态回退与局部 React Explore Island）、规范 RSS 订阅源及 XML 站点地图均已完成并通过静态构建与行为测试验证。
 
-## 下一阶段
+## 维护与更新流程
 
-1. 在 `src/content/entries/` 录入第一批正式内容：建议先准备 6 个精选条目与 3 篇 Note；本地 `*.local.md` 演示条目已被 Git 忽略，不能替代正式内容。
-2. 用真实内容校验标题长度、标签、Note 分类、卡片信息密度和关联条目是否足够；字段变化以 `docs/CONTENT.md` 与 `src/content.config.ts` 为准同步修改。
-3. 内容模型稳定后，实现首页 Explore React Island：搜索、类型与标签筛选、加载更多和条目详情弹窗。
-4. 确定远程仓库名、GitHub Pages 地址与许可证后，再按 `docs/DEPLOYMENT.md` 配置部署。
+1. 在 `src/content/entries/` 编写或维护 Markdown / MDX 条目，严格遵守 `docs/CONTENT.md` 的字段规范与不可变 slug 规则。
+2. 运行 `pnpm test && pnpm build` 确认纯逻辑测试与静态构建全部通过。
+3. 常规内容提交直接推送 `main` 分支触发 Cloudflare Pages 自动部署；涉及页面布局、样式、路由、配置或重大功能的改动，先通过分支与 Cloudflare Preview 预览验证后再合并至 `main`。

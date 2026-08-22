@@ -17,20 +17,19 @@ Paracosm Garden 采用“扁平条目 + 标签筛选”的方式。条目不被�
 
 所有类型共享以下基础字段；Note 的唯一专属字段见下一节：
 
-- `slug`：required, unique, immutable lowercase ASCII kebab-case public identity
+- `slug`：必填、全站唯一、不可变的小写 ASCII kebab-case 公开身份与路由标识
 - `title`：标题
-- `type`：上述六种类型之一
+- `type`：上述六种类型之一（`prompt`、`skill`、`mcp`、`website`、`project`、`note`）
 - `summary`：卡片和弹窗中使用的简短说明
-- `tags`：optional exact Explore filters; excluded from keyword search
+- `tags`：可选字符串数组，仅作为 Explore 精确筛选条件；不参与关键词搜索
 - `source`：`self`、`adapted` 或 `external`
-- `links`：带名称的外部资产地址，可为空数组
-- `related`：one-way immutable slug references; backlinks are derived by the site
-- `createdAt`：first recorded date; normally not rendered
-- `publishedAt`：required on public entries; first public date and never changed
-- `updatedAt`：material public update date
+- `links`：带名称的外部资产地址列表，可为空数组
+- `related`：单向不可变目标条目 slug 引用列表；反向链接由站点构建期自动计算
+- `createdAt`：条目首次记录日期，保留内容演进历史，默认不展示
+- `publishedAt`：公开条目必填，首次正式公开日期，一旦填写不可变更
+- `updatedAt`：实质内容更新日期，用于近期更新与 RSS 更新排序
 - `featuredOrder`：可选的精选位置，只能是 `1` 至 `6`
 - `draft`：是否暂不公开，默认 `false`
-
 `featuredOrder` 同时决定是否进入首页精选区和展示位置：`1` 至 `6` 对应六张等尺寸精选卡；不填写则不进入精选区。公开条目中同一个数字只能使用一次。
 
 `slug` 是全站唯一的稳定公开身份与路径标识，一旦确定不可更改。公开 URL 统一为 `/entries/<slug>/`。文件名仅用于仓库内部整理，不代表公开身份。

@@ -4,11 +4,12 @@
 
 ## 项目地图
 
-- 这是一个使用 Astro 构建的个人数字花园，内容包括 Prompt、Skill、MCP、网站收藏和项目。
+- 这是一个使用 Astro 构建的个人数字花园，内容包括 Prompt、Skill、MCP、网站收藏、项目和 Note。
+- 生产静态部署平台为 Cloudflare Pages，规范公开地址为 `https://kearril.com`。
 - 页面以 Astro 静态输出为主，Markdown / MDX 与 Content Collections 是内容来源。
-- React 只用于需要浏览器状态、事件或浏览器 API 的局部 Island。
-- 首页与独立 Note 文章页的静态展示框架已完成，包含内容集合驱动的精选、近期更新与 Notes；搜索、筛选、加载更多和条目弹窗等交互仍待以 React Island 实现。
-
+- 所有公开条目统一采用不可变 slug 与 `/entries/<slug>/` 规范路由，站点自动计算双向关联与反向链接。
+- React 只用于需要浏览器状态、事件或浏览器 API 的局部 Explore Island，并提供基础静态回退。
+- 站点自动生成规范 `/feed.xml`、`sitemap-index.xml` 和 `/robots.txt`。
 ## 开始任务前
 
 1. 先阅读 `README.md` 和本文件。
@@ -27,6 +28,7 @@
 ```bash
 pnpm install
 pnpm dev
+pnpm test
 pnpm build
 pnpm preview
 ```
@@ -56,10 +58,10 @@ pnpm preview
 ## 变更后的最低验证
 
 - 文档或样式规则：`git diff --check`。
-- 页面、组件、内容或 schema：`pnpm build`。
-- 依赖或配置：`pnpm install` 后运行 `pnpm build`。
-- 交互改动：在桌面和移动端检查键盘焦点、Esc、滚动、空状态和 reduced-motion。
-
+- 查询逻辑、关联图谱、索引或 schema：`pnpm test && pnpm build`。
+- 页面、组件、内容或全局配置：`pnpm build`。
+- 依赖或配置：`pnpm install` 后运行 `pnpm test && pnpm build`。
+- 交互或视觉改动：检查桌面端与移动端的键盘焦点、Esc、筛选、加载更多、空状态、reduced-motion 及无 JS 静态回退；重大改动使用 Cloudflare Preview 预览验证。
 ## 权威文档
 
 完整文档导航见 `docs/README.md`。如果规则之间冲突，优先级为：用户当前明确要求、`AGENTS.md` 的安全与范围规则、对应主题文档、一般实现偏好。发现重复或过时规则时，修正权威来源，不新增第三份副本。

@@ -96,10 +96,10 @@
 | 变更 | 必须更新 | 最低验证 |
 | --- | --- | --- |
 | 文档规则 | 对应权威文档，必要时更新导航 | `git diff --check`、链接和路径检查 |
-| 页面或组件 | 相关代码、设计规范引用 | `pnpm build`，交互和响应式检查 |
-| Content Collection 字段 | `docs/CONTENT.md`、schema、示例条目 | `pnpm build`，字段和关联检查 |
-| 依赖或配置 | `package.json`、lockfile、必要的决策记录 | `pnpm install`、`pnpm build` |
-| 部署方式 | `docs/DEPLOYMENT.md`、决策记录、workflow | 本地 build，发布后 smoke check |
+| 页面或组件 | 相关代码、设计规范引用 | `pnpm build`，交互和响应式检查，必要时 Cloudflare Preview |
+| Content Collection 字段与查询逻辑 | `docs/CONTENT.md`、schema、示例条目、相关测试 | `pnpm test && pnpm build`，字段、关联和索引检查 |
+| 依赖或全局配置 | `package.json`、lockfile、必要的决策记录 | `pnpm install`、`pnpm test && pnpm build` |
+| 部署与域名配置 | `docs/DEPLOYMENT.md`、决策记录 | 本地 `pnpm test && pnpm build`，Cloudflare Preview 与发布后 smoke check |
 | 视觉规则 | `docs/DESIGN.md`、必要的决策记录 | 设计清单、无障碍和 reduced-motion 检查 |
 
 ## 6. 什么时候需要用户确认

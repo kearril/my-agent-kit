@@ -35,14 +35,14 @@
 
 ## 4. 目录与职责
 
-- `src/pages/`：路由入口，只组装页面和传递数据，不承载复杂的查询、排序或组件细节。
-- `src/layouts/`：HTML 文档结构、SEO 基础信息和全局样式入口。
+- `src/pages/`：路由入口（首页、`/entries/[slug].astro` 规范条目页、`/feed.xml.ts` 与 `/robots.txt.ts`），只组装页面和传递数据，不承载复杂的查询、排序或组件细节。
+- `src/layouts/`：HTML 文档结构、SEO 基础信息、规范 URL / feed 声明和全局样式入口。
 - `src/components/layout/`：跨页面复用的站点框架，例如导航和页脚。
 - `src/components/home/`：首页专属区块；每个组件只渲染自己的区块，并通过 props 接收内容。
-- `src/components/islands/`：仅放需要浏览器状态的 React Island，例如未来的探索筛选和条目弹窗。
-- `src/lib/`：Content Collections 查询、排序与跨条目校验；组件不重复实现这些规则。
+- `src/components/islands/`：仅放需要浏览器状态的 React Island（如 `ExploreIsland.tsx` 探索搜索与筛选）。
+- `src/lib/`：Content Collections 查询、排序、关联图谱、反向链接与 Explore 索引计算；组件不重复实现这些规则。
 - `src/styles/`：设计 token、全局基础规则和跨组件样式；不存放内容或业务逻辑。
-
+- `tests/`：基于 Vitest 的纯逻辑单元测试（路径生成、关联图谱、反向链接计算与探索索引）。
 先按职责拆分页面区块，不为一次性文字、只使用一次的小片段或尚未重复的视觉细节建立通用组件。
 
 本地视觉测试可以在 `src/content/entries/` 中使用 `*.local.md` 或 `*.local.mdx` 条目。它们仍由 Content Collections 校验和渲染，但已被 Git 忽略；不得把真实私密内容伪装成演示条目。
@@ -57,16 +57,21 @@
 
 ## 6. 验证要求
 
-每次完成一个可交付改动后，至少运行：
+根据改动类型执行对应的质量验证：
 
-```bash
-pnpm build
-```
-
-涉及交互时，还要在桌面和移动端检查：卡片打开与关闭、筛选重置、加载更多、键盘操作和滚动锁定。涉及视觉时，检查长标题、空状态、无图条目和窄屏布局。
+1. **内容查询、关联逻辑、索引生成或 schema 变更**：必须运行测试与构建：
+   ```bash
+   pnpm test && pnpm build
+   ```
+2. **常规内容、文档或普通静态页面变更**：至少运行：
+   ```bash
+   pnpm build
+   ```
+3. **高风险 UI 重构、全局样式、路由重组或平台配置变更**：
+   - 本地通过 `pnpm test && pnpm build && pnpm preview` 检查；
+   - 提交分支并通过 Cloudflare Preview 预览部署在真实多终端（桌面、平板与移动端）检查键盘焦点、Esc 关闭、筛选、加载更多、滚动锁定、空状态与无 JS 静态回退。
 
 视觉实现必须遵守 `docs/DESIGN.md`。新增组件不能直接采用第三方组件库的默认圆角、渐变、模糊阴影或灰色主题；交付前按设计规范中的检查清单逐项确认。
-
 ## 7. Git 纪律
 
 - `main` 始终保持可构建、可部署。
@@ -83,7 +88,7 @@ pnpm build
 - `docs/AI-WORKFLOW.md`：AI 辅助开发的任务流程、证据纪律和质量门槛。
 - `docs/DEVELOPMENT.md`：开发规则和质量门槛。
 - `docs/DESIGN.md`：俏皮野兽派视觉、组件、动效和无障碍规范。
-- `docs/DEPLOYMENT.md`：部署决策和上线清单。
+- `docs/DEPLOYMENT.md`：Cloudflare Pages 部署操作手册与上线清单。
 - `docs/CONTENT.md`：条目类型、字段和标签约定。
 - `docs/DECISIONS.md`：经过讨论确认的长期决策。
 
