@@ -19,7 +19,7 @@
 | 内容 | 权威位置 | 不应该放在哪里 |
 | --- | --- | --- |
 | 项目简介和快速开始 | `README.md` | 不放进 AI 长规则 |
-| 编码代理的全局行为 | `AGENTS.md` | 不在 `CLAUDE.md` 或 Copilot 文件中复制 |
+| 编码代理的全局行为 | `AGENTS.md` | 不在其他工具专属规则文件中复制 |
 | AI 协作流程和验收模板 | `docs/AI-WORKFLOW.md` | 不塞进每个组件文件 |
 | 代码实现纪律 | `docs/DEVELOPMENT.md` | 不重复写进每个页面说明 |
 | 内容类型和字段 | `docs/CONTENT.md` 与最终 schema | 不以卡片组件中的临时对象为准 |
