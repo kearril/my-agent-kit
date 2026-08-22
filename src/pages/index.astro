@@ -8,9 +8,11 @@ import UpdatesSection from '../components/home/UpdatesSection.astro';
 import SiteFooter from '../components/layout/SiteFooter.astro';
 import SiteHeader from '../components/layout/SiteHeader.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getHomepageEntries } from '../lib/entries';
+import { getHomepageEntries, getPublicEntries } from '../lib/entries';
+import { createExploreIndex } from '../lib/explore-index';
 
 const { featured, recent, notes } = await getHomepageEntries();
+const explore = createExploreIndex(await getPublicEntries());
 ---
 
 <BaseLayout title="Paracosm Garden" description="Paracosm Garden 是一个公开生长的个人数字花园。" canonicalPath="/">
@@ -21,7 +23,7 @@ const { featured, recent, notes } = await getHomepageEntries();
 		<FeaturedSection entries={featured} />
 		<UpdatesSection entries={recent} />
 		<NotesSection entries={notes} />
-		<ExploreSection />
+		<ExploreSection entries={explore} />
 	</main>
 	<SiteFooter />
 </BaseLayout>

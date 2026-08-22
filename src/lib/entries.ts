@@ -3,6 +3,15 @@ import { getPublicConnections, sortByUpdatedAt, type EntryGraphNode } from './en
 import { getEntryPath, type EntryPathTarget } from './entry-path';
 
 export { getEntryPath, type EntryPathTarget };
+export {
+	createExploreIndex,
+	filterExploreIndex,
+	getVisibleEntries,
+	type ExploreEntry,
+	type ExploreEntryType,
+	type ExploreFilters,
+} from './explore-index';
+
 
 export type GardenEntry = CollectionEntry<'entries'>;
 export type NoteEntry = Extract<GardenEntry, { data: { type: 'note' } }>;

@@ -1,5 +1,13 @@
 ---
-import { Search } from '@lucide/astro';
+import ExploreFallback from './ExploreFallback.astro';
+import ExploreIsland from '../islands/ExploreIsland';
+import type { ExploreEntry } from '../../lib/explore-index';
+
+interface Props {
+	entries: ExploreEntry[];
+}
+
+const { entries } = Astro.props;
 ---
 
 <section id="explore" class="section section--teal" aria-labelledby="explore-title">
@@ -13,25 +21,11 @@ import { Search } from '@lucide/astro';
 				<span class="title-yellow">INDEX</span>
 			</h2>
 		</div>
-		<p>Prompt、Skill、MCP、网站与项目会在这里被搜索、筛选和重新发现。</p>
+		<p>Prompt、Skill、MCP、网站、项目与笔记会在这里被搜索、筛选和重新发现。</p>
 	</div>
-	<div class="explore-preview" aria-hidden="true">
-		<div class="explore-search-bar">
-			<span class="search-icon-box"><Search size={22} strokeWidth={3} /></span>
-			<span class="explore-input-mock">搜索花园中的条目（Prompt / Skill / MCP / 网站 / 项目）...</span>
-			<span class="explore-kbd">即将开放</span>
-		</div>
-		<div class="explore-tags-mock">
-			<span class="mock-tag mock-tag--active">ALL 全部</span>
-			<span class="mock-tag mock-tag--red">PROMPT</span>
-			<span class="mock-tag mock-tag--active">SKILL</span>
-			<span class="mock-tag mock-tag--teal">MCP</span>
-			<span class="mock-tag mock-tag--mint">WEBSITE</span>
-			<span class="mock-tag mock-tag--coral">PROJECT</span>
-		</div>
-	</div>
-	<div class="empty-state explore-status">
-		<strong>探索实验室筹备中</strong>
-		<p>第一批真实内容入园后，这里将开启实时检索、多维标签筛选与大卡片弹窗交互。</p>
-	</div>
+
+	<ExploreIsland client:load entries={entries} />
+	<noscript>
+		<ExploreFallback entries={entries} />
+	</noscript>
 </section>

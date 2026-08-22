@@ -1,0 +1,37 @@
+---
+import type { ExploreEntry } from '../../lib/explore-index';
+
+interface Props {
+	entries: ExploreEntry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<div class="explore-fallback">
+	{entries.length > 0 ? (
+		<ul class="explore-grid" role="list">
+			{entries.map((entry) => (
+				<li class="explore-grid-item">
+					<a class="explore-card" href={entry.canonicalUrl}>
+						<div class="explore-card-header">
+							<span class:list={['mini-badge', `mini-badge--${entry.type}`]}>{entry.type}</span>
+							<time class="explore-card-date" datetime={entry.updatedAt}>{entry.updatedAt}</time>
+						</div>
+						<h3 class="explore-card-title">{entry.title}</h3>
+						<p class="explore-card-summary">{entry.summary}</p>
+						{entry.tags.length > 0 && (
+							<div class="explore-card-tags">
+								{entry.tags.map((tag) => (
+									<span class="explore-tag-chip">#{tag}</span>
+								))}
+							</div>
+						)}
+					</a>
+				</li>
+			))}
+		</ul>
+	) : (
+		<p class="empty-state">暂无公开内容</p>
+	)}
+</div>
