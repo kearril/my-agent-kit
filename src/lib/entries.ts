@@ -1,18 +1,23 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { getPublicConnections, sortByUpdatedAt, type EntryGraphNode } from './entry-graph';
+import { getEntryPath, type EntryPathTarget } from './entry-path';
+
+export { getEntryPath, type EntryPathTarget };
 
 export type GardenEntry = CollectionEntry<'entries'>;
 export type NoteEntry = Extract<GardenEntry, { data: { type: 'note' } }>;
 
-export function getNoteSlug(entry: NoteEntry) {
-	if (entry.filePath?.endsWith('.local.md') || entry.filePath?.endsWith('.local.mdx')) {
-		return entry.id.replace(/local$/, '');
-	}
-
-	return entry.id.replace(/\.local\.(md|mdx)$/, '').replace(/\.(md|mdx)$/, '');
+interface EntryGraphWrapper extends EntryGraphNode {
+	entry: GardenEntry;
 }
 
-function byLastUpdate(left: GardenEntry, right: GardenEntry) {
-	return right.data.updatedAt.valueOf() - left.data.updatedAt.valueOf();
+function toGraphWrapper(entry: GardenEntry): EntryGraphWrapper {
+	return {
+		id: entry.id,
+		related: entry.data.related.map((item) => (typeof item === 'string' ? item : item.id)),
+		updatedAt: entry.data.updatedAt,
+		entry,
+	};
 }
 
 function validateFeaturedPositions(entries: GardenEntry[]) {
@@ -31,26 +36,52 @@ function validateFeaturedPositions(entries: GardenEntry[]) {
 	}
 }
 
-export async function getPublicEntries() {
+export async function getPublicEntries(): Promise<GardenEntry[]> {
 	const entries = await getCollection('entries');
 	validateFeaturedPositions(entries);
 	return entries.filter((entry) => !entry.data.draft);
 }
 
+export async function getPublicEntry(slug: string): Promise<GardenEntry | undefined> {
+	return (await getPublicEntries()).find((entry) => entry.id === slug);
+}
+
+export async function getEntryConnections(slug: string): Promise<{
+	related: GardenEntry[];
+	backlinks: GardenEntry[];
+}> {
+	const entries = await getPublicEntries();
+	const wrappers = entries.map(toGraphWrapper);
+	const connections = getPublicConnections(wrappers, slug);
+
+	return {
+		related: connections.related.map((item) => item.entry),
+		backlinks: connections.backlinks.map((item) => item.entry),
+	};
+}
+
 export async function getHomepageEntries() {
 	const entries = await getPublicEntries();
+	const wrappers = entries.map(toGraphWrapper);
+	const sorted = sortByUpdatedAt(wrappers).map((item) => item.entry);
 
 	return {
 		featured: entries
 			.filter((entry) => entry.data.featuredOrder !== undefined)
 			.sort((left, right) => left.data.featuredOrder! - right.data.featuredOrder!)
 			.slice(0, 6),
-		recent: entries.filter((entry) => entry.data.type !== 'note').sort(byLastUpdate).slice(0, 5),
-		notes: entries.filter((entry): entry is NoteEntry => entry.data.type === 'note').sort(byLastUpdate),
+		recent: sorted.filter((entry) => entry.data.type !== 'note').slice(0, 5),
+		notes: sorted.filter((entry): entry is NoteEntry => entry.data.type === 'note'),
 	};
+}
+
+export function getNoteSlug(entry: { id: string }) {
+	return entry.id;
 }
 
 export async function getPublicNotes() {
 	const entries = await getPublicEntries();
-	return entries.filter((entry): entry is NoteEntry => entry.data.type === 'note').sort(byLastUpdate);
+	const wrappers = entries.map(toGraphWrapper);
+	const sorted = sortByUpdatedAt(wrappers).map((item) => item.entry);
+	return sorted.filter((entry): entry is NoteEntry => entry.data.type === 'note');
 }

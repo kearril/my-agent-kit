@@ -17,25 +17,29 @@ Paracosm Garden 采用“扁平条目 + 标签筛选”的方式。条目不被�
 
 所有类型共享以下基础字段；Note 的唯一专属字段见下一节：
 
+- `slug`：required, unique, immutable lowercase ASCII kebab-case public identity
 - `title`：标题
 - `type`：上述六种类型之一
 - `summary`：卡片和弹窗中使用的简短说明
-- `tags`：用于跨类型筛选的标签
+- `tags`：optional exact Explore filters; excluded from keyword search
 - `source`：`self`、`adapted` 或 `external`
 - `links`：带名称的外部资产地址，可为空数组
-- `related`：关联条目的 slug
-- `createdAt`：创建日期
-- `updatedAt`：最后更新日期
+- `related`：one-way immutable slug references; backlinks are derived by the site
+- `createdAt`：first recorded date; normally not rendered
+- `publishedAt`：required on public entries; first public date and never changed
+- `updatedAt`：material public update date
 - `featuredOrder`：可选的精选位置，只能是 `1` 至 `6`
 - `draft`：是否暂不公开，默认 `false`
 
 `featuredOrder` 同时决定是否进入首页精选区和展示位置：`1` 至 `6` 对应六张等尺寸精选卡；不填写则不进入精选区。公开条目中同一个数字只能使用一次。
 
-`slug` 是稳定地址标识，但不作为手写 Frontmatter 字段；优先由内容文件名或内容集合生成。`status` 不进入初始模型，`draft` 只控制条目是否公开显示，不承担“正在使用”或“研究中”的含义。
+`slug` 是全站唯一的稳定公开身份与路径标识，一旦确定不可更改。公开 URL 统一为 `/entries/<slug>/`。文件名仅用于仓库内部整理，不代表公开身份。
+
+`draft` 控制条目是否公开显示；草稿条目禁止设置 `publishedAt`，公开条目必须设置 `publishedAt`。
 
 ## Note 的主分类
 
-`note` 是唯一带有专属字段的类型：每篇文章必须填写一个 `category`，例如 `AI`、`科研`、`实践` 或 `随笔`。它表示文章最主要的归属，用于 Notes 区和独立文章页的识别与未来筛选。
+`note` 是唯一带有专属字段的类型：每篇文章必须填写一个 `category`，例如 `AI`、`科研`、`实践` 或 `随笔`。它表示文章最主要的归属，用于分类识别与未来筛选。
 
 每篇 Note 只能有一个 `category`；`tags` 仍可填写多个，用来描述更细的主题、方法或上下文。分类词汇先随真实文章自然形成，不预设空分类，也不把分类目录化为文件夹。
 
@@ -45,7 +49,8 @@ Paracosm Garden 采用“扁平条目 + 标签筛选”的方式。条目不被�
 
 ```md
 ---
-title: 示例条目
+slug: building-a-long-lived-garden
+title: 构建一个可长期运营的数字花园
 type: note
 summary: 简短说明
 tags: [知识管理]
@@ -53,6 +58,7 @@ source: self
 links: []
 related: []
 createdAt: 2026-08-21
+publishedAt: 2026-08-21
 updatedAt: 2026-08-21
 category: 实践
 featuredOrder: 1
@@ -64,17 +70,21 @@ draft: false
 
 `summary` 服务于快速理解和卡片展示；正文服务于完整表达。除 Note 的主分类外，不同类型的内容结构先通过正文自然区分，暂不新增类型专属字段。
 
-## 内容集合与文件位置
+## 公开 URL 与内容集合
 
 内容集合定义在 `src/content.config.ts`，集合名为 `entries`。每个条目使用一个 Markdown 或 MDX 文件，统一放在 `src/content/entries/`，不按 type 分文件夹。
 
-内容文件名会生成该条目的稳定 ID；`related` 中填写的也是这个 ID。第一版不额外手写 `slug`，也不预先规定 URL 命名策略，等第一批真实条目出现后再确定。
+所有公开条目的唯一规范访问路径为：
 
-`related` 使用 Astro 的集合引用校验：引用不存在的条目时，构建会失败。这样可以在发布前发现失效关联。
+```text
+/entries/<slug>/
+```
+
+`slug` 在 Frontmatter 中显式声明，并作为 Astro 内容集合的主键 ID。`related` 中填写的也是目标条目的 `slug`。Astro 会校验 `related` 引用的有效性：引用不存在的 slug 时，构建将失败。站点在构建期自动计算反向链接（backlinks）。
 
 ## 标签纪律
 
-标签是筛选工具，不是新的目录树。优先复用已有词汇，并尽量使用短而稳定的中文词。
+标签是精确筛选工具，不是新的目录树，也不参与关键词模糊搜索。优先复用已有词汇，并尽量使用短而稳定的中文词。
 
 可以逐步形成这些维度：
 

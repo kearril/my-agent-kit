@@ -22,4 +22,8 @@ describe('entry graph', () => {
       backlinks: [],
     });
   });
+
+  it('returns empty connections for a missing target', () => {
+    expect(getPublicConnections(entries, 'missing-entry')).toEqual({ related: [], backlinks: [] });
+  });
 });
