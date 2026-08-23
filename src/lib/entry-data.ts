@@ -166,6 +166,12 @@ export function refineEntryDates(
   }
 }
 
+type DiscriminatedUnionMembers = [
+  z.ZodObject<z.ZodRawShape>,
+  z.ZodObject<z.ZodRawShape>,
+  ...Array<z.ZodObject<z.ZodRawShape>>,
+];
+
 export function createCollectionEntrySchema(relatedSchema?: z.ZodTypeAny) {
   const schemas = ENTRY_TYPES.map((type) => {
     const def = ENTRY_TYPE_DEFINITIONS[type];
@@ -179,15 +185,11 @@ export function createCollectionEntrySchema(relatedSchema?: z.ZodTypeAny) {
         type: z.literal(type),
         ...typeFieldsSchema,
       })
-      .strict()
-      .superRefine(refineEntryDates);
+      .strict();
   });
 
-  return z.union([schemas[0], schemas[1], ...schemas.slice(2)] as [
-    (typeof schemas)[0],
-    (typeof schemas)[1],
-    ...(typeof schemas),
-  ]);
+  const unionOptions = [schemas[0], schemas[1], ...schemas.slice(2)] as DiscriminatedUnionMembers;
+  return z.discriminatedUnion('type', unionOptions).superRefine(refineEntryDates);
 }
 
 export interface ParseEditorEntryOptions {
@@ -204,11 +206,9 @@ export interface ParseEditorEntryOptions {
     | Map<number, string>
     | Record<number, string>
     | Array<{ slug: string; featuredOrder?: number }>;
-  today?: Date | string;
 }
 
 export type EditorSharedData = {
-  slug: string;
   title: string;
   summary: string;
   tags: string[];
@@ -241,9 +241,9 @@ export type EditorEntryInput = {
   source: 'self' | 'adapted' | 'external';
   links?: Array<{ label: string; url: string }>;
   related?: string[];
-  createdAt?: Date | string;
+  createdAt: Date | string;
   publishedAt?: Date | string;
-  updatedAt?: Date | string;
+  updatedAt: Date | string;
   featuredOrder?: number;
   draft?: boolean;
 } & (
@@ -271,14 +271,8 @@ export function createEditorEntrySchema(options?: ParseEditorEntryOptions) {
       .strict();
   });
 
-  const unionSchema = z.discriminatedUnion(
-    'type',
-    schemas as unknown as [
-      (typeof schemas)[0],
-      (typeof schemas)[1],
-      ...(typeof schemas),
-    ],
-  );
+  const unionOptions = [schemas[0], schemas[1], ...schemas.slice(2)] as DiscriminatedUnionMembers;
+  const unionSchema = z.discriminatedUnion('type', unionOptions);
 
   return unionSchema.superRefine((data, ctx) => {
     refineEntryDates(data, ctx);

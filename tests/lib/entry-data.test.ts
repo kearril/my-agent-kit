@@ -45,7 +45,6 @@ describe('entry data registry and validation', () => {
   const validationOptions = {
     knownSlugs: ['existing-note', 'other-entry', 'test-prompt', 'test-note'],
     currentSlug: 'test-prompt',
-    today: new Date('2026-08-23T00:00:00Z'),
   };
 
   describe('ENTRY_TYPES and ENTRY_TYPE_DEFINITIONS', () => {
@@ -180,6 +179,15 @@ describe('entry data registry and validation', () => {
           validationOptions,
         ),
       ).toThrow(/publishedAt/i);
+    });
+    it('enforces required createdAt and updatedAt fields', () => {
+      const withoutCreatedAt = { ...baseValidPrompt };
+      delete (withoutCreatedAt as Record<string, unknown>).createdAt;
+      expect(() => parseEditorEntry(withoutCreatedAt, validationOptions)).toThrow();
+
+      const withoutUpdatedAt = { ...baseValidPrompt };
+      delete (withoutUpdatedAt as Record<string, unknown>).updatedAt;
+      expect(() => parseEditorEntry(withoutUpdatedAt, validationOptions)).toThrow();
     });
 
     it('enforces slug grammar (lowercase ASCII kebab-case)', () => {
