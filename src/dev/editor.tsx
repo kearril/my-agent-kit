@@ -295,6 +295,7 @@ export function LocalEntryEditorApp() {
 
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
+  const [previewStale, setPreviewStale] = useState(false);
 
   const previewAbortControllerRef = useRef<AbortController | null>(null);
   const previewSeqRef = useRef<number>(0);
@@ -337,6 +338,7 @@ export function LocalEntryEditorApp() {
         );
         dispatch({ type: 'setPreview', preview: null });
         setPreviewLoading(false);
+        setPreviewStale(false);
         return;
       }
 
@@ -402,6 +404,7 @@ export function LocalEntryEditorApp() {
               'MDX preview is not supported. Save the entry and view on the site.',
           );
           dispatch({ type: 'setPreview', preview: null });
+          setPreviewStale(false);
           return;
         }
 
@@ -410,12 +413,14 @@ export function LocalEntryEditorApp() {
           if (reqId !== previewSeqRef.current) return;
           setPreviewError(errData.error || `Preview failed (${res.status})`);
           dispatch({ type: 'setPreview', preview: null });
+          setPreviewStale(false);
           return;
         }
 
         const previewData = (await res.json()) as EditorPreviewResponse;
         if (reqId !== previewSeqRef.current) return;
         dispatch({ type: 'setPreview', preview: { html: previewData.html } });
+        setPreviewStale(false);
       } catch (err) {
         if (reqId !== previewSeqRef.current) return;
         if ((err as Error).name !== 'AbortError') {
@@ -517,10 +522,14 @@ export function LocalEntryEditorApp() {
       formDataRef.current = next;
       setFormData(next);
       dispatch({ type: 'markDirty', dirty: true });
-      requestPreview(next);
+      setPreviewStale(true);
     },
-    [requestPreview, dispatch],
+    [dispatch],
   );
+
+  const handleExplicitPreview = useCallback(() => {
+    requestPreview(formDataRef.current);
+  }, [requestPreview]);
 
   const handleTypeChange = useCallback(
     (newType: EntryType) => {
@@ -1729,6 +1738,19 @@ export function LocalEntryEditorApp() {
                 <div className="editor-buttons">
                   <button
                     type="button"
+                    className="preview-button"
+                    disabled={
+                      previewLoading ||
+                      formData.extension === '.mdx' ||
+                      formData.slug.endsWith('.mdx')
+                    }
+                    onClick={handleExplicitPreview}
+                    aria-label="预览未保存内容"
+                  >
+                    {previewLoading ? 'RENDERING...' : 'PREVIEW'}
+                  </button>
+                  <button
+                    type="button"
                     className="save-button"
                     disabled={saveLoading}
                     onClick={handleSave}
@@ -1746,21 +1768,36 @@ export function LocalEntryEditorApp() {
           <div className="preview-header-bar">
             <div className="preview-header-title">PREVIEW</div>
             <div className="preview-header-tag">
-              {formData.extension === '.mdx' ? 'MDX (LIMIT)' : 'LIVE HTML'}
+              {formData.extension === '.mdx' || formData.slug.endsWith('.mdx')
+                ? 'MDX (LIMIT)'
+                : state.mode === 'idle'
+                  ? 'IDLE'
+                  : previewStale
+                    ? 'OUT OF DATE'
+                    : 'UP TO DATE'}
             </div>
           </div>
 
           {/* Boundaries / notices */}
-          {formData.extension === '.mdx' ? (
+          {formData.extension === '.mdx' || formData.slug.endsWith('.mdx') ? (
             <div className="preview-boundary-notice preview-boundary-notice--mdx">
               MDX preview is not supported. Save the entry and view on the site.
             </div>
           ) : (
-            <div className="preview-boundary-notice">
-              Notice: Local relative images (e.g. ./img.png) cannot be previewed in the sandbox.
-            </div>
+            <>
+              {previewStale && state.mode !== 'idle' && (
+                <div
+                  className="preview-boundary-notice preview-boundary-notice--stale"
+                  role="status"
+                >
+                  Preview is out of date. Click PREVIEW to refresh.
+                </div>
+              )}
+              <div className="preview-boundary-notice">
+                Notice: Local relative images (e.g. ./img.png) cannot be previewed in the sandbox.
+              </div>
+            </>
           )}
-
           <div className="preview-iframe-wrapper">
             {previewLoading && (
               <div className="preview-loading-overlay">

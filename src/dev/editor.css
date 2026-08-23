@@ -826,6 +826,36 @@ a:focus-visible {
   align-items: center;
   gap: 10px;
 }
+.preview-button {
+  min-height: 44px;
+  min-width: 120px;
+  padding: 0 20px;
+  font-weight: 900;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  background: var(--teal);
+  color: var(--black);
+  border: 4px solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
+  cursor: pointer;
+  transition: transform 0.1s ease-out;
+}
+
+.preview-button:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.preview-button:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.preview-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 
 .save-button {
   min-height: 44px;
@@ -903,6 +933,12 @@ a:focus-visible {
   color: var(--black);
   font-weight: 900;
 }
+.preview-boundary-notice--stale {
+  background: var(--yellow);
+  color: var(--black);
+  font-weight: 900;
+}
+
 
 .preview-iframe-wrapper {
   flex: 1;
