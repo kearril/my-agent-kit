@@ -44,7 +44,7 @@ pnpm preview
 
 ## 当前维护流程
 
-1. 在 `src/content/entries/` 录入首批确认公开的 Markdown / MDX 条目，遵守 `docs/CONTENT.md` 的字段与不可变 slug 规则。
+1. 在 `src/content/entries/<type>/` 录入首批确认公开的 Markdown / MDX 条目，遵守 `docs/CONTENT.md` 的字段、目录和不可变 slug 规则。
 2. 用真实标题、摘要、标签、链接、关联关系和少量截图检查首页、条目页、Explore、RSS 与 sitemap 的信息密度和可读性。
 3. 运行 `pnpm test && pnpm build`。
 4. 只有首批内容、公开边界与首发文案均确认后，才按 `docs/DEPLOYMENT.md` 创建公开仓库、Cloudflare Pages 项目和域名绑定。

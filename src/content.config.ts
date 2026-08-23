@@ -26,7 +26,7 @@ const sharedEntryFields = {
 const entries = defineCollection({
 	loader: glob({
 		base: './src/content/entries',
-		pattern: '*.{md,mdx}',
+		pattern: '**/*.{md,mdx}',
 	}),
 	schema: z.union([
 		z

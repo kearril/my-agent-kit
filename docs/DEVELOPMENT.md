@@ -45,7 +45,7 @@
 - `tests/`：基于 Vitest 的纯逻辑单元测试（路径生成、关联图谱、反向链接计算与探索索引）。
 先按职责拆分页面区块，不为一次性文字、只使用一次的小片段或尚未重复的视觉细节建立通用组件。
 
-本地视觉测试可以在 `src/content/entries/` 中使用 `*.local.md` 或 `*.local.mdx` 条目。它们仍由 Content Collections 校验和渲染，但已被 Git 忽略；不得把真实私密内容伪装成演示条目。
+本地视觉测试可以在 `src/content/entries/<type>/` 中使用 `*.local.md` 或 `*.local.mdx` 条目。它们仍由 Content Collections 校验和渲染，但已被 Git 忽略；不得把真实私密内容伪装成演示条目。
 
 ## 5. 依赖管理
 

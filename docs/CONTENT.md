@@ -71,7 +71,7 @@ draft: false
 
 ## 公开 URL 与内容集合
 
-内容集合定义在 `src/content.config.ts`，集合名为 `entries`。每个条目使用一个 Markdown 或 MDX 文件，统一放在 `src/content/entries/`，不按 type 分文件夹。
+内容集合定义在 `src/content.config.ts`，集合名为 `entries`。每个条目使用一个 Markdown 或 MDX 文件，按 `type` 放在 `src/content/entries/<type>/` 的一层目录中；目录只负责文件维护，公开身份仍由 Frontmatter 中不可变的 `slug` 决定。
 
 所有公开条目的唯一规范访问路径为：
 

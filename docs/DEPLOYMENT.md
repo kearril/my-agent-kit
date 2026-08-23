@@ -97,7 +97,7 @@ GitHub public repository (paracosm-garden)
 
 | 变更类型 | 推荐流程 | 质量验证门槛 |
 | --- | --- | --- |
-| **常规条目编写与内容修订** | 在 `src/content/entries/` 修改，确认 slug 与 frontmatter 合法后直接 push `main` | 本地 `pnpm test && pnpm build` |
+| **常规条目编写与内容修订** | 在 `src/content/entries/<type>/` 修改，确认 slug 与 frontmatter 合法后直接 push `main` | 本地 `pnpm test && pnpm build` |
 | **页面布局、样式、组件或路由调整** | 创建 feature 分支，提 PR | 本地测试 + Cloudflare Preview 移动端/桌面端检查无误后合并 |
 | **依赖升级或全局架构配置** | 分支开发，更新 lockfile | `pnpm install`、`pnpm test && pnpm build`、Preview 冒烟检查 |
 

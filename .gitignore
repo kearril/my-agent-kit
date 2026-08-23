@@ -25,5 +25,5 @@ pnpm-debug.log*
 .idea/
 
 # local-only content fixtures for visual testing
-src/content/entries/*.local.md
-src/content/entries/*.local.mdx
+src/content/entries/**/*.local.md
+src/content/entries/**/*.local.mdx
