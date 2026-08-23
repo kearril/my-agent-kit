@@ -25,6 +25,8 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "vitest": "^4.1.11"
+    "marked": "^18.0.10",
+    "vitest": "^4.1.11",
+    "yaml": "^2.9.0"
   }
 }
