@@ -3,9 +3,10 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import { localEditor } from './src/integrations/local-editor';
 
 export default defineConfig({
   site: 'https://kearril.com',
   output: 'static',
-  integrations: [react(), mdx(), sitemap()],
+  integrations: [react(), mdx(), sitemap(), localEditor()],
 });
