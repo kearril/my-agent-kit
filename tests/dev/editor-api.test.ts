@@ -137,7 +137,7 @@ describe('Editor API', () => {
       const store = createFakeStore();
       const api = createEditorApi({ store });
 
-      const remoteIps = ['192.168.1.1', '172.16.0.1', '8.8.8.8', 'fe80::1', '2001:db8::1', '::ffff:192.168.1.1'];
+      const remoteIps = ['192.168.1.1', '172.16.0.1', '8.8.8.8', 'fe80::1', '2001:db8::1', '::ffff:192.168.1.1', 'localhost'];
       for (const ip of remoteIps) {
         const res = await api({
           method: 'GET',
@@ -621,6 +621,90 @@ describe('Editor API', () => {
         otherRes as unknown as ServerResponse,
         nextSpy2,
       );
+      expect(nextSpy2).toHaveBeenCalledTimes(1);
+      expect(otherRes.end).toHaveBeenCalledTimes(0);
+
+      // Test 3: Non-loopback request to HTML shell is rejected with 403
+      const nonLoopbackShellReq = {
+        url: '/__garden-editor/',
+        method: 'GET',
+        headers: {},
+        socket: { remoteAddress: '10.0.0.5' },
+      };
+      let nonLoopbackShellBody = '';
+      const nonLoopbackShellRes = {
+        statusCode: 0,
+        setHeader: vi.fn(),
+        end: vi.fn((data: string) => {
+          nonLoopbackShellBody = data;
+        }),
+      };
+      const nextSpy3 = vi.fn();
+      await middleware!(
+        nonLoopbackShellReq as unknown as IncomingMessage,
+        nonLoopbackShellRes as unknown as ServerResponse,
+        nextSpy3,
+      );
+      expect(nextSpy3).toHaveBeenCalledTimes(0);
+      expect(nonLoopbackShellRes.statusCode).toBe(403);
+      expect(nonLoopbackShellBody).toContain('Forbidden');
+
+      // Test 4: Non-loopback request to API is rejected with 403
+      const nonLoopbackApiReq = {
+        url: '/__garden-editor/api/entries',
+        method: 'GET',
+        headers: {},
+        socket: { remoteAddress: '192.168.1.50' },
+      };
+      let nonLoopbackApiBody = '';
+      const nonLoopbackApiRes = {
+        statusCode: 0,
+        setHeader: vi.fn(),
+        end: vi.fn((data: string) => {
+          nonLoopbackApiBody = data;
+        }),
+      };
+      const nextSpy4 = vi.fn();
+      await middleware!(
+        nonLoopbackApiReq as unknown as IncomingMessage,
+        nonLoopbackApiRes as unknown as ServerResponse,
+        nextSpy4,
+      );
+      expect(nextSpy4).toHaveBeenCalledTimes(0);
+      expect(nonLoopbackApiRes.statusCode).toBe(403);
+      expect(nonLoopbackApiBody).toContain('Forbidden');
+
+      // Test 5: Streaming request exceeding 2MB is terminated early with 413
+      async function* createLargeStream() {
+        // Yield 1MB twice + a bit more
+        yield Buffer.alloc(1024 * 1024, 'a');
+        yield Buffer.alloc(1024 * 1024, 'a');
+        yield Buffer.alloc(1024, 'a');
+      }
+
+      const largeReq = Object.assign(createLargeStream(), {
+        url: '/__garden-editor/api/entries',
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        socket: { remoteAddress: '127.0.0.1' },
+      });
+      let largeResBody = '';
+      const largeRes = {
+        statusCode: 0,
+        setHeader: vi.fn(),
+        end: vi.fn((data: string) => {
+          largeResBody = data;
+        }),
+      };
+      const nextSpy5 = vi.fn();
+      await middleware!(
+        largeReq as unknown as IncomingMessage,
+        largeRes as unknown as ServerResponse,
+        nextSpy5,
+      );
+      expect(nextSpy5).toHaveBeenCalledTimes(0);
+      expect(largeRes.statusCode).toBe(413);
+      expect(largeResBody).toContain('Payload too large');
     });
   });
 });

@@ -71,12 +71,12 @@ export type EditorApiHandler = (
   req: EditorApiRequest,
 ) => Promise<EditorApiResponse<unknown>>;
 
-const DEFAULT_MAX_BODY_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
+export const DEFAULT_MAX_BODY_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
 
 export function isLoopbackAddress(remoteAddress?: string): boolean {
   if (!remoteAddress) return false;
   const trimmed = remoteAddress.trim().toLowerCase();
-  if (trimmed === '127.0.0.1' || trimmed === '::1' || trimmed === 'localhost') {
+  if (trimmed === '127.0.0.1' || trimmed === '::1') {
     return true;
   }
   // IPv4 loopback network 127.0.0.0/8

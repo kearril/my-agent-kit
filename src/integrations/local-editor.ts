@@ -2,8 +2,11 @@ import type { AstroIntegration } from 'astro';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import * as path from 'node:path';
 import { createEntryStore } from '../dev/server/entry-store';
-import { createEditorApi } from '../dev/server/editor-api';
-
+import {
+  createEditorApi,
+  isLoopbackAddress,
+  DEFAULT_MAX_BODY_SIZE_BYTES,
+} from '../dev/server/editor-api';
 export interface LocalEditorOptions {
   entriesRoot?: string;
   today?: () => Date;
@@ -43,8 +46,36 @@ export function localEditor(options?: LocalEditorOptions): AstroIntegration {
 
             const parsedUrl = new URL(req.url, 'http://localhost');
             const pathname = parsedUrl.pathname;
+            const isEditorRoute =
+              pathname === '/__garden-editor' ||
+              pathname === '/__garden-editor/' ||
+              pathname === '/__garden-editor/api' ||
+              pathname.startsWith('/__garden-editor/api/');
 
-            // 1. API routes: /__garden-editor/api/*
+            // 1. Pass through all non-editor routes
+            if (!isEditorRoute) {
+              return next();
+            }
+
+            // 2. Enforce loopback check for all editor routes (shell and API)
+            const remoteAddress =
+              req.socket?.remoteAddress ??
+              (req as { connection?: { remoteAddress?: string } })
+                .connection?.remoteAddress;
+
+            if (!isLoopbackAddress(remoteAddress)) {
+              res.statusCode = 403;
+              res.setHeader(
+                'Content-Type',
+                'application/json; charset=utf-8',
+              );
+              res.end(
+                JSON.stringify({ error: 'Forbidden: loopback access only' }),
+              );
+              return;
+            }
+
+            // 3. API routes: /__garden-editor/api/*
             if (
               pathname === '/__garden-editor/api' ||
               pathname.startsWith('/__garden-editor/api/')
@@ -57,12 +88,25 @@ export function localEditor(options?: LocalEditorOptions): AstroIntegration {
               ) {
                 try {
                   const chunks: Buffer[] = [];
+                  let totalBytes = 0;
                   for await (const chunk of req) {
-                    chunks.push(
+                    const buf =
                       typeof chunk === 'string'
                         ? Buffer.from(chunk, 'utf8')
-                        : chunk,
-                    );
+                        : chunk;
+                    totalBytes += buf.length;
+                    if (totalBytes > DEFAULT_MAX_BODY_SIZE_BYTES) {
+                      res.statusCode = 413;
+                      res.setHeader(
+                        'Content-Type',
+                        'application/json; charset=utf-8',
+                      );
+                      res.end(
+                        JSON.stringify({ error: 'Payload too large' }),
+                      );
+                      return;
+                    }
+                    chunks.push(buf);
                   }
                   body = Buffer.concat(chunks).toString('utf8');
                 } catch {
@@ -77,11 +121,6 @@ export function localEditor(options?: LocalEditorOptions): AstroIntegration {
                   return;
                 }
               }
-
-              const remoteAddress =
-                req.socket?.remoteAddress ??
-                (req as { connection?: { remoteAddress?: string } })
-                  .connection?.remoteAddress;
 
               const headers: Record<string, string | string[] | undefined> =
                 {};
@@ -121,7 +160,7 @@ export function localEditor(options?: LocalEditorOptions): AstroIntegration {
               return;
             }
 
-            // 2. Editor UI shell: /__garden-editor or /__garden-editor/
+            // 4. Editor UI shell: /__garden-editor or /__garden-editor/
             if (
               pathname === '/__garden-editor' ||
               pathname === '/__garden-editor/'
@@ -154,8 +193,6 @@ export function localEditor(options?: LocalEditorOptions): AstroIntegration {
               }
               return;
             }
-
-            // 3. Other requests pass through
             return next();
           },
         );
