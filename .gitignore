@@ -7,6 +7,9 @@ dist/
 node_modules/
 .pnpm-store/
 
+
+# isolated implementation worktrees
+.worktrees/
 # logs
 npm-debug.log*
 yarn-debug.log*
