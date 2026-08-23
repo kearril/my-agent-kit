@@ -323,6 +323,19 @@ Local body
       expect(diskContent).toContain('---\n\n# Updated Note Body\n');
     });
 
+    it('uses the route slug when saving an edit payload without slug', async () => {
+      const created = await store.create(validPromptInput);
+      const { slug: _slug, ...editPayload } = validPromptInput;
+
+      const saved = await store.save('new-prompt', created.revision, {
+        ...editPayload,
+        title: 'Saved Through Route Identity',
+      });
+
+      expect(saved.slug).toBe('new-prompt');
+      expect(saved.title).toBe('Saved Through Route Identity');
+    });
+
     it('preserves existing file path and extension on save (.mdx and custom file names)', async () => {
       const promptDir = path.join(tempDir, 'prompt');
       await fs.mkdir(promptDir, { recursive: true });

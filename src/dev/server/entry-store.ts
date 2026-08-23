@@ -400,6 +400,7 @@ export function createEntryStore(options: CreateEntryStoreOptions): EntryStore {
       const { body: inputBody, ...metadataInput } = input;
       const preparedInput: EditorEntryInput = {
         ...metadataInput,
+        slug: metadataInput.slug ?? existing.data.slug,
         updatedAt: now,
         tags: metadataInput.tags ?? [],
         links: metadataInput.links ?? [],
