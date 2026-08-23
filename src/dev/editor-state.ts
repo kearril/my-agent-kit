@@ -101,6 +101,9 @@ export function reduceWorkspace<TPreview = unknown>(
     }
 
     case 'setPreview': {
+      if (!('preview' in action) && !('html' in action)) {
+        return state;
+      }
       let nextPreview: TPreview | null = null;
       if ('preview' in action && action.preview !== undefined) {
         nextPreview = action.preview;

@@ -4,7 +4,6 @@ import {
   reduceWorkspace,
   type EditorWorkspaceAction,
   type EditorWorkspaceState,
-  type WorkspacePane,
 } from '../../src/dev/editor-state';
 
 describe('Editor Workspace State', () => {
@@ -335,6 +334,23 @@ describe('Editor Workspace State', () => {
       });
 
       expect(next.preview).toBeNull();
+    });
+
+    it('acts as a no-op and preserves existing preview if neither preview nor html is provided', () => {
+      const state: EditorWorkspaceState = {
+        pane: 'split',
+        selectedSlug: 'slug-x',
+        mode: 'edit',
+        dirty: true,
+        preview: { html: '<p>Preserved preview</p>' },
+      };
+
+      const next = reduceWorkspace(state, {
+        type: 'setPreview',
+      });
+
+      expect(next).toBe(state);
+      expect(next.preview).toEqual({ html: '<p>Preserved preview</p>' });
     });
   });
 
