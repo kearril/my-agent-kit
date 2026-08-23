@@ -33,9 +33,10 @@ interface EntryFormData {
   related: string[];
   createdAt: string;
   publishedAt: string;
+  initialPublishedAt?: string;
   updatedAt: string;
   featuredOrder: string;
-  category: string;
+  typeFields: Record<string, unknown>;
   body: string;
   extension: string;
   isLocal: boolean;
@@ -44,6 +45,15 @@ interface EntryFormData {
 
 function createEmptyFormData(type: EntryType = 'prompt'): EntryFormData {
   const today = new Date().toISOString().slice(0, 10);
+  const typeDef = ENTRY_TYPE_DEFINITIONS[type];
+  const typeFields: Record<string, unknown> = {};
+  if (typeDef?.typeFields) {
+    for (const [key, decl] of Object.entries(typeDef.typeFields)) {
+      typeFields[key] =
+        decl.defaultValue ?? (decl.control === 'checkbox' ? false : '');
+    }
+  }
+
   return {
     slug: '',
     title: '',
@@ -56,9 +66,10 @@ function createEmptyFormData(type: EntryType = 'prompt'): EntryFormData {
     related: [],
     createdAt: today,
     publishedAt: '',
+    initialPublishedAt: '',
     updatedAt: today,
     featuredOrder: '',
-    category: '',
+    typeFields,
     body: '',
     extension: '.md',
     isLocal: true,
@@ -83,6 +94,20 @@ function toDateInputValue(val?: Date | string | null): string {
 }
 
 function entryDetailToFormData(detail: EditorEntryDetail): EntryFormData {
+  const typeDef = ENTRY_TYPE_DEFINITIONS[detail.type];
+  const typeFields: Record<string, unknown> = {};
+  if (typeDef?.typeFields) {
+    for (const [key, decl] of Object.entries(typeDef.typeFields)) {
+      const val = (detail as Record<string, unknown>)[key];
+      typeFields[key] =
+        val !== undefined
+          ? val
+          : (decl.defaultValue ?? (decl.control === 'checkbox' ? false : ''));
+    }
+  }
+
+  const publishedDate = toDateInputValue(detail.publishedAt);
+
   return {
     slug: detail.slug,
     title: detail.title,
@@ -96,13 +121,14 @@ function entryDetailToFormData(detail: EditorEntryDetail): EntryFormData {
       : [],
     related: Array.isArray(detail.related) ? [...detail.related] : [],
     createdAt: toDateInputValue(detail.createdAt),
-    publishedAt: toDateInputValue(detail.publishedAt),
+    publishedAt: publishedDate,
+    initialPublishedAt: publishedDate,
     updatedAt: toDateInputValue(detail.updatedAt),
     featuredOrder:
       detail.featuredOrder !== undefined && detail.featuredOrder !== null
         ? String(detail.featuredOrder)
         : '',
-    category: (detail as { category?: string }).category || '',
+    typeFields,
     body: detail.body || '',
     extension: detail.extension || '.md',
     isLocal: Boolean(detail.isLocal),
@@ -152,52 +178,50 @@ function buildPreviewDocument(html: string, title?: string): string {
       margin-bottom: 0.5em;
       line-height: 1.2;
     }
+    h1:first-child { margin-top: 0; }
     h1 { font-size: 1.8rem; border-bottom: 4px solid var(--black); padding-bottom: 8px; }
-    h2 { font-size: 1.4rem; border-left: 6px solid var(--black); padding-left: 10px; }
+    h2 { font-size: 1.4rem; border-bottom: 3px solid var(--black); padding-bottom: 4px; }
     h3 { font-size: 1.15rem; }
-    p { margin-bottom: 1.2em; }
-    ul, ol { margin-left: 24px; margin-bottom: 1.2em; }
-    li { margin-bottom: 0.4em; }
-    a { color: var(--black); font-weight: 900; text-decoration: underline; }
+    p { margin-bottom: 1em; }
+    a { color: var(--black); font-weight: 800; text-decoration: underline; }
+    ul, ol { margin-left: 24px; margin-bottom: 1em; }
+    li { margin-bottom: 0.25em; }
     blockquote {
-      border-left: 6px solid var(--teal);
-      background: var(--mint);
+      border-left: 6px solid var(--black);
+      background: #f3f4f6;
       padding: 12px 16px;
       margin: 1.5em 0;
-      font-weight: 700;
+      font-style: italic;
+    }
+    pre {
+      background: var(--dark);
+      color: #f9fafb;
+      padding: 16px;
+      border: 3px solid var(--black);
+      box-shadow: 4px 4px 0 var(--black);
+      overflow-x: auto;
+      margin: 1.5em 0;
+      font-size: 0.9rem;
     }
     code {
       font-family: inherit;
-      background: #f3f4f6;
-      border: 2px solid var(--black);
+      background: #e5e7eb;
+      color: var(--black);
       padding: 2px 6px;
       font-size: 0.9em;
-      font-weight: 800;
-    }
-    pre {
-      background: #1f2937;
-      color: #f9fafb;
-      border: 4px solid var(--black);
-      padding: 16px;
-      overflow-x: auto;
-      margin: 1.5em 0;
+      border: 1px solid var(--black);
     }
     pre code {
       background: transparent;
-      border: none;
       color: inherit;
       padding: 0;
-    }
-    hr {
       border: none;
-      border-top: 4px solid var(--black);
-      margin: 2em 0;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      border: 4px solid var(--black);
       margin: 1.5em 0;
+      border: 3px solid var(--black);
     }
     th, td {
       border: 2px solid var(--black);
@@ -208,20 +232,24 @@ function buildPreviewDocument(html: string, title?: string): string {
       background: var(--yellow);
       font-weight: 900;
     }
+    hr {
+      border: none;
+      border-top: 3px solid var(--black);
+      margin: 2em 0;
+    }
     img {
       max-width: 100%;
       height: auto;
-      border: 4px solid var(--black);
-      display: block;
-      margin: 1.5em 0;
+      border: 3px solid var(--black);
     }
-    .editor-relative-img-warning {
+    .preview-relative-image-fallback {
       display: inline-block;
-      padding: 4px 8px;
+      padding: 6px 10px;
       background: var(--yellow);
       border: 2px solid var(--black);
-      font-weight: 900;
       font-size: 0.8rem;
+      font-weight: 800;
+      margin: 4px 0;
     }
   </style>
 </head>
@@ -230,7 +258,6 @@ function buildPreviewDocument(html: string, title?: string): string {
 </body>
 </html>`;
 }
-
 
 export function LocalEntryEditorApp() {
   const [state, dispatch] = useReducer(
@@ -250,6 +277,9 @@ export function LocalEntryEditorApp() {
   const [formData, setFormData] = useState<EntryFormData>(() =>
     createEmptyFormData(),
   );
+  const formDataRef = useRef<EntryFormData>(formData);
+  formDataRef.current = formData;
+
   const [tagInput, setTagInput] = useState('');
   const [relatedSearch, setRelatedSearch] = useState('');
 
@@ -267,6 +297,10 @@ export function LocalEntryEditorApp() {
   const [previewError, setPreviewError] = useState<string | null>(null);
 
   const previewAbortControllerRef = useRef<AbortController | null>(null);
+  const previewSeqRef = useRef<number>(0);
+
+  const detailAbortControllerRef = useRef<AbortController | null>(null);
+  const detailRequestSeqRef = useRef<number>(0);
 
   const fetchEntries = useCallback(async () => {
     setEntriesLoading(true);
@@ -302,16 +336,18 @@ export function LocalEntryEditorApp() {
           'MDX preview is not supported. Save the entry and view on the site.',
         );
         dispatch({ type: 'setPreview', preview: null });
+        setPreviewLoading(false);
         return;
       }
 
       const controller = new AbortController();
       previewAbortControllerRef.current = controller;
+      const reqId = ++previewSeqRef.current;
 
       setPreviewLoading(true);
       setPreviewError(null);
 
-      const payload = {
+      const payload: Record<string, unknown> = {
         slug: form.slug || 'untitled-preview',
         title: form.title || 'Untitled Entry',
         summary: form.summary || 'Summary preview',
@@ -328,10 +364,25 @@ export function LocalEntryEditorApp() {
         featuredOrder: form.featuredOrder
           ? Number(form.featuredOrder)
           : undefined,
-        category: form.type === 'note' ? form.category || '札记' : undefined,
         body: form.body,
         extension: form.extension,
       };
+
+      const currentTypeDef = ENTRY_TYPE_DEFINITIONS[form.type];
+      if (currentTypeDef?.typeFields) {
+        for (const [key, decl] of Object.entries(currentTypeDef.typeFields)) {
+          const rawVal = form.typeFields[key];
+          if (rawVal !== undefined && rawVal !== '') {
+            if (decl.control === 'number') {
+              payload[key] = Number(rawVal);
+            } else if (decl.control === 'checkbox') {
+              payload[key] = Boolean(rawVal);
+            } else {
+              payload[key] = rawVal;
+            }
+          }
+        }
+      }
 
       try {
         const res = await fetch('/__garden-editor/api/preview', {
@@ -341,8 +392,11 @@ export function LocalEntryEditorApp() {
           signal: controller.signal,
         });
 
+        if (reqId !== previewSeqRef.current) return;
+
         if (res.status === 422) {
           const errData = (await res.json()) as EditorErrorResponse;
+          if (reqId !== previewSeqRef.current) return;
           setPreviewError(
             errData.error ||
               'MDX preview is not supported. Save the entry and view on the site.',
@@ -353,21 +407,26 @@ export function LocalEntryEditorApp() {
 
         if (!res.ok) {
           const errData = (await res.json()) as EditorErrorResponse;
+          if (reqId !== previewSeqRef.current) return;
           setPreviewError(errData.error || `Preview failed (${res.status})`);
           dispatch({ type: 'setPreview', preview: null });
           return;
         }
 
         const previewData = (await res.json()) as EditorPreviewResponse;
+        if (reqId !== previewSeqRef.current) return;
         dispatch({ type: 'setPreview', preview: { html: previewData.html } });
       } catch (err) {
+        if (reqId !== previewSeqRef.current) return;
         if ((err as Error).name !== 'AbortError') {
           setPreviewError(
             err instanceof Error ? err.message : 'Preview request error',
           );
         }
       } finally {
-        setPreviewLoading(false);
+        if (reqId === previewSeqRef.current) {
+          setPreviewLoading(false);
+        }
       }
     },
     [dispatch],
@@ -375,28 +434,47 @@ export function LocalEntryEditorApp() {
 
   const loadEntry = useCallback(
     async (slug: string) => {
+      if (detailAbortControllerRef.current) {
+        detailAbortControllerRef.current.abort();
+      }
+      const controller = new AbortController();
+      detailAbortControllerRef.current = controller;
+      const reqId = ++detailRequestSeqRef.current;
+
       setDetailLoading(true);
       setBannerAlert(null);
       setFieldErrors({});
       setSavedUrl(null);
+
       try {
-        const res = await fetch(`/__garden-editor/api/entries/${slug}`);
+        const res = await fetch(`/__garden-editor/api/entries/${slug}`, {
+          signal: controller.signal,
+        });
+        if (reqId !== detailRequestSeqRef.current) return;
+
         if (!res.ok) {
           throw new Error(`Failed to load entry "${slug}" (${res.status})`);
         }
         const data = (await res.json()) as EditorEntryResponse;
+        if (reqId !== detailRequestSeqRef.current) return;
+
         const nextForm = entryDetailToFormData(data.entry);
+        formDataRef.current = nextForm;
         setFormData(nextForm);
         setSavedUrl(data.url);
         requestPreview(nextForm);
       } catch (err) {
+        if (reqId !== detailRequestSeqRef.current) return;
+        if ((err as Error).name === 'AbortError') return;
         setBannerAlert({
           type: 'error',
           message:
             err instanceof Error ? err.message : 'Failed to load entry details',
         });
       } finally {
-        setDetailLoading(false);
+        if (reqId === detailRequestSeqRef.current) {
+          setDetailLoading(false);
+        }
       }
     },
     [requestPreview],
@@ -411,8 +489,15 @@ export function LocalEntryEditorApp() {
   );
 
   const handleNewEntry = useCallback(() => {
+    if (detailAbortControllerRef.current) {
+      detailAbortControllerRef.current.abort();
+    }
+    detailRequestSeqRef.current++;
+    setDetailLoading(false);
+
     dispatch({ type: 'startNewEntry' });
     const emptyForm = createEmptyFormData('prompt');
+    formDataRef.current = emptyForm;
     setFormData(emptyForm);
     setSavedUrl(null);
     setBannerAlert(null);
@@ -421,18 +506,38 @@ export function LocalEntryEditorApp() {
   }, [requestPreview]);
 
   const updateForm = useCallback(
-    (updater: Partial<EntryFormData> | ((prev: EntryFormData) => EntryFormData)) => {
-      setFormData((prev) => {
-        const next =
-          typeof updater === 'function'
-            ? updater(prev)
-            : { ...prev, ...updater };
-        dispatch({ type: 'markDirty', dirty: true });
-        requestPreview(next);
-        return next;
+    (
+      updater:
+        | Partial<EntryFormData>
+        | ((prev: EntryFormData) => EntryFormData),
+    ) => {
+      const prev = formDataRef.current;
+      const next =
+        typeof updater === 'function' ? updater(prev) : { ...prev, ...updater };
+      formDataRef.current = next;
+      setFormData(next);
+      dispatch({ type: 'markDirty', dirty: true });
+      requestPreview(next);
+    },
+    [requestPreview, dispatch],
+  );
+
+  const handleTypeChange = useCallback(
+    (newType: EntryType) => {
+      const typeDef = ENTRY_TYPE_DEFINITIONS[newType];
+      const nextTypeFields: Record<string, unknown> = {};
+      if (typeDef?.typeFields) {
+        for (const [key, decl] of Object.entries(typeDef.typeFields)) {
+          nextTypeFields[key] =
+            decl.defaultValue ?? (decl.control === 'checkbox' ? false : '');
+        }
+      }
+      updateForm({
+        type: newType,
+        typeFields: nextTypeFields,
       });
     },
-    [requestPreview],
+    [updateForm],
   );
 
   const handleAddTag = useCallback(() => {
@@ -516,8 +621,20 @@ export function LocalEntryEditorApp() {
       payload.featuredOrder = Number(formData.featuredOrder);
     }
 
-    if (formData.type === 'note') {
-      payload.category = formData.category.trim();
+    const currentTypeDef = ENTRY_TYPE_DEFINITIONS[formData.type];
+    if (currentTypeDef?.typeFields) {
+      for (const [key, decl] of Object.entries(currentTypeDef.typeFields)) {
+        const rawVal = formData.typeFields[key];
+        if (rawVal !== undefined && rawVal !== '') {
+          if (decl.control === 'number') {
+            payload[key] = Number(rawVal);
+          } else if (decl.control === 'checkbox') {
+            payload[key] = Boolean(rawVal);
+          } else {
+            payload[key] = rawVal;
+          }
+        }
+      }
     }
 
     if (isCreate) {
@@ -559,8 +676,19 @@ export function LocalEntryEditorApp() {
             message?: string;
           }>) {
             if (issue.path && issue.path.length > 0) {
-              const fieldName = String(issue.path[0]);
-              errMap[fieldName] = issue.message || 'Invalid value';
+              const fullPath = issue.path.join('.');
+              const topField = String(issue.path[0]);
+              const msg = issue.message || 'Invalid value';
+              errMap[fullPath] = msg;
+              if (!errMap[topField]) {
+                errMap[topField] = msg;
+              }
+              if (issue.path.length >= 2) {
+                const prefix2 = `${issue.path[0]}.${issue.path[1]}`;
+                if (!errMap[prefix2]) {
+                  errMap[prefix2] = msg;
+                }
+              }
             }
           }
         }
@@ -581,6 +709,7 @@ export function LocalEntryEditorApp() {
 
       const saveRes = (await res.json()) as EditorSaveResponse;
       const updatedForm = entryDetailToFormData(saveRes.entry);
+      formDataRef.current = updatedForm;
       setFormData(updatedForm);
       setSavedUrl(saveRes.url);
       dispatch({ type: 'markSaved', slug: saveRes.entry.slug });
@@ -933,9 +1062,7 @@ export function LocalEntryEditorApp() {
                             className="field-input"
                             value={formData.type}
                             onChange={(e) =>
-                              updateForm({
-                                type: e.target.value as EntryType,
-                              })
+                              handleTypeChange(e.target.value as EntryType)
                             }
                           >
                             {ENTRY_TYPES.map((t) => (
@@ -1073,26 +1200,46 @@ export function LocalEntryEditorApp() {
                         >
                           Published At {!formData.draft && <span className="field-required">*</span>}
                         </label>
-                        <input
-                          id="field-published-at"
-                          type="date"
-                          className="field-input"
-                          value={formData.publishedAt}
-                          disabled={formData.draft}
-                          onChange={(e) =>
-                            updateForm({ publishedAt: e.target.value })
-                          }
-                        />
-                        {formData.draft ? (
-                          <span className="field-help-text">
-                            Draft entries cannot set PublishedAt
-                          </span>
-                        ) : (
-                          fieldErrors.publishedAt && (
-                            <div className="field-error-message">
-                              {fieldErrors.publishedAt}
+                        {formData.initialPublishedAt ? (
+                          <>
+                            <div className="field-readonly" id="field-published-at">
+                              {formData.publishedAt}
                             </div>
-                          )
+                            <span className="field-help-text">
+                              Published date is immutable once set.
+                            </span>
+                          </>
+                        ) : formData.draft ? (
+                          <>
+                            <input
+                              id="field-published-at"
+                              type="date"
+                              className="field-input"
+                              value=""
+                              disabled
+                            />
+                            <span className="field-help-text">
+                              Draft entries cannot set PublishedAt (set when published)
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <input
+                              id="field-published-at"
+                              type="date"
+                              className="field-input"
+                              value={formData.publishedAt}
+                              onChange={(e) =>
+                                updateForm({ publishedAt: e.target.value })
+                              }
+                              required
+                            />
+                            {fieldErrors.publishedAt && (
+                              <div className="field-error-message">
+                                {fieldErrors.publishedAt}
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
 
@@ -1170,6 +1317,19 @@ export function LocalEntryEditorApp() {
                           + ADD TAG
                         </button>
                       </div>
+                      {(fieldErrors.tags ||
+                        fieldErrors['tags.0'] ||
+                        Object.keys(fieldErrors).find((k) =>
+                          k.startsWith('tags.'),
+                        )) && (
+                        <div className="field-error-message">
+                          {fieldErrors.tags ||
+                            fieldErrors['tags.0'] ||
+                            Object.entries(fieldErrors).find(([k]) =>
+                              k.startsWith('tags.'),
+                            )?.[1]}
+                        </div>
+                      )}
                     </div>
 
                     {/* Related Entries */}
@@ -1223,6 +1383,19 @@ export function LocalEntryEditorApp() {
                           </div>
                         )}
                       </div>
+                      {(fieldErrors.related ||
+                        fieldErrors['related.0'] ||
+                        Object.keys(fieldErrors).find((k) =>
+                          k.startsWith('related.'),
+                        )) && (
+                        <div className="field-error-message">
+                          {fieldErrors.related ||
+                            fieldErrors['related.0'] ||
+                            Object.entries(fieldErrors).find(([k]) =>
+                              k.startsWith('related.'),
+                            )?.[1]}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </section>
@@ -1259,42 +1432,82 @@ export function LocalEntryEditorApp() {
                           </label>
                         ))}
                       </div>
+                      {fieldErrors.source && (
+                        <div className="field-error-message">
+                          {fieldErrors.source}
+                        </div>
+                      )}
                     </div>
 
                     {/* Links Repeater */}
                     <div className="form-group">
                       <span className="field-label">Links (相关链接)</span>
+                      {fieldErrors.links && (
+                        <div className="field-error-message">
+                          {fieldErrors.links}
+                        </div>
+                      )}
                       <div className="link-list">
                         {formData.links.map((link, idx) => (
-                          <div key={idx} className="link-row">
-                            <input
-                              type="text"
-                              className="field-input"
-                              placeholder="Link label..."
-                              aria-label={`链接 ${idx + 1} 标签`}
-                              value={link.label}
-                              onChange={(e) =>
-                                handleUpdateLink(idx, 'label', e.target.value)
-                              }
-                            />
-                            <input
-                              type="url"
-                              className="field-input"
-                              placeholder="https://..."
-                              aria-label={`链接 ${idx + 1} 网址`}
-                              value={link.url}
-                              onChange={(e) =>
-                                handleUpdateLink(idx, 'url', e.target.value)
-                              }
-                            />
-                            <button
-                              type="button"
-                              className="link-delete-btn"
-                              aria-label={`删除链接 ${idx + 1}`}
-                              onClick={() => handleRemoveLink(idx)}
-                            >
-                              DELETE
-                            </button>
+                          <div key={idx} className="link-row-container">
+                            <div className="link-row">
+                              <div className="form-group" style={{ flex: 1 }}>
+                                <input
+                                  type="text"
+                                  className="field-input"
+                                  placeholder="Link label..."
+                                  aria-label={`链接 ${idx + 1} 标签`}
+                                  value={link.label}
+                                  onChange={(e) =>
+                                    handleUpdateLink(
+                                      idx,
+                                      'label',
+                                      e.target.value,
+                                    )
+                                  }
+                                />
+                                {fieldErrors[`links.${idx}.label`] && (
+                                  <div className="field-error-message">
+                                    {fieldErrors[`links.${idx}.label`]}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="form-group" style={{ flex: 2 }}>
+                                <input
+                                  type="url"
+                                  className="field-input"
+                                  placeholder="https://..."
+                                  aria-label={`链接 ${idx + 1} 网址`}
+                                  value={link.url}
+                                  onChange={(e) =>
+                                    handleUpdateLink(idx, 'url', e.target.value)
+                                  }
+                                />
+                                {fieldErrors[`links.${idx}.url`] && (
+                                  <div className="field-error-message">
+                                    {fieldErrors[`links.${idx}.url`]}
+                                  </div>
+                                )}
+                              </div>
+                              <button
+                                type="button"
+                                className="link-delete-btn"
+                                aria-label={`删除链接 ${idx + 1}`}
+                                onClick={() => handleRemoveLink(idx)}
+                              >
+                                DELETE
+                              </button>
+                            </div>
+                            {fieldErrors[`links.${idx}`] &&
+                              !fieldErrors[`links.${idx}.label`] &&
+                              !fieldErrors[`links.${idx}.url`] && (
+                                <div
+                                  className="field-error-message"
+                                  style={{ marginTop: '4px' }}
+                                >
+                                  {fieldErrors[`links.${idx}`]}
+                                </div>
+                              )}
                           </div>
                         ))}
                         <button
@@ -1310,36 +1523,166 @@ export function LocalEntryEditorApp() {
                 </section>
 
                 {/* Section 5: TYPE DETAILS */}
-                {formData.type === 'note' && (
-                  <section className="form-section">
-                    <div className="form-section-header form-section-header--details">
-                      5. TYPE DETAILS ({ENTRY_TYPE_DEFINITIONS.note.label})
-                    </div>
-                    <div className="form-section-body">
-                      <div className="form-group">
-                        <label htmlFor="field-category" className="field-label">
-                          Category (分类) <span className="field-required">*</span>
-                        </label>
-                        <input
-                          id="field-category"
-                          type="text"
-                          className="field-input"
-                          value={formData.category}
-                          onChange={(e) =>
-                            updateForm({ category: e.target.value })
-                          }
-                          placeholder="例如：实践、思考、指南"
-                          required
-                        />
-                        {fieldErrors.category && (
-                          <div className="field-error-message">
-                            {fieldErrors.category}
-                          </div>
-                        )}
+                {(() => {
+                  const currentTypeDef = ENTRY_TYPE_DEFINITIONS[formData.type];
+                  const typeFieldEntries = currentTypeDef
+                    ? Object.entries(currentTypeDef.typeFields)
+                    : [];
+                  if (typeFieldEntries.length === 0) return null;
+
+                  return (
+                    <section className="form-section">
+                      <div className="form-section-header form-section-header--details">
+                        5. TYPE DETAILS ({currentTypeDef.label})
                       </div>
-                    </div>
-                  </section>
-                )}
+                      <div className="form-section-body">
+                        {typeFieldEntries.map(([fieldKey, decl]) => {
+                          const fieldId = `field-type-${fieldKey}`;
+                          const val = formData.typeFields[fieldKey] ?? '';
+                          const errorMsg =
+                            fieldErrors[fieldKey] ||
+                            fieldErrors[`typeFields.${fieldKey}`];
+
+                          const handleFieldChange = (newVal: unknown) => {
+                            updateForm({
+                              typeFields: {
+                                ...formData.typeFields,
+                                [fieldKey]: newVal,
+                              },
+                            });
+                          };
+
+                          return (
+                            <div key={fieldKey} className="form-group">
+                              <label htmlFor={fieldId} className="field-label">
+                                {decl.label}{' '}
+                                {decl.required && (
+                                  <span className="field-required">*</span>
+                                )}
+                              </label>
+                              {decl.control === 'textarea' ? (
+                                <textarea
+                                  id={fieldId}
+                                  className="field-input"
+                                  style={{
+                                    minHeight: '80px',
+                                    resize: 'vertical',
+                                  }}
+                                  value={String(val)}
+                                  placeholder={decl.placeholder}
+                                  required={decl.required}
+                                  onChange={(e) =>
+                                    handleFieldChange(e.target.value)
+                                  }
+                                />
+                              ) : decl.control === 'number' ? (
+                                <input
+                                  id={fieldId}
+                                  type="number"
+                                  className="field-input"
+                                  value={String(val)}
+                                  placeholder={decl.placeholder}
+                                  required={decl.required}
+                                  onChange={(e) =>
+                                    handleFieldChange(e.target.value)
+                                  }
+                                />
+                              ) : decl.control === 'date' ? (
+                                <input
+                                  id={fieldId}
+                                  type="date"
+                                  className="field-input"
+                                  value={String(val)}
+                                  required={decl.required}
+                                  onChange={(e) =>
+                                    handleFieldChange(e.target.value)
+                                  }
+                                />
+                              ) : decl.control === 'checkbox' ? (
+                                <label className="checkbox-option">
+                                  <input
+                                    id={fieldId}
+                                    type="checkbox"
+                                    checked={Boolean(val)}
+                                    onChange={(e) =>
+                                      handleFieldChange(e.target.checked)
+                                    }
+                                  />
+                                  <span>{decl.label}</span>
+                                </label>
+                              ) : decl.control === 'select' && decl.options ? (
+                                <select
+                                  id={fieldId}
+                                  className="field-input"
+                                  value={String(val)}
+                                  required={decl.required}
+                                  onChange={(e) =>
+                                    handleFieldChange(e.target.value)
+                                  }
+                                >
+                                  <option value="">
+                                    {decl.placeholder || 'Select option...'}
+                                  </option>
+                                  {decl.options.map((opt) => (
+                                    <option key={opt.value} value={opt.value}>
+                                      {opt.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              ) : decl.control === 'radio' && decl.options ? (
+                                <div
+                                  className="radio-group"
+                                  role="radiogroup"
+                                  aria-label={decl.label}
+                                >
+                                  {decl.options.map((opt) => (
+                                    <label
+                                      key={opt.value}
+                                      className={`radio-option ${String(val) === opt.value ? 'is-selected' : ''}`}
+                                    >
+                                      <input
+                                        type="radio"
+                                        name={fieldId}
+                                        value={opt.value}
+                                        checked={String(val) === opt.value}
+                                        onChange={() =>
+                                          handleFieldChange(opt.value)
+                                        }
+                                      />
+                                      <span>{opt.label}</span>
+                                    </label>
+                                  ))}
+                                </div>
+                              ) : (
+                                <input
+                                  id={fieldId}
+                                  type="text"
+                                  className="field-input"
+                                  value={String(val)}
+                                  placeholder={decl.placeholder}
+                                  required={decl.required}
+                                  onChange={(e) =>
+                                    handleFieldChange(e.target.value)
+                                  }
+                                />
+                              )}
+                              {decl.helpText && (
+                                <span className="field-help-text">
+                                  {decl.helpText}
+                                </span>
+                              )}
+                              {errorMsg && (
+                                <div className="field-error-message">
+                                  {errorMsg}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </section>
+                  );
+                })()}
 
                 {/* Section 6: MARKDOWN BODY */}
                 <section className="form-section">
