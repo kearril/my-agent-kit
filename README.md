@@ -40,11 +40,11 @@ pnpm preview
 
 ## 当前状态
 
-静态核心、内容集合校验、统一条目路由、关联与反向链接、Explore Island、RSS 和站点地图均已完成并通过本地验证。项目仍处于**内容准备与首发校验阶段**：没有正式公开内容，也没有线上部署。
+静态核心、内容集合校验、统一条目路由、关联与反向链接、Explore Island、本地条目编辑台、RSS 和站点地图均已完成并通过本地验证。项目仍处于**内容准备与首发校验阶段**：没有正式公开内容，也没有线上部署。
 
 ## 当前维护流程
 
-1. 在 `src/content/entries/<type>/` 录入首批确认公开的 Markdown / MDX 条目，遵守 `docs/CONTENT.md` 的字段、目录和不可变 slug 规则。
+1. 在 `src/content/entries/<type>/` 录入首批确认公开的 Markdown / MDX 条目，遵守 `docs/CONTENT.md` 的字段、目录和不可变 slug 规则；本地开发时也可通过 `pnpm dev` 输出的编辑台地址在浏览器中创建或编辑条目。
 2. 用真实标题、摘要、标签、链接、关联关系和少量截图检查首页、条目页、Explore、RSS 与 sitemap 的信息密度和可读性。
 3. 运行 `pnpm test && pnpm build`。
 4. 只有首批内容、公开边界与首发文案均确认后，才按 `docs/DEPLOYMENT.md` 创建公开仓库、Cloudflare Pages 项目和域名绑定。

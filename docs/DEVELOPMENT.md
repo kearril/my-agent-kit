@@ -31,7 +31,9 @@
 - 只有需要浏览器端状态、事件监听或浏览器 API 的局部区域才使用 React Island。
 - 不把整个网站做成客户端 React 应用。
 - Content Collections 是内容的唯一事实来源；组件中不重复维护同一份条目数据。
-- 交互组件要考虑键盘操作、焦点状态、Esc 关闭和移动端尺寸。
+- 公开交互组件要考虑键盘操作、焦点状态、Esc 关闭和移动端尺寸；本地条目编辑台按桌面开发窗口设计。
+
+- 本地条目编辑台仅在 `pnpm dev` 中由 `localEditor` Integration 提供；终端会输出其 localhost 地址。它直接写入 Content Collections 源文件，生产静态产物不得包含编辑路由、编辑器模块或写入 API。
 
 ## 4. 目录与职责
 
@@ -40,9 +42,11 @@
 - `src/components/layout/`：跨页面复用的站点框架，例如导航和页脚。
 - `src/components/home/`：首页专属区块；每个组件只渲染自己的区块，并通过 props 接收内容。
 - `src/components/islands/`：仅放需要浏览器状态的 React Island（如 `ExploreIsland.tsx` 探索搜索与筛选）。
+- `src/integrations/`：Astro 开发服务器扩展；当前包含只在 dev 生命周期注册的本地条目编辑台 middleware。
+- `src/dev/`：只由开发服务器加载的编辑台 React 模块、状态与服务端读写逻辑；不得从公开页面、布局或组件导入。
 - `src/lib/`：Content Collections 查询、排序、关联图谱、反向链接与 Explore 索引计算；组件不重复实现这些规则。
 - `src/styles/`：设计 token、全局基础规则和跨组件样式；不存放内容或业务逻辑。
-- `tests/`：基于 Vitest 的纯逻辑单元测试（路径生成、关联图谱、反向链接计算与探索索引）。
+- `tests/`：基于 Vitest 的逻辑测试（路径生成、关联图谱、反向链接、探索索引，以及本地编辑台的 schema、源文件读写、API 与工作台状态）。
 先按职责拆分页面区块，不为一次性文字、只使用一次的小片段或尚未重复的视觉细节建立通用组件。
 
 本地视觉测试可以在 `src/content/entries/<type>/` 中使用 `*.local.md` 或 `*.local.mdx` 条目。它们仍由 Content Collections 校验和渲染，但已被 Git 忽略；不得把真实私密内容伪装成演示条目。

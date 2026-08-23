@@ -888,7 +888,9 @@ a:focus-visible {
 
 /* Right Preview Pane */
 .workbench-preview-pane {
-  min-width: 420px;
+  grid-column: 3;
+  width: 100%;
+  min-width: 0;
   height: 100%;
   display: flex;
   flex-direction: column;

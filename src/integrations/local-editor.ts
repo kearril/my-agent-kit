@@ -16,6 +16,11 @@ export function localEditor(options?: LocalEditorOptions): AstroIntegration {
   return {
     name: 'local-editor',
     hooks: {
+      'astro:server:start': ({ address, logger }) => {
+        logger.info(
+          `编辑台：http://localhost:${address.port}/__garden-editor/`,
+        );
+      },
       'astro:server:setup': async ({ server, refreshContent }) => {
         const entriesRoot =
           options?.entriesRoot ??
@@ -170,7 +175,7 @@ export function localEditor(options?: LocalEditorOptions): AstroIntegration {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Local Entry Editor</title>
+    <title>本地条目编辑器</title>
   </head>
   <body>
     <div id="root"></div>

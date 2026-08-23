@@ -8,7 +8,7 @@
 - 当前处于真实内容准备与首发校验阶段；计划使用 Cloudflare Pages 和 `https://kearril.com`，但尚未公开部署。
 - 页面以 Astro 静态输出为主，Markdown / MDX 与 Content Collections 是内容来源。
 - 所有公开条目统一采用不可变 slug 与 `/entries/<slug>/` 规范路由，站点自动计算双向关联与反向链接。
-- React 只用于需要浏览器状态、事件或浏览器 API 的局部 Explore Island，并提供基础静态回退。
+- 公开站点中的 React 只用于需要浏览器状态、事件或浏览器 API 的局部 Explore Island，并提供基础静态回退；本地条目编辑台是仅由 `pnpm dev` middleware 提供的开发模块，不进入公开页面或生产产物。
 - 站点构建生成 `/feed.xml`、`sitemap-index.xml` 和 `/robots.txt`，仅在公开部署后作为外部发现入口。
 ## 开始任务前
 
@@ -38,7 +38,7 @@ pnpm preview
 
 - 只改与当前目标直接相关的文件，不顺手重构无关代码。
 - 使用 pnpm；新增依赖前先确认现有能力不能满足需求，并说明理由。
-- Astro 负责页面和静态内容，React Island 只负责局部交互，不把整个网站改成客户端 React 应用。
+- Astro 负责公开页面和静态内容；React Island 只负责公开站点的局部交互，不把整站改成客户端 React 应用。本地条目编辑台仅可作为 dev-only 模块运行。
 - Content Collections 是条目数据的唯一事实来源，组件中不维护重复数据。
 - 视觉实现必须遵守 `docs/DESIGN.md`：无圆角、纯黑粗边框、硬边阴影、无渐变、无模糊阴影、旋转不超过 3 度。
 - 不提交密钥、个人隐私、`node_modules`、`dist` 或本地环境文件。

@@ -144,7 +144,7 @@ function buildPreviewDocument(html: string, title?: string): string {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;')
-    : 'Preview';
+    : '预览';
   return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -309,13 +309,13 @@ export function LocalEntryEditorApp() {
     try {
       const res = await fetch('/__garden-editor/api/entries');
       if (!res.ok) {
-        throw new Error(`Failed to load entries (${res.status})`);
+        throw new Error(`加载条目失败（${res.status}）`);
       }
       const data = (await res.json()) as EditorEntriesResponse;
       setEntries(data.entries);
     } catch (err) {
       setEntriesError(
-        err instanceof Error ? err.message : 'Unknown error loading entries',
+        err instanceof Error ? err.message : '加载条目时发生未知错误',
       );
     } finally {
       setEntriesLoading(false);
@@ -334,7 +334,7 @@ export function LocalEntryEditorApp() {
 
       if (form.extension === '.mdx' || form.slug.endsWith('.mdx')) {
         setPreviewError(
-          'MDX preview is not supported. Save the entry and view on the site.',
+          '暂不支持 MDX 预览。请保存条目后在站点页面中查看。',
         );
         dispatch({ type: 'setPreview', preview: null });
         setPreviewLoading(false);
@@ -351,8 +351,8 @@ export function LocalEntryEditorApp() {
 
       const payload: Record<string, unknown> = {
         slug: form.slug || 'untitled-preview',
-        title: form.title || 'Untitled Entry',
-        summary: form.summary || 'Summary preview',
+        title: form.title || '未命名条目',
+        summary: form.summary || '预览摘要',
         type: form.type,
         draft: form.draft,
         source: form.source,
@@ -401,7 +401,7 @@ export function LocalEntryEditorApp() {
           if (reqId !== previewSeqRef.current) return;
           setPreviewError(
             errData.error ||
-              'MDX preview is not supported. Save the entry and view on the site.',
+              '暂不支持 MDX 预览。请保存条目后在站点页面中查看。',
           );
           dispatch({ type: 'setPreview', preview: null });
           setPreviewStale(false);
@@ -411,7 +411,7 @@ export function LocalEntryEditorApp() {
         if (!res.ok) {
           const errData = (await res.json()) as EditorErrorResponse;
           if (reqId !== previewSeqRef.current) return;
-          setPreviewError(errData.error || `Preview failed (${res.status})`);
+          setPreviewError(errData.error || `预览失败（${res.status}）`);
           dispatch({ type: 'setPreview', preview: null });
           setPreviewStale(false);
           return;
@@ -425,7 +425,7 @@ export function LocalEntryEditorApp() {
         if (reqId !== previewSeqRef.current) return;
         if ((err as Error).name !== 'AbortError') {
           setPreviewError(
-            err instanceof Error ? err.message : 'Preview request error',
+            err instanceof Error ? err.message : '预览请求失败',
           );
         }
       } finally {
@@ -458,7 +458,7 @@ export function LocalEntryEditorApp() {
         if (reqId !== detailRequestSeqRef.current) return;
 
         if (!res.ok) {
-          throw new Error(`Failed to load entry "${slug}" (${res.status})`);
+          throw new Error(`加载条目“${slug}”失败（${res.status}）`);
         }
         const data = (await res.json()) as EditorEntryResponse;
         if (reqId !== detailRequestSeqRef.current) return;
@@ -474,7 +474,7 @@ export function LocalEntryEditorApp() {
         setBannerAlert({
           type: 'error',
           message:
-            err instanceof Error ? err.message : 'Failed to load entry details',
+            err instanceof Error ? err.message : '加载条目详情失败',
         });
       } finally {
         if (reqId === detailRequestSeqRef.current) {
@@ -670,7 +670,7 @@ export function LocalEntryEditorApp() {
           type: 'conflict',
           message:
             conflictData.error ||
-            `409 Conflict: Entry on disk has revision ${conflictData.actualRevision}, expected ${conflictData.expectedRevision}. Your current form draft is retained.`,
+            `检测到版本冲突：磁盘版本为 ${conflictData.actualRevision}，当前表单基于 ${conflictData.expectedRevision}。已保留当前表单草稿。`,
           details: conflictData,
         });
         return;
@@ -706,14 +706,14 @@ export function LocalEntryEditorApp() {
           type: 'error',
           message:
             errData.error ||
-            'Validation failed. Please correct field errors and try again.',
+            '校验失败。请修正字段错误后重试。',
         });
         return;
       }
 
       if (!res.ok) {
         const errData = (await res.json()) as EditorErrorResponse;
-        throw new Error(errData.error || `Save failed (${res.status})`);
+        throw new Error(errData.error || `保存失败（${res.status}）`);
       }
 
       const saveRes = (await res.json()) as EditorSaveResponse;
@@ -732,7 +732,7 @@ export function LocalEntryEditorApp() {
     } catch (err) {
       setBannerAlert({
         type: 'error',
-        message: err instanceof Error ? err.message : 'Failed to save entry',
+        message: err instanceof Error ? err.message : '保存条目失败',
       });
     } finally {
       setSaveLoading(false);
@@ -778,12 +778,12 @@ export function LocalEntryEditorApp() {
       {/* Top Application Toolbar */}
       <header className="workbench-toolbar">
         <div className="toolbar-brand-group">
-          <div className="toolbar-brand">LOCAL ENTRY EDITOR</div>
-          <div className="toolbar-status-badge">Localhost: 127.0.0.1</div>
+          <div className="toolbar-brand">本地条目编辑器</div>
+          <div className="toolbar-status-badge">本机地址：127.0.0.1</div>
           <div className="toolbar-summary">
             {entriesLoading
-              ? 'Loading entries...'
-              : `${filteredEntries.length} / ${entries.length} ENTRIES`}
+              ? '正在加载条目…'
+              : `${filteredEntries.length} / ${entries.length} 条目`}
           </div>
         </div>
 
@@ -800,7 +800,7 @@ export function LocalEntryEditorApp() {
                   : dispatch({ type: 'expandEditor' })
               }
             >
-              EXPAND EDITOR
+              放大编辑区
             </button>
             <button
               type="button"
@@ -808,7 +808,7 @@ export function LocalEntryEditorApp() {
               aria-pressed={state.pane === 'split'}
               onClick={() => dispatch({ type: 'restoreSplit' })}
             >
-              SPLIT
+              双栏视图
             </button>
             <button
               type="button"
@@ -820,7 +820,7 @@ export function LocalEntryEditorApp() {
                   : dispatch({ type: 'expandPreview' })
               }
             >
-              EXPAND PREVIEW
+              放大预览区
             </button>
           </div>
 
@@ -829,7 +829,7 @@ export function LocalEntryEditorApp() {
             className="new-entry-btn"
             onClick={handleNewEntry}
           >
-            + NEW ENTRY
+            + 新建条目
           </button>
         </div>
       </header>
@@ -839,14 +839,14 @@ export function LocalEntryEditorApp() {
         {/* Left Column: Fixed Navigation */}
         <nav className="workbench-nav-pane" aria-label="条目导航">
           <div className="nav-header">
-            <h2 className="nav-title">FIND ENTRIES</h2>
+            <h2 className="nav-title">查找条目</h2>
           </div>
 
           <div className="nav-controls">
             <input
               type="text"
               className="nav-search-input"
-              placeholder="Search title or slug..."
+              placeholder="搜索标题或 Slug…"
               value={filterText}
               aria-label="按标题或路径名搜索条目"
               onChange={(e) => setFilterText(e.target.value)}
@@ -859,7 +859,7 @@ export function LocalEntryEditorApp() {
                 aria-pressed={filterTab === 'ALL'}
                 onClick={() => setFilterTab('ALL')}
               >
-                ALL
+                全部
               </button>
               <button
                 type="button"
@@ -867,7 +867,7 @@ export function LocalEntryEditorApp() {
                 aria-pressed={filterTab === 'DRAFT'}
                 onClick={() => setFilterTab('DRAFT')}
               >
-                DRAFT
+                草稿
               </button>
               <button
                 type="button"
@@ -875,7 +875,7 @@ export function LocalEntryEditorApp() {
                 aria-pressed={filterTab === 'LOCAL'}
                 onClick={() => setFilterTab('LOCAL')}
               >
-                LOCAL
+                本地
               </button>
             </div>
 
@@ -887,7 +887,7 @@ export function LocalEntryEditorApp() {
                 setTypeFilter(e.target.value as 'ALL' | EntryType)
               }
             >
-              <option value="ALL">ALL TYPES ({entries.length})</option>
+              <option value="ALL">全部类型（{entries.length}）</option>
               {ENTRY_TYPES.map((t) => (
                 <option key={t} value={t}>
                   {ENTRY_TYPE_DEFINITIONS[t].label} ({t})
@@ -898,7 +898,7 @@ export function LocalEntryEditorApp() {
 
           <ul className="nav-entry-list">
             {entriesLoading && (
-              <li className="nav-empty-message">Loading entries...</li>
+              <li className="nav-empty-message">正在加载条目…</li>
             )}
             {entriesError && (
               <li className="nav-empty-message">{entriesError}</li>
@@ -907,7 +907,7 @@ export function LocalEntryEditorApp() {
               !entriesError &&
               filteredEntries.length === 0 && (
                 <li className="nav-empty-message">
-                  No entries found matching filters.
+                  没有符合当前筛选条件的条目。
                 </li>
               )}
             {!entriesLoading &&
@@ -930,10 +930,10 @@ export function LocalEntryEditorApp() {
                             item.type}
                         </span>
                         {item.draft && (
-                          <span className="badge badge-draft">DRAFT</span>
+                          <span className="badge badge-draft">草稿</span>
                         )}
                         {item.isLocal && (
-                          <span className="badge badge-local">LOCAL</span>
+                          <span className="badge badge-local">本地</span>
                         )}
                         <span className="badge">{item.extension || '.md'}</span>
                       </div>
@@ -944,12 +944,12 @@ export function LocalEntryEditorApp() {
                       <div className="entry-item-status-row">
                         {isSelected && (
                           <span className="status-selected-label">
-                            [SELECTED]
+                            [已选择]
                           </span>
                         )}
                         {isUnsaved && (
                           <span className="status-unsaved-label">
-                            [UNSAVED]
+                            [未保存]
                           </span>
                         )}
                       </div>
@@ -964,17 +964,17 @@ export function LocalEntryEditorApp() {
         <main className="workbench-editor-pane" aria-label="条目编辑">
           {state.mode === 'idle' ? (
             <div className="editor-empty-state">
-              <h2 className="editor-empty-title">NO ENTRY SELECTED</h2>
+              <h2 className="editor-empty-title">尚未选择条目</h2>
               <p className="editor-empty-desc">
-                Select an entry from the left navigation list to inspect and edit,
-                or click <strong>+ NEW ENTRY</strong> to create a new markdown entry.
+                请从左侧选择条目进行查看和编辑，或点击
+                <strong>+ 新建条目</strong> 创建新的 Markdown 条目。
               </p>
               <button
                 type="button"
                 className="new-entry-btn"
                 onClick={handleNewEntry}
               >
-                + NEW ENTRY
+                + 新建条目
               </button>
             </div>
           ) : (
@@ -982,13 +982,13 @@ export function LocalEntryEditorApp() {
               <div className="editor-header-bar">
                 <div className="editor-header-title">
                   {state.mode === 'create'
-                    ? '+ CREATE NEW ENTRY'
-                    : `EDIT: ${formData.slug}`}
+                    ? '+ 创建新条目'
+                    : `编辑：${formData.slug}`}
                 </div>
                 <div className="editor-header-meta">
                   {state.mode === 'edit' && (
                     <span>
-                      Revision: {formData.revision || 'unknown'} |{' '}
+                      版本：{formData.revision || '未知'} |{' '}
                       {formData.extension}
                     </span>
                   )}
@@ -998,7 +998,7 @@ export function LocalEntryEditorApp() {
               <div className="editor-scroll-container">
                 {detailLoading && (
                   <div className="editor-alert editor-alert--conflict">
-                    Loading entry details from disk...
+                    正在从磁盘加载条目详情…
                   </div>
                 )}
 
@@ -1015,12 +1015,12 @@ export function LocalEntryEditorApp() {
                 {/* Section 1: BASIC INFO */}
                 <section className="form-section">
                   <div className="form-section-header form-section-header--basic">
-                    1. BASIC INFO
+                    1. 基本信息
                   </div>
                   <div className="form-section-body">
                     <div className="form-group">
                       <label htmlFor="field-title" className="field-label">
-                        Title <span className="field-required">*</span>
+                        标题 <span className="field-required">*</span>
                       </label>
                       <input
                         id="field-title"
@@ -1028,7 +1028,7 @@ export function LocalEntryEditorApp() {
                         className="field-input"
                         value={formData.title}
                         onChange={(e) => updateForm({ title: e.target.value })}
-                        placeholder="Entry title..."
+                        placeholder="条目标题…"
                         required
                       />
                       {fieldErrors.title && (
@@ -1040,7 +1040,7 @@ export function LocalEntryEditorApp() {
 
                     <div className="form-group">
                       <label htmlFor="field-summary" className="field-label">
-                        Summary <span className="field-required">*</span>
+                        摘要 <span className="field-required">*</span>
                       </label>
                       <input
                         id="field-summary"
@@ -1050,7 +1050,7 @@ export function LocalEntryEditorApp() {
                         onChange={(e) =>
                           updateForm({ summary: e.target.value })
                         }
-                        placeholder="Brief summary description..."
+                        placeholder="简短摘要说明…"
                         required
                       />
                       {fieldErrors.summary && (
@@ -1063,7 +1063,7 @@ export function LocalEntryEditorApp() {
                     <div className="form-group-row">
                       <div className="form-group">
                         <label htmlFor="field-type" className="field-label">
-                          Type <span className="field-required">*</span>
+                          类型 <span className="field-required">*</span>
                         </label>
                         {state.mode === 'create' ? (
                           <select
@@ -1124,7 +1124,7 @@ export function LocalEntryEditorApp() {
                           formData.slug &&
                           !slugRegex.test(formData.slug) && (
                             <div className="field-error-message">
-                              Slug must be lowercase ASCII kebab-case (e.g. my-new-entry)
+                              Slug 必须使用小写 ASCII kebab-case 格式（例如 my-new-entry）
                             </div>
                           )}
                       </div>
@@ -1135,7 +1135,7 @@ export function LocalEntryEditorApp() {
                 {/* Section 2: IDENTITY & PUBLISHING */}
                 <section className="form-section">
                   <div className="form-section-header form-section-header--publishing">
-                    2. IDENTITY & PUBLISHING
+                    2. 身份与发布
                   </div>
                   <div className="form-section-body">
                     <div className="form-group-row">
@@ -1147,7 +1147,7 @@ export function LocalEntryEditorApp() {
                             updateForm({ draft: e.target.checked })
                           }
                         />
-                        <span>DRAFT (草稿状态)</span>
+                        <span>草稿状态</span>
                       </label>
 
                       <div className="form-group">
@@ -1155,7 +1155,7 @@ export function LocalEntryEditorApp() {
                           htmlFor="field-featured-order"
                           className="field-label"
                         >
-                          Featured Order (精选序号 1–6)
+                          精选序号（1–6）
                         </label>
                         <input
                           id="field-featured-order"
@@ -1167,7 +1167,7 @@ export function LocalEntryEditorApp() {
                           onChange={(e) =>
                             updateForm({ featuredOrder: e.target.value })
                           }
-                          placeholder="Optional (1-6)"
+                          placeholder="可选（1–6）"
                         />
                         {fieldErrors.featuredOrder && (
                           <div className="field-error-message">
@@ -1183,7 +1183,7 @@ export function LocalEntryEditorApp() {
                           htmlFor="field-created-at"
                           className="field-label"
                         >
-                          Created At <span className="field-required">*</span>
+                          创建日期 <span className="field-required">*</span>
                         </label>
                         <input
                           id="field-created-at"
@@ -1207,7 +1207,7 @@ export function LocalEntryEditorApp() {
                           htmlFor="field-published-at"
                           className="field-label"
                         >
-                          Published At {!formData.draft && <span className="field-required">*</span>}
+                          发布日期 {!formData.draft && <span className="field-required">*</span>}
                         </label>
                         {formData.initialPublishedAt ? (
                           <>
@@ -1215,7 +1215,7 @@ export function LocalEntryEditorApp() {
                               {formData.publishedAt}
                             </div>
                             <span className="field-help-text">
-                              Published date is immutable once set.
+                              发布日期一经设置不可修改。
                             </span>
                           </>
                         ) : formData.draft ? (
@@ -1228,7 +1228,7 @@ export function LocalEntryEditorApp() {
                               disabled
                             />
                             <span className="field-help-text">
-                              Draft entries cannot set PublishedAt (set when published)
+                              草稿条目不能设置发布日期，请在正式发布时填写。
                             </span>
                           </>
                         ) : (
@@ -1257,7 +1257,7 @@ export function LocalEntryEditorApp() {
                           htmlFor="field-updated-at"
                           className="field-label"
                         >
-                          Updated At <span className="field-required">*</span>
+                          更新日期 <span className="field-required">*</span>
                         </label>
                         <input
                           id="field-updated-at"
@@ -1282,12 +1282,12 @@ export function LocalEntryEditorApp() {
                 {/* Section 3: ORGANIZE (Tags & Related) */}
                 <section className="form-section">
                   <div className="form-section-header form-section-header--organize">
-                    3. ORGANIZE
+                    3. 整理与关联
                   </div>
                   <div className="form-section-body">
                     {/* Tags */}
                     <div className="form-group">
-                      <label htmlFor="field-tag-input" className="field-label">Tags</label>
+                      <label htmlFor="field-tag-input" className="field-label">标签</label>
                       <div className="tag-container">
                         {formData.tags.map((tag) => (
                           <span key={tag} className="tag-chip">
@@ -1308,7 +1308,7 @@ export function LocalEntryEditorApp() {
                           id="field-tag-input"
                           type="text"
                           className="field-input"
-                          placeholder="Add new tag..."
+                          placeholder="添加新标签…"
                           value={tagInput}
                           onChange={(e) => setTagInput(e.target.value)}
                           onKeyDown={(e) => {
@@ -1323,7 +1323,7 @@ export function LocalEntryEditorApp() {
                           className="tag-add-btn"
                           onClick={handleAddTag}
                         >
-                          + ADD TAG
+                          + 添加标签
                         </button>
                       </div>
                       {(fieldErrors.tags ||
@@ -1343,20 +1343,20 @@ export function LocalEntryEditorApp() {
 
                     {/* Related Entries */}
                     <div className="form-group">
-                      <label htmlFor="field-related-search" className="field-label">Related Entries (关联条目)</label>
+                      <label htmlFor="field-related-search" className="field-label">关联条目</label>
                       <div className="related-box">
                         <input
                           id="field-related-search"
                           type="text"
                           className="field-input"
-                          placeholder="Search entries to link..."
+                          placeholder="搜索要关联的条目…"
                           value={relatedSearch}
                           onChange={(e) => setRelatedSearch(e.target.value)}
                         />
                         <div className="related-list">
                           {availableRelatedEntries.length === 0 ? (
                             <div className="field-help-text" style={{ padding: '8px' }}>
-                              No matching entries to link
+                              没有可关联的匹配条目
                             </div>
                           ) : (
                             availableRelatedEntries.map((e) => {
@@ -1388,7 +1388,7 @@ export function LocalEntryEditorApp() {
                         </div>
                         {formData.related.length > 0 && (
                           <div className="field-help-text">
-                            Selected: {formData.related.join(', ')}
+                            已选择：{formData.related.join(', ')}
                           </div>
                         )}
                       </div>
@@ -1412,18 +1412,18 @@ export function LocalEntryEditorApp() {
                 {/* Section 4: SOURCE & LINKS */}
                 <section className="form-section">
                   <div className="form-section-header form-section-header--source">
-                    4. SOURCE & LINKS
+                    4. 来源与链接
                   </div>
                   <div className="form-section-body">
                     {/* Source Radio Group */}
                     <div className="form-group">
-                      <span className="field-label">Source (条目来源)</span>
+                      <span className="field-label">来源</span>
                       <div className="radio-group" role="radiogroup" aria-label="条目来源">
                         {(
                           [
-                            ['self', '原创 (Self)'],
-                            ['adapted', '改编 (Adapted)'],
-                            ['external', '外部收录 (External)'],
+                            ['self', '原创'],
+                            ['adapted', '改编'],
+                            ['external', '外部收录'],
                           ] as const
                         ).map(([val, label]) => (
                           <label
@@ -1450,7 +1450,7 @@ export function LocalEntryEditorApp() {
 
                     {/* Links Repeater */}
                     <div className="form-group">
-                      <span className="field-label">Links (相关链接)</span>
+                      <span className="field-label">相关链接</span>
                       {fieldErrors.links && (
                         <div className="field-error-message">
                           {fieldErrors.links}
@@ -1464,7 +1464,7 @@ export function LocalEntryEditorApp() {
                                 <input
                                   type="text"
                                   className="field-input"
-                                  placeholder="Link label..."
+                                  placeholder="链接名称…"
                                   aria-label={`链接 ${idx + 1} 标签`}
                                   value={link.label}
                                   onChange={(e) =>
@@ -1504,7 +1504,7 @@ export function LocalEntryEditorApp() {
                                 aria-label={`删除链接 ${idx + 1}`}
                                 onClick={() => handleRemoveLink(idx)}
                               >
-                                DELETE
+                                删除
                               </button>
                             </div>
                             {fieldErrors[`links.${idx}`] &&
@@ -1524,7 +1524,7 @@ export function LocalEntryEditorApp() {
                           className="link-add-btn"
                           onClick={handleAddLink}
                         >
-                          + ADD LINK
+                          + 添加链接
                         </button>
                       </div>
                     </div>
@@ -1542,7 +1542,7 @@ export function LocalEntryEditorApp() {
                   return (
                     <section className="form-section">
                       <div className="form-section-header form-section-header--details">
-                        5. TYPE DETAILS ({currentTypeDef.label})
+                        5. 类型详情（{currentTypeDef.label}）
                       </div>
                       <div className="form-section-body">
                         {typeFieldEntries.map(([fieldKey, decl]) => {
@@ -1630,7 +1630,7 @@ export function LocalEntryEditorApp() {
                                   }
                                 >
                                   <option value="">
-                                    {decl.placeholder || 'Select option...'}
+                                    {decl.placeholder || '请选择选项…'}
                                   </option>
                                   {decl.options.map((opt) => (
                                     <option key={opt.value} value={opt.value}>
@@ -1696,19 +1696,19 @@ export function LocalEntryEditorApp() {
                 {/* Section 6: MARKDOWN BODY */}
                 <section className="form-section">
                   <div className="form-section-header form-section-header--body">
-                    6. MARKDOWN BODY
+                    6. Markdown 正文
                   </div>
                   <div className="form-section-body">
                     <div className="form-group">
                       <label htmlFor="field-body" className="field-label">
-                        Markdown Content
+                        Markdown 正文
                       </label>
                       <textarea
                         id="field-body"
                         className="markdown-textarea"
                         value={formData.body}
                         onChange={(e) => updateForm({ body: e.target.value })}
-                        placeholder="# Markdown content here..."
+                        placeholder="# 在这里编写 Markdown 正文…"
                       />
                     </div>
                   </div>
@@ -1721,7 +1721,7 @@ export function LocalEntryEditorApp() {
                   <span
                     className={`save-status-text ${state.dirty ? 'is-dirty' : 'is-saved'}`}
                   >
-                    {state.dirty ? 'UNSAVED CHANGES' : 'ALL CHANGES SAVED'}
+                    {state.dirty ? '有未保存改动' : '所有改动已保存'}
                   </span>
                   {savedUrl && (
                     <a
@@ -1730,7 +1730,7 @@ export function LocalEntryEditorApp() {
                       rel="noreferrer"
                       className="live-entry-link"
                     >
-                      View Live Entry ({savedUrl})
+                      查看站点条目（{savedUrl}）
                     </a>
                   )}
                 </div>
@@ -1747,7 +1747,7 @@ export function LocalEntryEditorApp() {
                     onClick={handleExplicitPreview}
                     aria-label="预览未保存内容"
                   >
-                    {previewLoading ? 'RENDERING...' : 'PREVIEW'}
+                    {previewLoading ? '正在渲染…' : '预览'}
                   </button>
                   <button
                     type="button"
@@ -1755,7 +1755,7 @@ export function LocalEntryEditorApp() {
                     disabled={saveLoading}
                     onClick={handleSave}
                   >
-                    {saveLoading ? 'SAVING...' : 'SAVE ENTRY'}
+                    {saveLoading ? '正在保存…' : '保存条目'}
                   </button>
                 </div>
               </div>
@@ -1766,22 +1766,22 @@ export function LocalEntryEditorApp() {
         {/* Right Column: Sandboxed Preview Pane */}
         <aside className="workbench-preview-pane" aria-label="条目预览">
           <div className="preview-header-bar">
-            <div className="preview-header-title">PREVIEW</div>
+            <div className="preview-header-title">预览</div>
             <div className="preview-header-tag">
               {formData.extension === '.mdx' || formData.slug.endsWith('.mdx')
-                ? 'MDX (LIMIT)'
+                ? 'MDX（受限）'
                 : state.mode === 'idle'
-                  ? 'IDLE'
+                  ? '尚未预览'
                   : previewStale
-                    ? 'OUT OF DATE'
-                    : 'UP TO DATE'}
+                    ? '预览已过期'
+                    : '预览已更新'}
             </div>
           </div>
 
           {/* Boundaries / notices */}
           {formData.extension === '.mdx' || formData.slug.endsWith('.mdx') ? (
             <div className="preview-boundary-notice preview-boundary-notice--mdx">
-              MDX preview is not supported. Save the entry and view on the site.
+              暂不支持 MDX 预览。请保存条目后在站点页面中查看。
             </div>
           ) : (
             <>
@@ -1790,18 +1790,18 @@ export function LocalEntryEditorApp() {
                   className="preview-boundary-notice preview-boundary-notice--stale"
                   role="status"
                 >
-                  Preview is out of date. Click PREVIEW to refresh.
+                  预览已过期。点击“预览”刷新。
                 </div>
               )}
               <div className="preview-boundary-notice">
-                Notice: Local relative images (e.g. ./img.png) cannot be previewed in the sandbox.
+                提示：沙箱中无法预览本地相对图片（例如 ./img.png）。
               </div>
             </>
           )}
           <div className="preview-iframe-wrapper">
             {previewLoading && (
               <div className="preview-loading-overlay">
-                <div>Rendering live preview...</div>
+                <div>正在渲染实时预览…</div>
               </div>
             )}
 
