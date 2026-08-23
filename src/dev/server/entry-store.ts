@@ -313,7 +313,11 @@ export function createEntryStore(options: CreateEntryStoreOptions): EntryStore {
         if (err instanceof EntryPathConflictError) {
           throw err;
         }
-        // File does not exist, safe to proceed
+        const code = (err as NodeJS.ErrnoException).code;
+        if (code !== 'ENOENT') {
+          throw err;
+        }
+        // ENOENT: File does not exist, safe to proceed
       }
 
       // Prepare metadata input with defaults (exclude body from schema validation)

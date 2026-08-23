@@ -444,6 +444,24 @@ Original body
       const expectedEnd = `---\n${complexBody}`;
       expect(diskContent.endsWith(expectedEnd)).toBe(true);
     });
+
+    it('preserves existing on-disk body when body is omitted on save', async () => {
+      const created = await store.create(validPromptInput);
+      const originalBody = validPromptInput.body!;
+
+      const { body: _, ...inputWithoutBody } = validPromptInput;
+      const saved = await store.save('new-prompt', created.revision, {
+        ...inputWithoutBody,
+        title: 'Updated Prompt Title Without Body',
+      });
+
+      expect(saved.body).toBe(originalBody);
+      expect(saved.title).toBe('Updated Prompt Title Without Body');
+
+      const diskContent = await fs.readFile(saved.filePath, 'utf8');
+      expect(diskContent).toContain('title: Updated Prompt Title Without Body\n');
+      expect(diskContent.endsWith(`---\n${originalBody}`)).toBe(true);
+    });
   });
 
   describe('list', () => {
