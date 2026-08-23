@@ -5,6 +5,7 @@ import {
   ENTRY_TYPES,
   createCollectionEntrySchema,
   parseEditorEntry,
+  type EditorEntryData,
   type EditorEntryInput,
   type EntryType,
 } from '../../src/lib/entry-data';
@@ -77,11 +78,13 @@ describe('entry data registry and validation', () => {
   });
 
   describe('parseEditorEntry', () => {
-    it('parses a valid note with category', () => {
-      const parsed = parseEditorEntry(baseValidNote, {
+    it('parses a valid note with category and exposes typed slug', () => {
+      const parsed: EditorEntryData = parseEditorEntry(baseValidNote, {
         ...validationOptions,
         currentSlug: 'test-note',
       });
+      const parsedSlug: string = parsed.slug;
+      expect(parsedSlug).toBe('test-note');
       expect(parsed).toMatchObject({
         type: 'note',
         category: '实践',

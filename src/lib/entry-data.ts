@@ -209,6 +209,7 @@ export interface ParseEditorEntryOptions {
 }
 
 export type EditorSharedData = {
+  slug: string;
   title: string;
   summary: string;
   tags: string[];
