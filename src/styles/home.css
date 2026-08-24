@@ -918,6 +918,7 @@
 	padding: clamp(12px, 1.8vw, 18px);
 	display: flex;
 	flex-direction: column;
+	justify-content: space-between;
 	gap: 10px;
 	position: relative;
 	transition: transform 0.18s ease-out, box-shadow 0.18s ease-out;
@@ -951,11 +952,13 @@
 .blueprint-rules-list {
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	flex-grow: 1;
+	justify-content: space-around;
+	gap: 10px;
 }
 .blueprint-rule-item {
 	display: flex;
-	gap: 10px;
+	gap: 12px;
 	align-items: flex-start;
 }
 .rule-index-box {
@@ -964,28 +967,28 @@
 	color: var(--black);
 	box-shadow: 2px 2px 0 var(--black);
 	font-family: ui-monospace, monospace;
-	font-size: 0.78rem;
+	font-size: 0.82rem;
 	font-weight: 900;
-	padding: 2px 5px;
+	padding: 2px 6px;
 	flex-shrink: 0;
 	line-height: 1.2;
 }
 .rule-content {
 	display: flex;
 	flex-direction: column;
-	gap: 2px;
+	gap: 4px;
 }
 .rule-title {
 	font-family: ui-monospace, monospace;
-	font-size: 0.9rem;
+	font-size: 0.95rem;
 	font-weight: 900;
 	color: var(--black);
 	margin: 0;
 }
 .rule-desc {
 	font-family: ui-monospace, monospace;
-	font-size: 0.8rem;
-	line-height: 1.45;
+	font-size: 0.84rem;
+	line-height: 1.5;
 	color: var(--dark);
 	margin: 0;
 }
