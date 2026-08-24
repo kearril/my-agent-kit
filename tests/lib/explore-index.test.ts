@@ -19,14 +19,14 @@ const entries: ExploreEntry[] = [
     canonicalUrl: '/entries/astro-guide/',
   },
   {
-    slug: 'garden-note',
-    type: 'note',
-    title: 'Garden Notes',
+    slug: 'garden-project',
+    type: 'project',
+    title: 'Garden Project',
     summary: 'A personal digital garden.',
     tags: ['写作'],
     publishedAt: '2026-08-02',
     updatedAt: '2026-08-04',
-    canonicalUrl: '/entries/garden-note/',
+    canonicalUrl: '/entries/garden-project/',
   },
 ];
 
@@ -42,8 +42,11 @@ describe('Explore index', () => {
   });
 
   it('intersects query, type, and exact tag filters', () => {
-    expect(filterExploreIndex(entries, { query: 'guide', type: 'website', tag: '开发' }).map((entry) => entry.slug)).toEqual([
+    expect(filterExploreIndex(entries, { query: '', type: 'website', tag: '开发' }).map((entry) => entry.slug)).toEqual([
       'astro-guide',
+    ]);
+    expect(filterExploreIndex(entries, { query: '', type: 'project', tag: '写作' }).map((entry) => entry.slug)).toEqual([
+      'garden-project',
     ]);
   });
 
@@ -86,6 +89,18 @@ describe('Explore index', () => {
           tags: ['mcp'],
           publishedAt: new Date('2026-08-03T00:00:00Z'),
           updatedAt: new Date('2026-08-06T00:00:00Z'),
+        },
+      },
+      {
+        id: 'note-item',
+        data: {
+          draft: false,
+          type: 'note',
+          title: 'Note Item',
+          summary: 'Note summary',
+          tags: ['note'],
+          publishedAt: new Date('2026-08-04T00:00:00Z'),
+          updatedAt: new Date('2026-08-07T00:00:00Z'),
         },
       },
     ];

@@ -10,22 +10,32 @@ interface Props {
 const { entries } = Astro.props;
 ---
 
-<section id="explore" class="section section--teal" aria-labelledby="explore-title">
-	<div class="section-heading">
-		<div>
-			<div class="eyebrow eyebrow--black">
-				<span>EXPLORE ENGINE</span>
+<section id="explore" class="explore-section" aria-labelledby="explore-title">
+	<div class="explore-heading-row">
+		<div class="explore-heading-left">
+			<div class="eyebrow eyebrow--tape">
+				<span>SECTION 06 // EXPLORE ENGINE</span>
 			</div>
-			<h2 id="explore-title" class="section-title-two-tone">
-				<span class="title-black">EXPLORE</span>
-				<span class="title-yellow">INDEX</span>
+			<h2 id="explore-title" class="explore-title">
+				<span class="explore-title-en">EXPLORE INDEX</span>
+				<span class="explore-title-cn">· 全量检索</span>
 			</h2>
 		</div>
-		<p>Prompt、Skill、MCP、网站、项目与笔记会在这里被搜索、筛选和重新发现。</p>
+		<div class="explore-heading-right">
+			<p class="explore-heading-desc">
+				支持关键词实时检索、资产类型快速分流与多维标签定位。即搜即得的数字工具与协议自留地。
+			</p>
+			<div class="explore-live-seal" aria-hidden="true">
+				<span class="explore-seal-label">CATALOG // ACTIVE</span>
+				<span class="explore-seal-count">{entries.length} ARTIFACTS</span>
+			</div>
+		</div>
 	</div>
 
 	<ExploreIsland client:load entries={entries} />
 	<noscript>
 		<ExploreFallback entries={entries} />
 	</noscript>
+
+	<div class="explore-bottom-tape" aria-hidden="true" />
 </section>

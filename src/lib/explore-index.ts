@@ -1,5 +1,4 @@
-export type ExploreEntryType = 'prompt' | 'skill' | 'mcp' | 'website' | 'project' | 'note';
-
+export type ExploreEntryType = 'prompt' | 'skill' | 'mcp' | 'website' | 'project';
 export interface ExploreEntry {
   slug: string;
   type: ExploreEntryType;
@@ -20,7 +19,7 @@ export interface ExploreFilters {
 export interface RawGardenEntry {
   id: string;
   data: {
-    type: ExploreEntryType;
+    type: ExploreEntryType | 'note';
     title: string;
     summary: string;
     tags: string[];
@@ -38,9 +37,8 @@ function formatDateString(date: Date): string {
 }
 
 export function createExploreIndex(entries: readonly RawGardenEntry[]): ExploreEntry[] {
-  const publicEntries = entries.filter((entry) => !entry.data.draft);
+  const publicEntries = entries.filter((entry) => !entry.data.draft && entry.data.type !== 'note') as Array<RawGardenEntry & { data: { type: ExploreEntryType } }>;
   const sorted = [...publicEntries].sort((a, b) => b.data.updatedAt.valueOf() - a.data.updatedAt.valueOf());
-
   return sorted.map((entry) => ({
     slug: entry.id,
     type: entry.data.type,

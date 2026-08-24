@@ -197,21 +197,15 @@
 	.article-connection-header {
 		flex-wrap:wrap
 	}
-	.explore-grid {
-		grid-template-columns:1fr;
-		gap:18px
+	.explore-cockpit-layout {
+		grid-template-columns: 1fr;
+		gap: 20px;
 	}
-	.explore-search-bar {
-		box-shadow:4px 4px 0 var(--black)
+	.cockpit-tuner-panel {
+		position: static;
 	}
-	.explore-status-bar {
-		flex-direction:column;
-		align-items:flex-start;
-		gap:10px
-	}
-	.explore-clear-btn {
-		width:100%;
-		justify-content:center
+	.explore-specimen-grid {
+		grid-template-columns: 1fr;
 	}
 }
 @media (prefers-reduced-motion:reduce) {
@@ -220,12 +214,20 @@
 		transition-duration:.01ms!important;
 		animation-duration:.01ms!important
 	}
-	.wordmark:hover, .desktop-nav a:hover, .plain-link:hover, .button:hover, .button:active, .specimen-card:hover, .entry-card:hover, .receipt-row-item:hover, .note-stacked-card:hover, .note-row:hover, .note-row:focus-within, .stat-card:hover, .about-overview-sheet:hover, .ledger-row:hover, .blueprint-card:hover, .boundary-card:hover, .article-link-list li a:hover, .article-connection-list li a:hover, .hero:hover .clipboard-board, .hero:hover .collage-card--prompt, .hero:hover .collage-card--skill, .hero:hover .collage-card--mcp, .hero:hover .collage-card--note, .hero:hover .shape--square, .hero:hover .shape--diamond, .hero:hover .shape--star, .explore-card:hover, .explore-type-btn:hover, .explore-type-btn:active, .explore-tag-btn:hover, .explore-clear-btn:hover {
+	.wordmark:hover, .desktop-nav a:hover, .plain-link:hover, .button:hover, .button:active, .specimen-card:hover, .entry-card:hover, .receipt-row-item:hover, .note-stacked-card:hover, .explore-specimen-card:hover, .band-switch-btn:hover, .cockpit-tag-btn:hover, .specimen-load-more-btn:hover, .note-row:hover, .note-row:focus-within, .stat-card:hover, .about-overview-sheet:hover, .ledger-row:hover, .blueprint-card:hover, .boundary-card:hover, .article-link-list li a:hover, .article-connection-list li a:hover, .hero:hover .clipboard-board, .hero:hover .collage-card--prompt, .hero:hover .collage-card--skill, .hero:hover .collage-card--mcp, .hero:hover .collage-card--note, .hero:hover .shape--square, .hero:hover .shape--diamond, .hero:hover .shape--star, .explore-card:hover, .explore-type-btn:hover, .explore-type-btn:active, .explore-tag-btn:hover, .explore-clear-btn:hover {
 		transform:none!important
 	}
 }
 @media (max-width: 1024px) and (min-width: 769px) {
 	.featured-grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+@media (max-width: 1024px) and (min-width: 769px) {
+	.explore-cockpit-layout {
+		grid-template-columns: 280px 1fr;
+	}
+	.explore-specimen-grid {
+		grid-template-columns: 1fr;
 	}
 }
