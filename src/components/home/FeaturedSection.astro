@@ -7,34 +7,71 @@ interface Props {
 }
 
 const { entries } = Astro.props;
+
+const formatDate = (date: Date) =>
+	new Intl.DateTimeFormat('zh-CN', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+	}).format(date);
 ---
 
-<section id="featured" class="section section--white" aria-labelledby="featured-title">
-	<div class="section-heading">
-		<div>
-			<div class="eyebrow">
-				<span>COLOR SYSTEM</span>
+<section id="featured" class="featured-section" aria-labelledby="featured-title">
+	<div class="featured-heading-row">
+		<div class="featured-heading-left">
+			<div class="eyebrow eyebrow--tape">
+				<span>SECTION 03 // FEATURED GEMS</span>
 			</div>
-			<h2 id="featured-title" class="section-title-two-tone">
-				<span class="title-black">HANDPICKED</span>
-				<span class="title-teal">ENTRIES</span>
+			<h2 id="featured-title" class="featured-title">
+				<span class="featured-title-en">CURATED GEMS</span>
+				<span class="featured-title-cn">· 精选收录</span>
 			</h2>
 		</div>
-		<p>纯黑边框搭配 5 种强调色。彩色硬阴影在红、青、黄、薄荷和珊瑚之间跳跃——这就是 Color Ping-Pong。</p>
+		<div class="featured-heading-right">
+			<p class="featured-heading-desc">从日常构建与持续探索中筛选出的高频资产与核心切片。包含实战验证的提示词、工具协议、高价值站点与深度思考。</p>
+			<div class="featured-rack-seal" aria-hidden="true">
+				<span class="rack-seal-text">RACK // GEMS</span>
+				<span class="rack-seal-count">{entries.length} ITEMS</span>
+			</div>
+		</div>
 	</div>
+
 	{entries.length > 0 ? (
 		<div class="featured-grid">
-			{entries.map((entry) => (
-				<a class="entry-card" href={getEntryPath(entry)}>
-					<div class="entry-card-header">
-						<span class:list={['mini-badge', `mini-badge--${entry.data.type}`]}>{entry.data.type}</span>
-					</div>
-					<h3>{entry.data.title}</h3>
-					<p>{entry.data.summary}</p>
-				</a>
-			))}
+			{entries.map((entry, index) => {
+				const itemNumber = String(index + 1).padStart(2, '0');
+				return (
+					<a class={`specimen-card specimen-card--${entry.data.type}`} href={getEntryPath(entry)}>
+						<div class="specimen-card-header">
+							<span class="specimen-index-tag">NO. {itemNumber}</span>
+							<span class={`mini-badge mini-badge--${entry.data.type}`}>{entry.data.type}</span>
+						</div>
+						<h3 class="specimen-card-title">{entry.data.title}</h3>
+						<p class="specimen-card-summary">{entry.data.summary}</p>
+						{entry.data.tags && entry.data.tags.length > 0 && (
+							<div class="specimen-tag-list">
+								{entry.data.tags.slice(0, 3).map((tag) => (
+									<span class="specimen-tag">#{tag}</span>
+								))}
+							</div>
+						)}
+						<div class="specimen-card-footer">
+							<time datetime={entry.data.updatedAt.toISOString()} class="specimen-date">
+								{formatDate(entry.data.updatedAt)}
+							</time>
+							<span class="specimen-action-cue">
+								标本详情 <span class="action-arrow">↗</span>
+							</span>
+						</div>
+					</a>
+				);
+			})}
 		</div>
 	) : (
-		<p class="empty-state">第一批精选正在培育中。</p>
+		<div class="featured-empty-rack">
+			<div class="empty-rack-badge">[ RACK EMPTY // 展架准备中 ]</div>
+			<p class="empty-rack-text">首批精选资产正在培育与装裱中，敬请期待。</p>
+		</div>
 	)}
+	<div class="featured-bottom-tape" aria-hidden="true"></div>
 </section>

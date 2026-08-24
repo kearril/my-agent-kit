@@ -142,12 +142,12 @@
 		gap:16px
 	}
 	.featured-grid {
-		grid-template-columns:1fr;
-		gap:20px
+		grid-template-columns: 1fr;
+		gap: 20px;
 	}
-	.entry-card {
-		grid-column:auto;
-		min-height:0
+	.specimen-card, .entry-card {
+		grid-column: auto;
+		min-height: 0;
 	}
 	.update-item {
 		grid-template-columns:1fr auto;
@@ -233,7 +233,12 @@
 		transition-duration:.01ms!important;
 		animation-duration:.01ms!important
 	}
-	.wordmark:hover, .desktop-nav a:hover, .plain-link:hover, .button:hover, .button:active, .entry-card:hover, .note-row:hover, .note-row:focus-within, .stat-card:hover, .about-overview-sheet:hover, .ledger-row:hover, .blueprint-card:hover, .boundary-card:hover, .article-link-list li a:hover, .article-connection-list li a:hover, .hero:hover .clipboard-board, .hero:hover .collage-card--prompt, .hero:hover .collage-card--skill, .hero:hover .collage-card--mcp, .hero:hover .collage-card--note, .hero:hover .shape--square, .hero:hover .shape--diamond, .hero:hover .shape--star, .explore-card:hover, .explore-type-btn:hover, .explore-type-btn:active, .explore-tag-btn:hover, .explore-clear-btn:hover {
+	.wordmark:hover, .desktop-nav a:hover, .plain-link:hover, .button:hover, .button:active, .specimen-card:hover, .entry-card:hover, .note-row:hover, .note-row:focus-within, .stat-card:hover, .about-overview-sheet:hover, .ledger-row:hover, .blueprint-card:hover, .boundary-card:hover, .article-link-list li a:hover, .article-connection-list li a:hover, .hero:hover .clipboard-board, .hero:hover .collage-card--prompt, .hero:hover .collage-card--skill, .hero:hover .collage-card--mcp, .hero:hover .collage-card--note, .hero:hover .shape--square, .hero:hover .shape--diamond, .hero:hover .shape--star, .explore-card:hover, .explore-type-btn:hover, .explore-type-btn:active, .explore-tag-btn:hover, .explore-clear-btn:hover {
 		transform:none!important
+	}
+}
+@media (max-width: 1024px) and (min-width: 769px) {
+	.featured-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 }

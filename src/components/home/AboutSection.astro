@@ -3,24 +3,23 @@
 
 <section id="about" class="section about-section" aria-labelledby="about-title">
 	<div class="about-heading-row">
-		<div class="about-heading-box">
+		<div class="about-heading-left">
 			<div class="eyebrow eyebrow--tape">
 				<span>SECTION 02 // ABOUT</span>
 			</div>
 			<h2 id="about-title" class="about-title">
 				<span class="about-title-en">ABOUT GARDEN</span>
-				<span class="about-title-cn">关于本园 · 数字自留地</span>
+				<span class="about-title-cn">· 关于本园</span>
 			</h2>
+		</div>
+		<div class="about-heading-right">
+			<span class="about-meta-chip">GARDEN PHILOSOPHY // 02</span>
+			<div class="about-heading-seal" aria-hidden="true">[ ARCHIVE // 2026 ]</div>
 		</div>
 	</div>
 
-	<!-- Layer 1: Core Overview Sheet -->
-	<div class="about-overview-sheet">
-		<div class="overview-tape-accent" aria-hidden="true"></div>
-		<div class="overview-header-tag">
-			<span class="tag-mark" aria-hidden="true"></span>
-			<span class="tag-title">FIELD REPORT // 01</span>
-		</div>
+	<!-- Layer 1: Core Overview Inline Lead -->
+	<div class="about-overview-inline">
 		<p class="about-lead-text">
 			<strong>Paracosm Garden</strong> 是一个个人数字花园与长期资产库。用于结构化沉淀、归档和检索在技术探索与日常构建中积累与发现的各类数字资产与思考，不设固定边界，随兴趣演进与实践深入持续扩容。
 		</p>
@@ -43,7 +42,7 @@
 					<span class="ledger-badge ledger-badge--prompt">PROMPT</span>
 					<span class="ledger-row-name">提示词</span>
 				</div>
-				<span class="ledger-leader-line" aria-hidden="true"></span>
+				<div class="ledger-leader-line" aria-hidden="true"></div>
 				<p class="ledger-row-desc">自我整理或外部精选收录的提示词</p>
 			</div>
 
@@ -53,7 +52,7 @@
 					<span class="ledger-badge ledger-badge--skill">SKILL</span>
 					<span class="ledger-row-name">智能体技能</span>
 				</div>
-				<span class="ledger-leader-line" aria-hidden="true"></span>
+				<div class="ledger-leader-line" aria-hidden="true"></div>
 				<p class="ledger-row-desc">模块化封装的 Agent 能力与工作流套件</p>
 			</div>
 
@@ -63,7 +62,7 @@
 					<span class="ledger-badge ledger-badge--mcp">MCP</span>
 					<span class="ledger-row-name">上下文协议</span>
 				</div>
-				<span class="ledger-leader-line" aria-hidden="true"></span>
+				<div class="ledger-leader-line" aria-hidden="true"></div>
 				<p class="ledger-row-desc">扩展大模型感知与操作边界的服务与协议实现</p>
 			</div>
 
@@ -73,7 +72,7 @@
 					<span class="ledger-badge ledger-badge--website">WEBSITE</span>
 					<span class="ledger-row-name">网站收藏</span>
 				</div>
-				<span class="ledger-leader-line" aria-hidden="true"></span>
+				<div class="ledger-leader-line" aria-hidden="true"></div>
 				<p class="ledger-row-desc">值得长期留存与查阅的高价值站点与在线资源</p>
 			</div>
 
@@ -83,7 +82,7 @@
 					<span class="ledger-badge ledger-badge--project">PROJECT</span>
 					<span class="ledger-row-name">精选项目</span>
 				</div>
-				<span class="ledger-leader-line" aria-hidden="true"></span>
+				<div class="ledger-leader-line" aria-hidden="true"></div>
 				<p class="ledger-row-desc">个人开发或开源社区中值得关注与研究的优质项目</p>
 			</div>
 
@@ -93,17 +92,17 @@
 					<span class="ledger-badge ledger-badge--note">NOTE</span>
 					<span class="ledger-row-name">思考笔记</span>
 				</div>
-				<span class="ledger-leader-line" aria-hidden="true"></span>
+				<div class="ledger-leader-line" aria-hidden="true"></div>
 				<p class="ledger-row-desc">探索、复盘与非线性的数字随笔</p>
 			</div>
 
-			<!-- Item 7: + More (Expandable) -->
-			<div class="ledger-row ledger-row--more" role="listitem">
+			<!-- Item 7: Scalable Placeholder -->
+			<div class="ledger-row ledger-row--expandable" role="listitem">
 				<div class="ledger-row-type">
 					<span class="ledger-badge ledger-badge--more">+ MORE</span>
 					<span class="ledger-row-name">持续扩容</span>
 				</div>
-				<span class="ledger-leader-line ledger-leader-line--dashed" aria-hidden="true"></span>
+				<div class="ledger-leader-line ledger-leader-line--dashed" aria-hidden="true"></div>
 				<p class="ledger-row-desc">随着探索半径拓展，按需开辟新的收录分类与载体</p>
 			</div>
 		</div>
@@ -111,7 +110,7 @@
 
 	<!-- Layer 3: Architecture & Boundary Cards -->
 	<div class="about-bottom-deck">
-		<!-- Left: Architecture Card (晒图蓝卡) -->
+		<!-- Left: Architecture Card (鼠尾草灰绿卡) -->
 		<div class="blueprint-card">
 			<div class="blueprint-card-header">
 				<span class="blueprint-spec-tag">SPEC // 02-A</span>
@@ -119,21 +118,21 @@
 			</div>
 			<div class="blueprint-rules-list">
 				<div class="blueprint-rule-item">
-					<div class="rule-index-box">01</div>
+					<span class="rule-index-box">01</span>
 					<div class="rule-content">
 						<h4 class="rule-title">网状关联 (Bi-directional Graph)</h4>
-						<p class="rule-desc">条目之间通过双向关联与反向链接（Backlinks）自然交织，形成互相关联的网状知识图谱。</p>
+						<p class="rule-desc">条目之间通过双向关联与反向链接 (Backlinks) 自然交织，形成相互关联的网状知识图谱。</p>
 					</div>
 				</div>
 				<div class="blueprint-rule-item">
-					<div class="rule-index-box">02</div>
+					<span class="rule-index-box">02</span>
 					<div class="rule-content">
 						<h4 class="rule-title">完整上下文 (Full Context)</h4>
 						<p class="rule-desc">保留核心配置、完整参数、引用来源与使用说明，确保资产具备独立复现与直接取用的能力。</p>
 					</div>
 				</div>
 				<div class="blueprint-rule-item">
-					<div class="rule-index-box">03</div>
+					<span class="rule-index-box">03</span>
 					<div class="rule-content">
 						<h4 class="rule-title">动态维护 (Continuous Iteration)</h4>
 						<p class="rule-desc">条目随实际认知与技术更迭持续修订，保留演进痕迹，构建具备生命力的数字资产库。</p>
@@ -153,15 +152,15 @@
 				<div class="boundary-point">
 					<span class="boundary-marker boundary-marker--warning" aria-hidden="true">!</span>
 					<div class="boundary-text">
-						<strong>不包含任何实际资产：</strong>
-						<p>本园仅提供导向与索引，不直接托管或分发任何专有代码与第三方受限资产。</p>
+						<strong class="boundary-point-title">不包含任何实际资产：</strong>
+						<p class="boundary-point-desc">本园仅提供导向与索引，不直接托管或分发任何专有代码与第三方受限资产。</p>
 					</div>
 				</div>
 				<div class="boundary-point">
-					<span class="boundary-marker boundary-marker--star" aria-hidden="true"></span>
+					<span class="boundary-marker boundary-marker--star" aria-hidden="true">★</span>
 					<div class="boundary-text">
-						<strong>纯个人主观体验标准：</strong>
-						<p>收录的内容、评级与记录完全以个人真实工作流体验与探索为唯一判断依据。</p>
+						<strong class="boundary-point-title">纯个人主观体验标准：</strong>
+						<p class="boundary-point-desc">收录的内容、评级与记录完全以个人真实工作流体验与探索为唯一判断依据。</p>
 					</div>
 				</div>
 			</div>

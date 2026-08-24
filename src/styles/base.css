@@ -38,9 +38,13 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 	font-family:Impact, Haettenschweiler, Arial Black, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif;
 	font-weight:900
 }
+.section, .hero, .about-section, .featured-section, #about, #featured, #updates, #notes, #explore {
+	scroll-margin-top: 72px;
+}
 .section {
-	border-bottom:8px solid var(--black);
-	padding:clamp(48px, 8vw, 100px) clamp(16px, 5vw, 72px)
+	border-bottom:4px solid var(--black);
+	padding:80px 24px;
+	position:relative
 }
 .section--teal {
 	background:var(--teal)
