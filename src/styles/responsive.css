@@ -207,6 +207,16 @@
 	.explore-specimen-grid {
 		grid-template-columns: 1fr;
 	}
+	.footer-body {
+		grid-template-columns: 1fr;
+		gap: 28px;
+		padding: 28px 16px;
+	}
+	.footer-colophon-bar {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 12px;
+	}
 }
 @media (prefers-reduced-motion:reduce) {
 	*, :before, :after {

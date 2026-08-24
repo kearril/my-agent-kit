@@ -2,88 +2,117 @@
 import { ArrowUp } from '@lucide/astro';
 ---
 
-<footer class="site-footer">
-	<div class="footer-rainbow" aria-hidden="true">
-		<span class="rainbow-bar rainbow-bar--red"></span>
-		<span class="rainbow-bar rainbow-bar--teal"></span>
-		<span class="rainbow-bar rainbow-bar--yellow"></span>
-		<span class="rainbow-bar rainbow-bar--mint"></span>
-		<span class="rainbow-bar rainbow-bar--coral"></span>
-	</div>
+<footer class="site-footer" aria-labelledby="footer-heading">
 	<div class="footer-body">
-		<div class="footer-brand">
-			<a class="wordmark" href="#top">Paracosm Garden</a>
-			<p class="footer-desc">
-				俏皮野兽派——Neo-Brutalist 的活泼变体。<br />
-				硬边缘 + 彩色 + 探索感 = 持续生长的个人数字花园。
+		<!-- Brand & Philosophy Column -->
+		<div class="footer-brand-block">
+			<div class="footer-brand-header">
+				<a class="footer-wordmark" href="#top" aria-label="返回顶部">
+					<span class="wordmark-highlight">PARACOSM</span> GARDEN
+				</a>
+				<div class="footer-edition-badge">
+					<span class="edition-dot"></span>
+					<span>DIGITAL GARDEN // 2026 EDITION</span>
+				</div>
+			</div>
+			<p class="footer-mission-text">
+				一个公开生长的个人数字自留地。结构化沉淀与归档在技术探索与日常构建中积累的灵感、智能体技能、上下文协议、高价值站点与深度思考笔记。
 			</p>
-			<div class="footer-swatches" aria-hidden="true">
-				<span class="swatch-box swatch-box--red"></span>
-				<span class="swatch-box swatch-box--teal"></span>
-				<span class="swatch-box swatch-box--yellow"></span>
-				<span class="swatch-box swatch-box--mint"></span>
-				<span class="swatch-box swatch-box--coral"></span>
+			<div class="footer-palette-swatches" aria-label="工坊调色盘">
+				<span class="palette-swatch swatch--red" title="番茄红 #e63946"></span>
+				<span class="palette-swatch swatch--teal" title="鼠尾草青 #2a9d8f"></span>
+				<span class="palette-swatch swatch--yellow" title="芥末黄 #e9c46a"></span>
+				<span class="palette-swatch swatch--mint" title="薄荷绿 #95e1d3"></span>
+				<span class="palette-swatch swatch--coral" title="珊瑚粉 #e76f51"></span>
 			</div>
 		</div>
-		<div class="footer-col">
-			<p class="footer-col-title">STYLE 体系</p>
-			<a class="footer-link-item" href="#about">
-				<span class="footer-link-bullet" style="background: var(--red);"></span>
-				<span>Manifesto 原则</span>
-			</a>
-			<a class="footer-link-item" href="#about">
-				<span class="footer-link-bullet" style="background: var(--teal);"></span>
-				<span>Philosophy 理念</span>
-			</a>
-			<a class="footer-link-item" href="#explore">
-				<span class="footer-link-bullet" style="background: var(--yellow);"></span>
-				<span>Engine 引擎</span>
-			</a>
+
+		<!-- Nav Column 1: Garden Architecture -->
+		<div class="footer-links-col">
+			<h3 class="footer-col-title">
+				<span class="col-title-icon">▶</span>
+				<span>GARDEN 架构导航</span>
+			</h3>
+			<ul class="footer-nav-list" role="list">
+				<li>
+					<a class="footer-nav-link" href="/#about">
+						<span class="link-marker link-marker--red"></span>
+						<span>关于本园 (About)</span>
+					</a>
+				</li>
+				<li>
+					<a class="footer-nav-link" href="/#featured">
+						<span class="link-marker link-marker--teal"></span>
+						<span>精选收录 (Featured)</span>
+					</a>
+				</li>
+				<li>
+					<a class="footer-nav-link" href="/#updates">
+						<span class="link-marker link-marker--yellow"></span>
+						<span>近期动态 (Updates)</span>
+					</a>
+				</li>
+				<li>
+					<a class="footer-nav-link" href="/#notes">
+						<span class="link-marker link-marker--mint"></span>
+						<span>思考随笔 (Notes)</span>
+					</a>
+				</li>
+				<li>
+					<a class="footer-nav-link" href="/#explore">
+						<span class="link-marker link-marker--coral"></span>
+						<span>全量检索 (Explore)</span>
+					</a>
+				</li>
+			</ul>
 		</div>
-		<div class="footer-col">
-			<p class="footer-col-title">GARDEN 花园</p>
-			<a class="footer-link-item" href="#featured">
-				<span class="footer-link-bullet" style="background: var(--yellow);"></span>
-				<span>Handpicked 精选</span>
-			</a>
-			<a class="footer-link-item" href="#updates">
-				<span class="footer-link-bullet" style="background: var(--mint);"></span>
-				<span>Timeline 更新</span>
-			</a>
-			<a class="footer-link-item" href="#notes">
-				<span class="footer-link-bullet" style="background: var(--coral);"></span>
-				<span>Field Notes 笔记</span>
-			</a>
-		</div>
-		<div class="footer-col">
-			<p class="footer-col-title">PALETTE 调色盘</p>
-			<span class="footer-link-item" style="cursor: default;">
-				<span class="footer-link-bullet" style="background: var(--red);"></span>
-				<span>Playful Red</span>
-			</span>
-			<span class="footer-link-item" style="cursor: default;">
-				<span class="footer-link-bullet" style="background: var(--teal);"></span>
-				<span>Vibrant Teal</span>
-			</span>
-			<span class="footer-link-item" style="cursor: default;">
-				<span class="footer-link-bullet" style="background: var(--yellow);"></span>
-				<span>Bold Yellow</span>
-			</span>
-			<span class="footer-link-item" style="cursor: default;">
-				<span class="footer-link-bullet" style="background: var(--mint);"></span>
-				<span>Fresh Mint</span>
-			</span>
-			<span class="footer-link-item" style="cursor: default;">
-				<span class="footer-link-bullet" style="background: var(--coral);"></span>
-				<span>Warm Coral</span>
-			</span>
+
+		<!-- Nav Column 2: Feeds & Discovery -->
+		<div class="footer-links-col">
+			<h3 class="footer-col-title">
+				<span class="col-title-icon">▶</span>
+				<span>DISCOVERY 发现与协议</span>
+			</h3>
+			<ul class="footer-nav-list" role="list">
+				<li>
+					<a class="footer-nav-link" href="/feed.xml" target="_blank" rel="noopener noreferrer">
+						<span class="link-marker link-marker--yellow"></span>
+						<span>RSS 订阅源 (/feed.xml) ↗</span>
+					</a>
+				</li>
+				<li>
+					<a class="footer-nav-link" href="/sitemap-index.xml" target="_blank" rel="noopener noreferrer">
+						<span class="link-marker link-marker--mint"></span>
+						<span>Sitemap 站点地图 ↗</span>
+					</a>
+				</li>
+				<li>
+					<a class="footer-nav-link" href="/robots.txt" target="_blank" rel="noopener noreferrer">
+						<span class="link-marker link-marker--teal"></span>
+						<span>Robots 爬虫协议 ↗</span>
+					</a>
+				</li>
+				<li>
+					<a class="footer-nav-link" href="https://github.com" target="_blank" rel="noopener noreferrer">
+						<span class="link-marker link-marker--red"></span>
+						<span>GitHub 源码 ↗</span>
+					</a>
+				</li>
+			</ul>
 		</div>
 	</div>
-	<div class="footer-bottom-bar">
-		<p class="footer-copyright">Paracosm Garden · 公开构建中 · 许可证待定</p>
-		<a class="button button--yellow" href="#top">
+
+	<!-- Bottom Colophon Bar -->
+	<div class="footer-colophon-bar">
+		<div class="colophon-left">
+			<span class="colophon-seal" aria-hidden="true">[ WORKSHOP ARCHIVE ]</span>
+			<p class="colophon-copy">
+				© 2026 Paracosm Garden · Built with Astro & Neo-Brutalist Scrapbook Aesthetics.
+			</p>
+		</div>
+		<a class="footer-back-to-top-btn" href="#top" aria-label="平滑回到页面顶部">
 			<span>回到顶部</span>
-			<ArrowUp size={18} strokeWidth={3} aria-hidden="true" />
+			<ArrowUp size={16} strokeWidth={3} aria-hidden="true" />
 		</a>
 	</div>
 </footer>

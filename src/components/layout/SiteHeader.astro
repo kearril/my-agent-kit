@@ -6,10 +6,10 @@ interface Props {
 const { article = false } = Astro.props;
 ---
 
-<header class="site-header">
+<header class:list={['site-header', { 'site-header--article': article }]}>
 	<a class="wordmark" href={article ? '/' : '#top'}>Paracosm Garden</a>
 	{article ? (
-		<a class="plain-link" href="/#notes">返回 Notes</a>
+		<a class="plain-link" href="/">← 返回花园总览</a>
 	) : (
 		<>
 			<nav class="desktop-nav" aria-label="主要导航">
