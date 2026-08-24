@@ -36,13 +36,13 @@ Paracosm Garden 采用“扁平条目 + 标签筛选”的方式。条目不被�
 
 `draft` 控制条目是否公开显示；草稿条目禁止设置 `publishedAt`，公开条目必须设置 `publishedAt`。
 
-## Note 的主分类
+## Note 的主分类与分卷
 
-`note` 是唯一带有专属字段的类型：每篇文章必须填写一个 `category`，例如 `AI`、`科研`、`实践` 或 `随笔`。它表示文章最主要的归属，用于分类识别与未来筛选。
+`note` 是唯一带有专属字段的类型：每篇文章必须填写一个 `category`，例如 `AI`、`架构`、`实践` 或 `随笔`。它表示文章最主要的归属，用于首页 Notes 区块的分卷册归卷（`VOL 01`、`VOL 02`...）与独立筛选。
 
-每篇 Note 只能有一个 `category`；`tags` 仍可填写多个，用来描述更细的主题、方法或上下文。分类词汇先随真实文章自然形成，不预设空分类，也不把分类目录化为文件夹。
+Explore 探索引擎专精于非 Note 资产（`prompt`、`skill`、`mcp`、`website`、`project`），Note 随笔拥有专属的 Notes 思考手记区块与分卷册展示。
 
-## 正文
+每篇 Note 只能有一个 `category`；`tags` 仍可填写多个，用来描述更细的主题、方法或上下文。分类词汇随真实文章自然形成，不预设空分类，也不把分类目录化为文件夹。
 
 每个条目都必须有正文，但正文不作为 Frontmatter 中的 `content` 或 `body` 字段。它直接写在 Markdown / MDX 的 Frontmatter 之后。
 

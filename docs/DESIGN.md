@@ -107,10 +107,10 @@ style_slug: neo-brutalist-playful-scrapbook
 
 ### 2. 卡片与便签体系（Cards & Paper Sheets）
 
-- **条目卡片（Entry Cards）**：直角、4px 纯黑边框、6px 硬边阴影、特种纸背景（`--white` 或 `--paper-cotton`）。
+- **条目卡片（Entry Cards）**：直角、3.5px~4px 纯黑边框、4px~6px 硬边阴影、特种纸背景（`--white` 或 `--paper-cotton`）。
+- **长文阅读册（Reading Binder）**：最大宽度 960px，采用护眼温润米黄纸（`#fbf5e8`），内嵌 `24px × 24px` 浅墨色工程方格网底纹，3.5px 纯黑外框与 8px 实色阴影。
 - **便签白卡（Paper Sheets）**：微倾斜（≤ 2°），可搭配胶带角与高光底色，hover 时平滑归位（`rotate: 0deg`）并位移。
 - **阴影规则**：实色硬边偏移（`4px ~ 8px`），禁止模糊阴影。
-
 ### 3. 和纸胶带与微标签（Washi Tapes & Badges）
 
 - **胶带标签（Tape Eyebrow）**：倾斜 1°~2°，亮黄色或暖红色底，纯黑细/粗框，硬直角切边。
@@ -151,6 +151,12 @@ style_slug: neo-brutalist-playful-scrapbook
 
 - 绝对禁止使用直接输入的 emoji 或 Unicode 符号字符作为装饰。
 - 装饰图形一律采用纯 CSS 几何形状（方块、菱形、线条）或 Lucide 等 SVG 线性图标。
+
+### 10. 代码与提示词展示块（Code & Prompt Blocks）
+
+- 采用特种工程纸底色（`#f0eae1` / `--paper-dark`）与深墨色文字，配合 2.5px 纯黑墨线外框与 4px 实色阴影。
+- 文本使用智能软折行（`white-space: pre-wrap; word-break: break-word;`），消除破坏美感的横向滚动条。
+- 右上角配备实体的 `[ 📋 复制 ]` 按钮，点击产生 `[ ✓ 已复制 ]` 绿底反馈与即时剪贴板写入。
 
 ## 交互与动效
 
