@@ -1,4 +1,4 @@
-@media (width<=768px) {
+@media (max-width: 768px) {
 	.desktop-nav {
 		display:none
 	}
@@ -65,24 +65,55 @@
 		border-bottom:0
 	}
 	.hero {
-		grid-template-columns:1fr;
-		min-height:auto;
-		padding-top:40px;
-		padding-bottom:48px
+		grid-template-columns: 1fr;
+		min-height: auto;
+		padding-top: 60px;
+		padding-bottom: 48px;
+		gap: 28px;
 	}
 	.hero-title-black {
-		font-size:clamp(2.4rem, 10vw, 3.6rem)
+		font-size: clamp(2.2rem, 9vw, 3.4rem);
 	}
 	.hero-title-white {
-		font-size:clamp(2rem, 8.5vw, 3.2rem)
+		font-size: clamp(1.8rem, 7.5vw, 2.8rem);
 	}
-	.hero-collage {
-		min-height:320px;
-		margin-top:16px
+	.hero-clipboard-deck {
+		min-height: auto;
+		margin-top: 12px;
 	}
-	.stat-ribbon {
-		grid-template-columns:repeat(2, minmax(0, 1fr));
-		gap:14px
+	.clipboard-board {
+		padding: 34px 10px 14px 18px;
+		min-height: 420px;
+		transform: rotate(0.5deg);
+	}
+	.clipboard-tab,
+	.board-doodle-arrow,
+	.board-circle-stamp,
+	.board-ticket-stub {
+		display: none;
+	}
+	.harvest-receipt {
+		grid-template-columns: 1fr;
+		gap: 14px;
+		padding: 14px;
+	}
+	.receipt-items {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px 14px;
+		border-left: none;
+		border-right: none;
+		border-top: 2px dashed var(--black);
+		border-bottom: 2px dashed var(--black);
+		padding: 10px 0;
+	}
+	.receipt-label {
+		font-size: 0.65rem;
+	}
+	.receipt-val {
+		font-size: 1rem;
+	}
+	.receipt-stamp-area {
+		justify-content: space-between;
 	}
 	.activity-board-container {
 		grid-template-columns:1fr;
@@ -185,7 +216,7 @@
 		transition-duration:.01ms!important;
 		animation-duration:.01ms!important
 	}
-	.wordmark:hover, .desktop-nav a:hover, .plain-link:hover, .button:hover, .button:active, .entry-card:hover, .note-row:hover, .note-row:focus-within, .stat-card:hover, .widget-card:hover, .activity-task-row:hover, .article-link-list li a:hover, .article-connection-list li a:hover, .hero:hover .collage-card--prompt, .hero:hover .collage-card--skill, .hero:hover .collage-card--mcp, .hero:hover .collage-card--note, .hero:hover .shape--square, .hero:hover .shape--diamond, .hero:hover .shape--cross, .explore-card:hover, .explore-type-btn:hover, .explore-type-btn:active, .explore-tag-btn:hover, .explore-clear-btn:hover {
+	.wordmark:hover, .desktop-nav a:hover, .plain-link:hover, .button:hover, .button:active, .entry-card:hover, .note-row:hover, .note-row:focus-within, .stat-card:hover, .widget-card:hover, .activity-task-row:hover, .article-link-list li a:hover, .article-connection-list li a:hover, .hero:hover .clipboard-board, .hero:hover .collage-card--prompt, .hero:hover .collage-card--skill, .hero:hover .collage-card--mcp, .hero:hover .collage-card--note, .hero:hover .shape--square, .hero:hover .shape--diamond, .hero:hover .shape--star, .explore-card:hover, .explore-type-btn:hover, .explore-type-btn:active, .explore-tag-btn:hover, .explore-clear-btn:hover {
 		transform:none!important
 	}
 }

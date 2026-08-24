@@ -1,14 +1,22 @@
 :root {
-	--black:#000;
-	--white:#fff;
-	--red:#ff6b6b;
-	--teal:#4ecdc4;
-	--yellow:#ffe66d;
+	--black:#18181b;
+	--white:#ffffff;
+	--paper:#fbf9f4;
+	--paper-dark:#efece4;
+	--paper-cinnamon:#f09a8f;
+	--paper-butter:#fce4a6;
+	--paper-cotton:#faf8f5;
+	--paper-sage:#b7d5c4;
+	--board-kraft:#e6e0d4;
+	--red:#e63946;
+	--teal:#2a9d8f;
+	--yellow:#e9c46a;
 	--mint:#95e1d3;
-	--coral:#f38181;
-	--dark:#111827;
-	--muted:#374151;
-	background:var(--white);
+	--coral:#e76f51;
+	--blue:#457b9d;
+	--dark:#27272a;
+	--muted:#52525b;
+	background:var(--paper);
 	color:var(--black);
-	font-family:JetBrains Mono, Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, PingFang SC, Hiragino Sans GB, Microsoft YaHei, monospace
+	font-family:JetBrains Mono, Fira Code, Cascadia Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, PingFang SC, Hiragino Sans GB, Microsoft YaHei, monospace;
 }
