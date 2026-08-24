@@ -83,11 +83,11 @@ style_slug: neo-brutalist-playful-scrapbook
 - 不使用 `font-light`、`font-thin` 或 `font-normal` 制造柔弱层级
 - 标题可以很大，但必须保留清晰的信息层级和可读行高
 
-## 组件规则
+## 设计模式与组件规范
 
-### 按钮
+### 1. 按钮体系（Buttons）
 
-按钮应具备完整的硬边反馈：
+所有按钮为直角无圆角，具备完整的硬边按压与位移反馈：
 
 ```css
 .button {
@@ -98,34 +98,35 @@ style_slug: neo-brutalist-playful-scrapbook
   color: var(--black);
   box-shadow: 6px 6px 0 var(--black);
   font-weight: 900;
+  transition: transform 0.18s ease-out, box-shadow 0.18s ease-out;
 }
-
-.button:hover { transform: translate(3px, 3px); box-shadow: none; }
+.button:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--black); }
+.button:active { transform: translate(3px, 3px); box-shadow: none; }
 .button:focus-visible { outline: 4px solid var(--black); box-shadow: 6px 6px 0 var(--teal); }
-.button:active { transform: translate(4px, 4px); box-shadow: none; }
 ```
 
-可以增加 `hover:scale-105`，但不能让缩放造成内容溢出或布局跳动。按钮的触控区域不小于 44px。
+### 2. 卡片与便签体系（Cards & Paper Sheets）
 
-### 卡片
+- **条目卡片（Entry Cards）**：直角、4px 纯黑边框、6px 硬边阴影、特种纸背景（`--white` 或 `--paper-cotton`）。
+- **便签白卡（Paper Sheets）**：微倾斜（≤ 2°），可搭配胶带角与高光底色，hover 时平滑归位（`rotate: 0deg`）并位移。
+- **阴影规则**：实色硬边偏移（`4px ~ 8px`），禁止模糊阴影。
 
-条目卡片是数字花园的主要容器：
+### 3. 和纸胶带与微标签（Washi Tapes & Badges）
 
-```css
-.entry-card {
-  border: 4px solid var(--black);
-  border-radius: 0;
-  background: var(--white);
-  box-shadow: 6px 6px 0 var(--teal);
-  padding: clamp(16px, 3vw, 24px);
-}
+- **胶带标签（Tape Eyebrow）**：倾斜 1°~2°，亮黄色或暖红色底，纯黑细/粗框，硬直角切边。
+- **分类色标徽章（Type Badges）**：按资产类型匹配专属纸品底色（如 Prompt 肉桂红、Skill 奶油黄、MCP 棉麻白、Website 鼠尾草绿等），纯黑墨线边框与 2px 硬阴影。
 
-.entry-card:hover { transform: translate(3px, 3px); }
-```
+### 4. 标本明细卷宗（Ledger Tables）
 
-卡片可以按类型或索引使用不同强调色，但结构、边框和交互语言保持一致。点击卡片打开大卡片弹窗，不依赖卡片上的小型难点按钮作为唯一入口。
+- 替代散落小卡片的列表容器，采用单页特种纸底（`--paper-dark`），4px 纯黑外框。
+- 内部条目采用点线连接（Dot-leader）排布，hover 时呈现单行高亮与轻微横向位移。
 
-### 输入框和筛选控件
+### 5. 印章与戳记（Stamps & Seals）
+
+- 纯文字双线边框或单线框，使用 `--red` 番茄红色系，微倾斜（≤ 2.5°）。
+- 禁止使用 Unicode 特殊符号代替文字印章，印章内容采用等宽全大写字母或直观简短中文。
+
+### 6. 输入框与筛选控件（Inputs & Filters）
 
 ```css
 .search-input {
@@ -134,66 +135,26 @@ style_slug: neo-brutalist-playful-scrapbook
   border-radius: 0;
   font: inherit;
 }
-
 .search-input:focus-visible { outline: 4px solid var(--black); box-shadow: 6px 6px 0 var(--teal); }
 ```
 
-搜索框、类型筛选、标签筛选和排序控件都必须有清晰的标签、键盘焦点和移动端可操作尺寸。不要依赖 placeholder 代替可访问名称。
+### 7. 大卡片弹窗（Modal Dialogs）
 
-### 大卡片弹窗
+- 直角、4px 纯黑边框、特种纸底色，无 `backdrop-blur`。
+- 弹窗锁定背景滚动，Esc 或点击遮罩关闭，焦点自动捕获与恢复。
 
-- 使用直角、4px 纯黑边框和白色背景。
-- 遮罩可以使用纯黑半透明色，但不能使用 `backdrop-blur`。
-- 弹窗打开时锁定背景滚动，关闭后恢复原滚动位置。
-- 支持关闭按钮、背景点击和 Esc 关闭。
-- 打开后焦点进入弹窗，关闭后焦点回到触发卡片。
-- 移动端接近全屏，桌面端保持适合阅读的最大宽度。
-- 条目弹窗内容包括类型、来源、摘要、正文、资产链接、标签、关联条目和更新时间；不显示已移除的 `status` 字段。
+### 8. 区块过渡胶带（Section Dividers）
 
-### 图标和装饰
+- 区块底部使用黑黄斜纹（或红黄斜纹）和纸胶带过渡条横贯切分，强化工坊手作封口质感。
 
-禁止使用 emoji 或直接输入的符号字符作为装饰。优先使用 Lucide React 等线性 SVG 图标，以及 CSS 几何形状、方块、圆点和线条。图标不能取代按钮文字或可访问名称。
+### 9. 图标与几何装饰
 
-## 首页应用
+- 绝对禁止使用直接输入的 emoji 或 Unicode 符号字符作为装饰。
+- 装饰图形一律采用纯 CSS 几何形状（方块、菱形、线条）或 Lucide 等 SVG 线性图标。
 
-首页是一个可持续生长的手账式数字花园入口：
-
-1. 固定导航（SiteHeader）：站点名回到 Hero，锚点依次指向关于（#about）、精选（#featured）、更新（#updates）、Notes（#notes）和探索（#explore）。
-2. Hero 首屏（手账工坊与档案夹板）：
-   - **顶部胶带**：`[ DIGITAL GARDEN · 想法与工具的生长地 ]`。
-   - **主标题 & 印章**：`I GROW` + 双线纯文字红印章 `[SEEDS & ARTIFACTS]` + `WHAT FASCINATES ME.`。
-   - **正文手账便签**：装入微倾斜白底便签框，文案聚焦“持续培育和记录所有令我为之驻足的事物”。
-   - **行动按钮**：`开始探索 ↘`（跳转 `#featured`）与 `了解本园`（跳转 `#about`）。
-   - **右侧手账大夹板（Clipboard Deck）**：牛皮纸色长夹板，顶部带工业金属大压板、左侧标尺刻度线、右侧索引便签（`TAB 01 · ARTIFACTS`），内含 4 张温润特种纸便签（灵感、想法、经验、收藏）呈 Z 字交错排布，点缀红色档案印章与 `#GARDEN-2026` 吊牌。
-   - **底部花园收成收据（Garden Harvest Receipt）**：横贯底部的白底撕纸小票，记录植物隐喻指标（`RAW SPARKS` / `PRACTICE` / `CURATED GEMS` / `DEEP THOUGHTS`），右侧印有条形码与 `HARVESTED` 印章。
-   - **底部过渡条**：黑黄斜纹和纸胶带过渡条横贯切分到下一区块。
-3. 关于本园（About Section · 数字自留地与档案卷宗）：
-   - **顶部胶带与标题**：黄色和纸胶带 `SECTION 02 // ABOUT`，大标题 `ABOUT GARDEN · 关于本园 · 数字自留地`。
-   - **第一层（自留地概览便签）**：棉麻白卡（`--paper-cotton`）搭配红色胶带角与 `[ FIELD REPORT // 01 ]` 标签，阐明个人数字资产库与不设固定边界的定位。
-   - **第二层（收录载体标本卷宗 · 一体化手账明细册）**：轻型特种纸底色（`--paper-dark`），包含 7 行点线连接明细（`PROMPT`, `SKILL`, `MCP`, `WEBSITE`, `PROJECT`, `NOTE`, `+ MORE`），彻底消除小卡片视觉疲劳，支持未来无限追加新载体。
-   - **第三层（左右对开构建逻辑与收录边界）**：
-     - **左卡【构建逻辑】**：鼠尾草灰绿纸（`--paper-sage`）黑字排版，白色三维立体索引块（`01`, `02`, `03`）承载网状关联、完整上下文与动态维护。
-     - **右卡【收录边界】**：奶油暖黄便签（`--paper-butter`）搭配红胶带与红色警告/星标，明确不含实际资产与个人体验标准，底部加盖 `[ PERSONAL ARCHIVE ONLY ]` 档案红印。
-   - **底部过渡条**：黑黄斜纹和纸胶带过渡条（`.about-bottom-tape`）封底。
-4. 精选收录（Featured）：读取 `featuredOrder: 1` 至 `6` 的真实条目卡片。
-5. 近期更新（Updates）：非 Note 条目的时间线沉淀。
-6. Notes：文章横条列表，支持浮卡预览与独立长文页。
-7. 探索（Explore）：全量条目探索引擎，支持搜索、类型过滤、标签过滤与瀑布流。
-8. 页脚（SiteFooter）：黑底手账工坊页脚，承接站点信息与色票。
-首页区块使用 `py-12 md:py-20 lg:py-28` 的节奏；卡片网格使用 `gap-4 md:gap-6`。类型和标签的颜色可以多彩，但不能改变扁平条目模型。Note 的 `category` 作为文章主分类显示，不替代多标签。
-
-### 响应式规则
-
-- 桌面端显示完整锚点导航；移动端保留站点名与 44px 以上的菜单按钮，展开同一组锚点。
-- Hero 在移动端先显示文案与“开始探索”，手账夹板移至下方，自适应为纵向单列卡片流动，不能遮挡文本或造成横向溢出。
-- 精选区桌面端为 6 张等尺寸卡片；窄屏按阅读顺序改为单列或双列，不压缩触控目标。
-- 类型筛选在移动端保持单行可横向滚动；标签默认显示少量常用项，通过“更多标签”展开。
-- Notes 横条在移动端改为纵向信息顺序；摘要浮卡不依赖 hover，必须可通过“预览”展开。
-- 大卡片弹窗移动端接近全屏；独立 Note 页面直接承载长正文，不放进条目弹窗。
 ## 交互与动效
 
 基础过渡：
-
 ```text
 transition-all duration-300 ease-out
 hover:translate-x-[3px] hover:translate-y-[3px]
