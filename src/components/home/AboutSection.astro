@@ -1,87 +1,174 @@
 ---
-import { Check } from '@lucide/astro';
 ---
 
-<section id="about" class="section section--white" aria-labelledby="about-title">
-	<div class="section-heading">
-		<div>
-			<div class="eyebrow eyebrow--black">
-				<span>DESIGN PHILOSOPHY</span>
+<section id="about" class="section about-section" aria-labelledby="about-title">
+	<div class="about-heading-row">
+		<div class="about-heading-box">
+			<div class="eyebrow eyebrow--tape">
+				<span>SECTION 02 // ABOUT</span>
 			</div>
-			<h2 id="about-title" class="section-title-two-tone">
-				<span class="title-black">ABOUT</span>
-				<span class="title-red">GARDEN</span>
+			<h2 id="about-title" class="about-title">
+				<span class="about-title-en">ABOUT GARDEN</span>
+				<span class="about-title-cn">关于本园 · 数字自留地</span>
 			</h2>
 		</div>
-		<p>一个真实生长的个人数字花园。展示俏皮野兽派在实际界面与工作流中的应用：彩色卡片 + 彩色阴影 + 旋转装饰。</p>
 	</div>
-	<div class="activity-board-container">
-		<div class="activity-main-board">
-			<div class="activity-main-header">
-				<h3>今日原则 · MANIFESTO</h3>
-				<span class="activity-badge-btn">3 项准则</span>
+
+	<!-- Layer 1: Core Overview Sheet -->
+	<div class="about-overview-sheet">
+		<div class="overview-tape-accent" aria-hidden="true"></div>
+		<div class="overview-header-tag">
+			<span class="tag-mark" aria-hidden="true"></span>
+			<span class="tag-title">FIELD REPORT // 01</span>
+		</div>
+		<p class="about-lead-text">
+			<strong>Paracosm Garden</strong> 是一个个人数字花园与长期资产库。用于结构化沉淀、归档和检索在技术探索与日常构建中积累与发现的各类数字资产与思考，不设固定边界，随兴趣演进与实践深入持续扩容。
+		</p>
+	</div>
+
+	<!-- Layer 2: Artifacts Ledger Sheet -->
+	<div class="about-ledger-container" role="region" aria-label="收录载体明细卷宗">
+		<div class="ledger-header">
+			<div class="ledger-title-group">
+				<span class="ledger-bullet-symbol" aria-hidden="true"></span>
+				<h3 class="ledger-title">ARTIFACTS IN ORBIT // 收录载体明细册</h3>
 			</div>
-			<div class="activity-task-list">
-				<div class="activity-task-row">
-					<div class="activity-task-content">
-						<span class="activity-check-box"><Check size={16} strokeWidth={3} aria-hidden="true" /></span>
-						<span><strong>真实可用：</strong>每一条收录都来自真实工作流，拒绝未经检验的理论摆件。</span>
-					</div>
-					<span class="mini-badge mini-badge--prompt">PRACTICE</span>
+			<span class="ledger-status-pill">OPEN & SCALABLE · 持续扩容中</span>
+		</div>
+
+		<div class="ledger-list" role="list">
+			<!-- Item 1: Prompt -->
+			<div class="ledger-row" role="listitem">
+				<div class="ledger-row-type">
+					<span class="ledger-badge ledger-badge--prompt">PROMPT</span>
+					<span class="ledger-row-name">提示词</span>
 				</div>
-				<div class="activity-task-row">
-					<div class="activity-task-content">
-						<span class="activity-check-box"><Check size={16} strokeWidth={3} aria-hidden="true" /></span>
-						<span><strong>持续迭代：</strong>记录想法与工具演进的瞬间，把未完成状态作为花园养分。</span>
-					</div>
-					<span class="mini-badge mini-badge--mcp">EVOLVE</span>
+				<span class="ledger-leader-line" aria-hidden="true"></span>
+				<p class="ledger-row-desc">自我整理或外部精选收录的提示词</p>
+			</div>
+
+			<!-- Item 2: Skill -->
+			<div class="ledger-row" role="listitem">
+				<div class="ledger-row-type">
+					<span class="ledger-badge ledger-badge--skill">SKILL</span>
+					<span class="ledger-row-name">智能体技能</span>
 				</div>
-				<div class="activity-task-row">
-					<div class="activity-task-content">
-						<span class="activity-check-box"><Check size={16} strokeWidth={3} aria-hidden="true" /></span>
-						<span><strong>开放记录：</strong>持续分享花园的架构、Prompt 与思考过程。</span>
+				<span class="ledger-leader-line" aria-hidden="true"></span>
+				<p class="ledger-row-desc">模块化封装的 Agent 能力与工作流套件</p>
+			</div>
+
+			<!-- Item 3: MCP -->
+			<div class="ledger-row" role="listitem">
+				<div class="ledger-row-type">
+					<span class="ledger-badge ledger-badge--mcp">MCP</span>
+					<span class="ledger-row-name">上下文协议</span>
+				</div>
+				<span class="ledger-leader-line" aria-hidden="true"></span>
+				<p class="ledger-row-desc">扩展大模型感知与操作边界的服务与协议实现</p>
+			</div>
+
+			<!-- Item 4: Website -->
+			<div class="ledger-row" role="listitem">
+				<div class="ledger-row-type">
+					<span class="ledger-badge ledger-badge--website">WEBSITE</span>
+					<span class="ledger-row-name">网站收藏</span>
+				</div>
+				<span class="ledger-leader-line" aria-hidden="true"></span>
+				<p class="ledger-row-desc">值得长期留存与查阅的高价值站点与在线资源</p>
+			</div>
+
+			<!-- Item 5: Project -->
+			<div class="ledger-row" role="listitem">
+				<div class="ledger-row-type">
+					<span class="ledger-badge ledger-badge--project">PROJECT</span>
+					<span class="ledger-row-name">精选项目</span>
+				</div>
+				<span class="ledger-leader-line" aria-hidden="true"></span>
+				<p class="ledger-row-desc">个人开发或开源社区中值得关注与研究的优质项目</p>
+			</div>
+
+			<!-- Item 6: Note -->
+			<div class="ledger-row" role="listitem">
+				<div class="ledger-row-type">
+					<span class="ledger-badge ledger-badge--note">NOTE</span>
+					<span class="ledger-row-name">思考笔记</span>
+				</div>
+				<span class="ledger-leader-line" aria-hidden="true"></span>
+				<p class="ledger-row-desc">探索、复盘与非线性的数字随笔</p>
+			</div>
+
+			<!-- Item 7: + More (Expandable) -->
+			<div class="ledger-row ledger-row--more" role="listitem">
+				<div class="ledger-row-type">
+					<span class="ledger-badge ledger-badge--more">+ MORE</span>
+					<span class="ledger-row-name">持续扩容</span>
+				</div>
+				<span class="ledger-leader-line ledger-leader-line--dashed" aria-hidden="true"></span>
+				<p class="ledger-row-desc">随着探索半径拓展，按需开辟新的收录分类与载体</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- Layer 3: Architecture & Boundary Cards -->
+	<div class="about-bottom-deck">
+		<!-- Left: Architecture Card (晒图蓝卡) -->
+		<div class="blueprint-card">
+			<div class="blueprint-card-header">
+				<span class="blueprint-spec-tag">SPEC // 02-A</span>
+				<h3 class="blueprint-card-title">构建逻辑 · ARCHITECTURE</h3>
+			</div>
+			<div class="blueprint-rules-list">
+				<div class="blueprint-rule-item">
+					<div class="rule-index-box">01</div>
+					<div class="rule-content">
+						<h4 class="rule-title">网状关联 (Bi-directional Graph)</h4>
+						<p class="rule-desc">条目之间通过双向关联与反向链接（Backlinks）自然交织，形成互相关联的网状知识图谱。</p>
 					</div>
-					<span class="mini-badge mini-badge--website">SHARE</span>
+				</div>
+				<div class="blueprint-rule-item">
+					<div class="rule-index-box">02</div>
+					<div class="rule-content">
+						<h4 class="rule-title">完整上下文 (Full Context)</h4>
+						<p class="rule-desc">保留核心配置、完整参数、引用来源与使用说明，确保资产具备独立复现与直接取用的能力。</p>
+					</div>
+				</div>
+				<div class="blueprint-rule-item">
+					<div class="rule-index-box">03</div>
+					<div class="rule-content">
+						<h4 class="rule-title">动态维护 (Continuous Iteration)</h4>
+						<p class="rule-desc">条目随实际认知与技术更迭持续修订，保留演进痕迹，构建具备生命力的数字资产库。</p>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="activity-widgets">
-			<div class="widget-card widget-card--coral">
-				<div class="widget-header-row">
-					<h4>收录进度 / PROGRESS</h4>
-					<span class="mini-badge mini-badge--prompt">LIVE</span>
+
+		<!-- Right: Boundary & Experience Card (暖黄便签卡) -->
+		<div class="boundary-card">
+			<div class="boundary-tape-clip" aria-hidden="true"></div>
+			<div class="boundary-card-header">
+				<span class="boundary-alert-badge">NOTICE & BOUNDARY</span>
+				<h3 class="boundary-card-title">收录边界与准则</h3>
+			</div>
+			<div class="boundary-card-body">
+				<div class="boundary-point">
+					<span class="boundary-marker boundary-marker--warning" aria-hidden="true">!</span>
+					<div class="boundary-text">
+						<strong>不包含任何实际资产：</strong>
+						<p>本园仅提供导向与索引，不直接托管或分发任何专有代码与第三方受限资产。</p>
+					</div>
 				</div>
-				<div class="widget-stat-large">5+ 维度</div>
-				<div class="widget-progress-bar">
-					<div class="widget-progress-fill" style="width: 75%;"></div>
+				<div class="boundary-point">
+					<span class="boundary-marker boundary-marker--star" aria-hidden="true"></span>
+					<div class="boundary-text">
+						<strong>纯个人主观体验标准：</strong>
+						<p>收录的内容、评级与记录完全以个人真实工作流体验与探索为唯一判断依据。</p>
+					</div>
 				</div>
 			</div>
-			<div class="widget-card widget-card--teal">
-				<div class="widget-header-row">
-					<h4>公开计划 / IN PUBLIC</h4>
-					<span class="mini-badge mini-badge--skill">ONGOING</span>
-				</div>
-				<div class="widget-stat-large">LICENSE TBD</div>
-				<div class="widget-meter-blocks">
-					<span class="meter-block"></span>
-					<span class="meter-block"></span>
-					<span class="meter-block"></span>
-					<span class="meter-block"></span>
-					<span class="meter-block"></span>
-				</div>
-			</div>
-			<div class="widget-card widget-card--mint">
-				<div class="widget-header-row">
-					<h4>花园维度 / CATEGORIES</h4>
-				</div>
-				<div class="widget-tag-cloud">
-					<span class="mini-badge mini-badge--prompt">PROMPT</span>
-					<span class="mini-badge mini-badge--skill">SKILL</span>
-					<span class="mini-badge mini-badge--mcp">MCP</span>
-					<span class="mini-badge mini-badge--website">WEBSITE</span>
-					<span class="mini-badge mini-badge--project">PROJECT</span>
-				</div>
+			<div class="boundary-footer-stamp">
+				<span class="verified-seal">[ PERSONAL ARCHIVE ONLY ]</span>
 			</div>
 		</div>
 	</div>
+	<div class="about-bottom-tape" aria-hidden="true"></div>
 </section>
