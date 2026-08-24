@@ -149,13 +149,22 @@
 		grid-column: auto;
 		min-height: 0;
 	}
-	.update-item {
-		grid-template-columns:1fr auto;
-		gap:10px;
-		padding:16px 14px
+	.typewriter-paper-sheet {
+		grid-template-columns: 1fr;
+		border-left: 3px solid var(--black);
+		border-right: 3px solid var(--black);
 	}
-	.update-item strong {
-		grid-column:1/-1
+	.sprocket-track {
+		display: none;
+	}
+	.receipt-row-item {
+		grid-template-columns: 1fr;
+		gap: 8px;
+		padding: 12px;
+	}
+	.receipt-row-right {
+		justify-content: space-between;
+		width: 100%;
 	}
 	.note-row {
 		grid-template-columns:1fr;
@@ -233,7 +242,7 @@
 		transition-duration:.01ms!important;
 		animation-duration:.01ms!important
 	}
-	.wordmark:hover, .desktop-nav a:hover, .plain-link:hover, .button:hover, .button:active, .specimen-card:hover, .entry-card:hover, .note-row:hover, .note-row:focus-within, .stat-card:hover, .about-overview-sheet:hover, .ledger-row:hover, .blueprint-card:hover, .boundary-card:hover, .article-link-list li a:hover, .article-connection-list li a:hover, .hero:hover .clipboard-board, .hero:hover .collage-card--prompt, .hero:hover .collage-card--skill, .hero:hover .collage-card--mcp, .hero:hover .collage-card--note, .hero:hover .shape--square, .hero:hover .shape--diamond, .hero:hover .shape--star, .explore-card:hover, .explore-type-btn:hover, .explore-type-btn:active, .explore-tag-btn:hover, .explore-clear-btn:hover {
+	.wordmark:hover, .desktop-nav a:hover, .plain-link:hover, .button:hover, .button:active, .specimen-card:hover, .entry-card:hover, .receipt-row-item:hover, .note-row:hover, .note-row:focus-within, .stat-card:hover, .about-overview-sheet:hover, .ledger-row:hover, .blueprint-card:hover, .boundary-card:hover, .article-link-list li a:hover, .article-connection-list li a:hover, .hero:hover .clipboard-board, .hero:hover .collage-card--prompt, .hero:hover .collage-card--skill, .hero:hover .collage-card--mcp, .hero:hover .collage-card--note, .hero:hover .shape--square, .hero:hover .shape--diamond, .hero:hover .shape--star, .explore-card:hover, .explore-type-btn:hover, .explore-type-btn:active, .explore-tag-btn:hover, .explore-clear-btn:hover {
 		transform:none!important
 	}
 }

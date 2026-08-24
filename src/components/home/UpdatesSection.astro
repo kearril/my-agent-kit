@@ -7,35 +7,114 @@ interface Props {
 }
 
 const { entries } = Astro.props;
-const formatDate = (date: Date) => new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+
+const formatDate = (date: Date) =>
+	new Intl.DateTimeFormat('zh-CN', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+	}).format(date);
 ---
 
-<section id="updates" class="section section--mint" aria-labelledby="updates-title">
-	<div class="section-heading">
-		<div>
-			<div class="eyebrow eyebrow--black">
-				<span>TIMELINE</span>
+<section id="updates" class="updates-section" aria-labelledby="updates-title">
+	<div class="updates-heading-row">
+		<div class="updates-heading-left">
+			<div class="eyebrow eyebrow--tape">
+				<span>SECTION 04 // ACTIVITY LOG</span>
 			</div>
-			<h2 id="updates-title" class="section-title-two-tone">
-				<span class="title-black">RECENT</span>
-				<span class="title-yellow">UPDATES</span>
+			<h2 id="updates-title" class="updates-title">
+				<span class="updates-title-en">RECENT UPDATES</span>
+				<span class="updates-title-cn">· 近期动态</span>
 			</h2>
 		</div>
-		<p>最近被补充、整理或重新理解的内容，按时间流实时沉淀到花园中。</p>
+		<div class="updates-heading-right">
+			<p class="updates-heading-desc">记录最新收录、补充与修订的工具、协议与站点。按时间流水持续沉淀生长轨迹。</p>
+			<div class="updates-live-seal" aria-hidden="true">
+				<span class="live-seal-dot"></span>
+				<span class="live-seal-text">FEED // LIVE</span>
+			</div>
+		</div>
 	</div>
+
 	{entries.length > 0 ? (
-		<ol class="update-list">
-			{entries.map((entry) => (
-				<li>
-					<a class="update-item" href={getEntryPath(entry)}>
-						<time datetime={entry.data.updatedAt.toISOString()}>{formatDate(entry.data.updatedAt)}</time>
-						<span class:list={['mini-badge', `mini-badge--${entry.data.type}`]}>{entry.data.type}</span>
-						<strong>{entry.data.title}</strong>
-					</a>
-				</li>
-			))}
-		</ol>
+		<div class="typewriter-roll-deck">
+			<!-- Mechanical Platen Roll Top -->
+			<div class="typewriter-platen" aria-hidden="true">
+				<div class="platen-knob platen-knob--left"></div>
+				<div class="platen-roller-bar">
+					<span class="platen-label">CONTINUOUS FEED MECHANISM · MODEL-2026</span>
+				</div>
+				<div class="platen-knob platen-knob--right"></div>
+			</div>
+
+			<!-- Paper Stream Sheet with Sprocket Feed Holes -->
+			<div class="typewriter-paper-sheet">
+				<div class="sprocket-track sprocket-track--left" aria-hidden="true">
+					{Array.from({ length: Math.max(entries.length * 2, 6) }).map((_) => (
+						<span class="sprocket-hole" />
+					))}
+				</div>
+
+				<div class="receipt-stream-list" role="list">
+					{entries.map((entry) => {
+						const dateStr = formatDate(entry.data.updatedAt);
+						return (
+							<a
+								class={`receipt-row-item receipt-row-item--${entry.data.type}`}
+								href={getEntryPath(entry)}
+								role="listitem"
+							>
+								<div class="receipt-row-left">
+									<time datetime={entry.data.updatedAt.toISOString()} class="receipt-date-stamp">
+										{dateStr}
+									</time>
+									<span class={`mini-badge mini-badge--${entry.data.type}`}>
+										{entry.data.type.toUpperCase()}
+									</span>
+								</div>
+
+								<div class="receipt-row-center">
+									<strong class="receipt-entry-title">
+										{entry.data.title}
+										<span class="typewriter-cursor" aria-hidden="true">▋</span>
+									</strong>
+								</div>
+
+								<div class="receipt-row-right">
+									<span class="receipt-stamp-strike" aria-hidden="true">
+										[ LOGGED // PASS ]
+									</span>
+									<span class="receipt-action-btn">
+										查看 <span class="receipt-arrow">↗</span>
+									</span>
+								</div>
+							</a>
+						);
+					})}
+				</div>
+
+				<div class="sprocket-track sprocket-track--right" aria-hidden="true">
+					{Array.from({ length: Math.max(entries.length * 2, 6) }).map((_) => (
+						<span class="sprocket-hole" />
+					))}
+				</div>
+
+				<!-- Sawtooth Tear-off Bottom Edge -->
+				<div class="paper-sawtooth-footer" aria-hidden="true">
+					<div class="sawtooth-teeth"></div>
+					<div class="sawtooth-meta-bar">
+						<span class="sawtooth-code">||||||||||||||||||||||||||||||||||||</span>
+						<span class="sawtooth-status">FEED ROLL 04 // WAITING FOR NEXT ENTRY</span>
+					</div>
+				</div>
+			</div>
+		</div>
 	) : (
-		<p class="empty-state">新的工具、项目与收藏会从这里出现。</p>
+		<div class="updates-empty-feed">
+			<div class="empty-feed-badge">[ LOG BUFFER EMPTY ]</div>
+			<p class="empty-feed-text">动态流水正在准备中，最新收录的条目将在此实时打卡打印。</p>
+		</div>
 	)}
+
+	<div class="updates-bottom-tape" aria-hidden="true"></div>
 </section>
