@@ -174,35 +174,42 @@ const formatDate = (date: Date) =>
 
 	<!-- Code Block Copy Button Script -->
 	<script is:inline>
-		document.querySelectorAll('.prose pre').forEach((preBlock) => {
-			const wrapper = document.createElement('div');
-			wrapper.className = 'code-block-wrapper';
-			preBlock.parentNode.insertBefore(wrapper, preBlock);
-			wrapper.appendChild(preBlock);
+		function initCodeCopyButtons() {
+			document.querySelectorAll('.prose pre').forEach((preBlock) => {
+				if (preBlock.closest('.code-block-wrapper')) return;
+				const wrapper = document.createElement('div');
+				wrapper.className = 'code-block-wrapper';
+				preBlock.parentNode?.insertBefore(wrapper, preBlock);
+				wrapper.appendChild(preBlock);
 
-			const copyBtn = document.createElement('button');
-			copyBtn.className = 'code-copy-btn';
-			copyBtn.type = 'button';
-			copyBtn.setAttribute('aria-label', '复制代码内容');
-			copyBtn.innerHTML = '<span>📋 复制</span>';
+				const copyBtn = document.createElement('button');
+				copyBtn.className = 'code-copy-btn';
+				copyBtn.type = 'button';
+				copyBtn.setAttribute('aria-label', '复制代码内容');
+				copyBtn.innerHTML = '<span>📋 复制</span>';
 
-			copyBtn.addEventListener('click', async () => {
-				const codeEl = preBlock.querySelector('code');
-				const text = codeEl ? codeEl.innerText : preBlock.innerText;
-				try {
-					await navigator.clipboard.writeText(text);
-					copyBtn.innerHTML = '<span>✓ 已复制</span>';
-					copyBtn.classList.add('code-copy-btn--copied');
-					setTimeout(() => {
-						copyBtn.innerHTML = '<span>📋 复制</span>';
-						copyBtn.classList.remove('code-copy-btn--copied');
-					}, 2000);
-				} catch (err) {
-					console.error('Copy failed:', err);
-				}
+				copyBtn.addEventListener('click', async (e) => {
+					e.preventDefault();
+					const codeEl = preBlock.querySelector('code');
+					const text = (codeEl ? codeEl.innerText : preBlock.innerText).trim();
+					try {
+						await navigator.clipboard.writeText(text);
+						copyBtn.innerHTML = '<span>✓ 已复制</span>';
+						copyBtn.classList.add('code-copy-btn--copied');
+						setTimeout(() => {
+							copyBtn.innerHTML = '<span>📋 复制</span>';
+							copyBtn.classList.remove('code-copy-btn--copied');
+						}, 2000);
+					} catch (err) {
+						console.error('Copy failed:', err);
+					}
+				});
+
+				wrapper.appendChild(copyBtn);
 			});
+		}
 
-			wrapper.appendChild(copyBtn);
-		});
+		initCodeCopyButtons();
+		document.addEventListener('astro:page-load', initCodeCopyButtons);
 	</script>
 </BaseLayout>
