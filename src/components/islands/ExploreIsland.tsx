@@ -127,7 +127,7 @@ export default function ExploreIsland({ entries }: Props) {
               className="cockpit-search-input"
               value={query}
               onChange={handleQueryChange}
-              placeholder="检索标题、摘要或标签关键词..."
+              placeholder="检索标题或摘要关键词..."
               autoComplete="off"
               spellCheck="false"
             />
@@ -293,9 +293,7 @@ export default function ExploreIsland({ entries }: Props) {
                       <time dateTime={entry.updatedAt} className="card-date-label">
                         {entry.updatedAt}
                       </time>
-                      <span className="card-action-cue">
-                        提取标本 <span className="action-arrow">↗</span>
-                      </span>
+                      <span className="card-action-cue">提取标本</span>
                     </div>
                   </a>
                 );
@@ -306,7 +304,7 @@ export default function ExploreIsland({ entries }: Props) {
             {visibleEntries.length < filteredEntries.length && (
               <div className="feed-load-more-box">
                 <button type="button" className="specimen-load-more-btn" onClick={handleLoadMore}>
-                  ＋ 加载更多资产 ({filteredEntries.length - visibleEntries.length} 剩余) ↘
+                  加载更多资产 ({filteredEntries.length - visibleEntries.length} 剩余)
                 </button>
               </div>
             )}

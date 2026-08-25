@@ -20,7 +20,9 @@ const { article = false } = Astro.props;
 				<a href="#explore">探索</a>
 			</nav>
 			<details class="mobile-nav">
-				<summary>菜单</summary>
+				<summary aria-label="打开导航">
+					<span class="mobile-nav-toggle-icon" aria-hidden="true"></span>
+				</summary>
 				<nav aria-label="移动端主要导航">
 					<a href="#about">关于</a>
 					<a href="#featured">精选</a>

@@ -21,6 +21,7 @@ const formatDate = (date: Date) =>
 		month: '2-digit',
 		day: '2-digit',
 	}).format(date);
+
 ---
 
 <BaseLayout
@@ -32,8 +33,8 @@ const formatDate = (date: Date) =>
 
 	<main class="article-shell">
 		<div class="article-breadcrumb-bar">
-			<a class="article-breadcrumb-btn" href="/">
-				<span>← 返回数字花园总览</span>
+			<a class="article-breadcrumb-btn" href="/" data-history-back>
+				<span>返回上一页</span>
 			</a>
 			<span class="article-specimen-id">SPECIMEN // {entry.id}</span>
 		</div>
@@ -108,7 +109,6 @@ const formatDate = (date: Date) =>
 							<li>
 								<a href={link.url} target="_blank" rel="noopener noreferrer">
 									<span>{link.label}</span>
-									<span class="article-external-arrow" aria-hidden="true">↗</span>
 								</a>
 							</li>
 						))}
@@ -132,7 +132,6 @@ const formatDate = (date: Date) =>
 											{item.data.type.toUpperCase()}
 										</span>
 										<strong>{item.data.title}</strong>
-										<span class="article-external-arrow" aria-hidden="true">↗</span>
 									</div>
 									<p>{item.data.summary}</p>
 								</a>
@@ -158,7 +157,6 @@ const formatDate = (date: Date) =>
 											{item.data.type.toUpperCase()}
 										</span>
 										<strong>{item.data.title}</strong>
-										<span class="article-external-arrow" aria-hidden="true">↗</span>
 									</div>
 									<p>{item.data.summary}</p>
 								</a>
@@ -186,7 +184,8 @@ const formatDate = (date: Date) =>
 				copyBtn.className = 'code-copy-btn';
 				copyBtn.type = 'button';
 				copyBtn.setAttribute('aria-label', '复制代码内容');
-				copyBtn.innerHTML = '<span>📋 复制</span>';
+				copyBtn.innerHTML =
+					'<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="9" y="9" width="11" height="11"></rect><path d="M5 15V5h10"></path></svg>';
 
 				copyBtn.addEventListener('click', async (e) => {
 					e.preventDefault();
@@ -194,10 +193,14 @@ const formatDate = (date: Date) =>
 					const text = (codeEl ? codeEl.innerText : preBlock.innerText).trim();
 					try {
 						await navigator.clipboard.writeText(text);
-						copyBtn.innerHTML = '<span>✓ 已复制</span>';
+						copyBtn.setAttribute('aria-label', '代码已复制');
+						copyBtn.innerHTML =
+							'<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 4 4L19 6"></path></svg>';
 						copyBtn.classList.add('code-copy-btn--copied');
 						setTimeout(() => {
-							copyBtn.innerHTML = '<span>📋 复制</span>';
+							copyBtn.innerHTML =
+								'<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="9" y="9" width="11" height="11"></rect><path d="M5 15V5h10"></path></svg>';
+							copyBtn.setAttribute('aria-label', '复制代码内容');
 							copyBtn.classList.remove('code-copy-btn--copied');
 						}, 2000);
 					} catch (err) {
@@ -208,6 +211,13 @@ const formatDate = (date: Date) =>
 				wrapper.appendChild(copyBtn);
 			});
 		}
+
+		document.querySelector('[data-history-back]')?.addEventListener('click', (event) => {
+			if (window.history.length > 1) {
+				event.preventDefault();
+				window.history.back();
+			}
+		});
 
 		initCodeCopyButtons();
 		document.addEventListener('astro:page-load', initCodeCopyButtons);

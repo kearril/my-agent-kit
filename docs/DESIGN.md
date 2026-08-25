@@ -156,7 +156,7 @@ style_slug: neo-brutalist-playful-scrapbook
 
 - 采用特种工程纸底色（`#f0eae1` / `--paper-dark`）与深墨色文字，配合 2.5px 纯黑墨线外框与 4px 实色阴影。
 - 文本使用智能软折行（`white-space: pre-wrap; word-break: break-word;`），消除破坏美感的横向滚动条。
-- 右上角配备实体的 `[ 📋 复制 ]` 按钮，点击产生 `[ ✓ 已复制 ]` 绿底反馈与即时剪贴板写入。
+- 右上角配备 44px 的 SVG 复制控件；点击后即时写入剪贴板，图标替换为 SVG 钩选反馈，再自动恢复复制图标。
 
 ## 交互与动效
 
