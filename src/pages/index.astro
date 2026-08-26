@@ -19,10 +19,15 @@ const explore = createExploreIndex(await getPublicEntries());
 	<SiteHeader />
 	<main id="top">
 		<Hero />
+		<div class="washi-section-divider" aria-hidden="true" />
 		<AboutSection />
+		<div class="washi-section-divider" aria-hidden="true" />
 		<FeaturedSection entries={featured} />
+		<div class="washi-section-divider" aria-hidden="true" />
 		<UpdatesSection entries={recent} />
+		<div class="washi-section-divider" aria-hidden="true" />
 		<NotesSection entries={notes} />
+		<div class="washi-section-divider" aria-hidden="true" />
 		<ExploreSection entries={explore} />
 	</main>
 	<SiteFooter />

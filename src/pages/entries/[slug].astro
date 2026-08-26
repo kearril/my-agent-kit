@@ -1,5 +1,6 @@
 ---
 import { render } from 'astro:content';
+import { ArrowLeft, Calendar, Clock, Tag, ExternalLink, Layers, Link as LinkIcon, Sparkles, Wrench, Compass, FolderGit2, StickyNote } from '@lucide/astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteHeader from '../../components/layout/SiteHeader.astro';
 import SiteFooter from '../../components/layout/SiteFooter.astro';
@@ -34,11 +35,11 @@ const formatDate = (date: Date) =>
 	<main class="article-shell">
 		<div class="article-breadcrumb-bar">
 			<a class="article-breadcrumb-btn" href="/" data-history-back>
+				<ArrowLeft size={16} stroke-width={2.5} />
 				<span>返回上一页</span>
 			</a>
 			<span class="article-specimen-id">SPECIMEN // {entry.id}</span>
 		</div>
-
 		<article class="article-content">
 			<!-- Article Header -->
 			<header class="article-header">
@@ -68,6 +69,7 @@ const formatDate = (date: Date) =>
 					<div class="article-meta-dates">
 						{entry.data.publishedAt && (
 							<div class="article-meta-item">
+								<Calendar size={14} stroke-width={2.5} />
 								<span class="meta-label">首次收录:</span>
 								<time datetime={entry.data.publishedAt.toISOString()}>
 									{formatDate(entry.data.publishedAt)}
@@ -75,6 +77,7 @@ const formatDate = (date: Date) =>
 							</div>
 						)}
 						<div class="article-meta-item">
+							<Clock size={14} stroke-width={2.5} />
 							<span class="meta-label">最近修订:</span>
 							<time datetime={entry.data.updatedAt.toISOString()}>
 								{formatDate(entry.data.updatedAt)}
@@ -85,7 +88,10 @@ const formatDate = (date: Date) =>
 					{entry.data.tags && entry.data.tags.length > 0 && (
 						<div class="article-tags-group">
 							{entry.data.tags.map((tag) => (
-								<span class="article-tag-chip">#{tag}</span>
+								<span class="article-tag-chip">
+									<Tag size={11} stroke-width={2.5} style="display: inline; vertical-align: -1px; margin-right: 2px;" />
+									#{tag}
+								</span>
 							))}
 						</div>
 					)}
@@ -108,14 +114,17 @@ const formatDate = (date: Date) =>
 						{entry.data.links.map((link) => (
 							<li>
 								<a href={link.url} target="_blank" rel="noopener noreferrer">
-									<span>{link.label}</span>
+									<span style="display: inline-flex; align-items: center; gap: 8px;">
+										<LinkIcon size={16} stroke-width={2.5} />
+										{link.label}
+									</span>
+									<ExternalLink size={16} stroke-width={2.5} class="article-external-arrow" />
 								</a>
 							</li>
 						))}
 					</ul>
 				</section>
 			)}
-
 			<!-- Bi-directional Graph Connections -->
 			{related.length > 0 && (
 				<section class="article-section" aria-labelledby="related-entries-title">
@@ -185,7 +194,7 @@ const formatDate = (date: Date) =>
 				copyBtn.type = 'button';
 				copyBtn.setAttribute('aria-label', '复制代码内容');
 				copyBtn.innerHTML =
-					'<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="9" y="9" width="11" height="11"></rect><path d="M5 15V5h10"></path></svg>';
+					'<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="0"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>复制</span>';
 
 				copyBtn.addEventListener('click', async (e) => {
 					e.preventDefault();
@@ -195,11 +204,11 @@ const formatDate = (date: Date) =>
 						await navigator.clipboard.writeText(text);
 						copyBtn.setAttribute('aria-label', '代码已复制');
 						copyBtn.innerHTML =
-							'<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 4 4L19 6"></path></svg>';
+							'<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 4 4L19 6"></path></svg><span>已复制!</span>';
 						copyBtn.classList.add('code-copy-btn--copied');
 						setTimeout(() => {
 							copyBtn.innerHTML =
-								'<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="9" y="9" width="11" height="11"></rect><path d="M5 15V5h10"></path></svg>';
+								'<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="0"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>复制</span>';
 							copyBtn.setAttribute('aria-label', '复制代码内容');
 							copyBtn.classList.remove('code-copy-btn--copied');
 						}, 2000);
@@ -207,7 +216,6 @@ const formatDate = (date: Date) =>
 						console.error('Copy failed:', err);
 					}
 				});
-
 				wrapper.appendChild(copyBtn);
 			});
 		}

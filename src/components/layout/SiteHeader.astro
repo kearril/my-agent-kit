@@ -1,4 +1,6 @@
 ---
+import { ArrowLeft } from '@lucide/astro';
+
 interface Props {
 	article?: boolean;
 }
@@ -9,7 +11,10 @@ const { article = false } = Astro.props;
 <header class:list={['site-header', { 'site-header--article': article }]}>
 	<a class="wordmark" href={article ? '/' : '#top'}>Paracosm Garden</a>
 	{article ? (
-		<a class="plain-link" href="/">← 返回花园总览</a>
+		<a class="plain-link" href="/" style="display: inline-flex; align-items: center; gap: 6px;">
+			<ArrowLeft size={16} stroke-width={2.5} />
+			<span>返回花园总览</span>
+		</a>
 	) : (
 		<>
 			<nav class="desktop-nav" aria-label="主要导航">
