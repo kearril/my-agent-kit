@@ -2,7 +2,7 @@
  * Desktop workbench state model for the local entry editor.
  *
  * Provides deterministic, pure state transitions across navigation,
- * metadata/body form editing, preview freshness, and focus modes.
+ * metadata/body form editing, preview freshness, sidebar folding, and focus modes.
  *
  * Contains no React effects, fetches, or DOM behavior.
  */
@@ -13,6 +13,8 @@ export type WorkspaceMode = 'idle' | 'edit' | 'create';
 
 export interface EditorWorkspaceState<TPreview = unknown> {
   pane: WorkspacePane;
+  sidebarCollapsed: boolean;
+  metadataCollapsed: boolean;
   selectedSlug: string | null;
   mode: WorkspaceMode;
   dirty: boolean;
@@ -27,7 +29,10 @@ export type EditorWorkspaceAction<TPreview = unknown> =
   | { type: 'setPreview'; preview?: TPreview | null; html?: string }
   | { type: 'expandEditor' }
   | { type: 'expandPreview' }
-  | { type: 'restoreSplit' };
+  | { type: 'restoreSplit' }
+  | { type: 'setPane'; pane: WorkspacePane }
+  | { type: 'toggleSidebar'; collapsed?: boolean }
+  | { type: 'toggleMetadata'; collapsed?: boolean };
 
 /**
  * Creates an initial desktop editor workspace state with optional property overrides.
@@ -37,6 +42,8 @@ export function createWorkspaceState<TPreview = unknown>(
 ): EditorWorkspaceState<TPreview> {
   return {
     pane: 'split',
+    sidebarCollapsed: false,
+    metadataCollapsed: true,
     selectedSlug: null,
     mode: 'idle',
     dirty: false,
@@ -76,6 +83,7 @@ export function reduceWorkspace<TPreview = unknown>(
         mode: 'create',
         preview: null,
         dirty: false,
+        metadataCollapsed: false, // Auto-expand metadata for brand new entries
       };
     }
 
@@ -144,6 +152,44 @@ export function reduceWorkspace<TPreview = unknown>(
       return {
         ...state,
         pane: 'split',
+      };
+    }
+
+    case 'setPane': {
+      if (state.pane === action.pane) {
+        return state;
+      }
+      return {
+        ...state,
+        pane: action.pane,
+      };
+    }
+
+    case 'toggleSidebar': {
+      const nextCollapsed =
+        action.collapsed !== undefined
+          ? Boolean(action.collapsed)
+          : !state.sidebarCollapsed;
+      if (state.sidebarCollapsed === nextCollapsed) {
+        return state;
+      }
+      return {
+        ...state,
+        sidebarCollapsed: nextCollapsed,
+      };
+    }
+
+    case 'toggleMetadata': {
+      const nextCollapsed =
+        action.collapsed !== undefined
+          ? Boolean(action.collapsed)
+          : !state.metadataCollapsed;
+      if (state.metadataCollapsed === nextCollapsed) {
+        return state;
+      }
+      return {
+        ...state,
+        metadataCollapsed: nextCollapsed,
       };
     }
 

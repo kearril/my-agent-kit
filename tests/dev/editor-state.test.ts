@@ -13,6 +13,8 @@ describe('Editor Workspace State', () => {
 
       expect(state).toEqual({
         pane: 'split',
+        sidebarCollapsed: false,
+        metadataCollapsed: true,
         selectedSlug: null,
         mode: 'idle',
         dirty: false,
@@ -31,6 +33,8 @@ describe('Editor Workspace State', () => {
 
       expect(state).toEqual({
         pane: 'editor',
+        sidebarCollapsed: false,
+        metadataCollapsed: true,
         selectedSlug: 'my-note',
         mode: 'edit',
         dirty: true,
@@ -116,6 +120,36 @@ describe('Editor Workspace State', () => {
     });
   });
 
+  describe('setPane, toggleSidebar, and toggleMetadata actions', () => {
+    it('sets pane mode directly via setPane', () => {
+      const initial = createWorkspaceState();
+      const updated = reduceWorkspace(initial, { type: 'setPane', pane: 'editor' });
+      expect(updated.pane).toBe('editor');
+    });
+
+    it('toggles sidebar collapse state and accepts explicit overrides', () => {
+      const initial = createWorkspaceState();
+      expect(initial.sidebarCollapsed).toBe(false);
+
+      const collapsed = reduceWorkspace(initial, { type: 'toggleSidebar' });
+      expect(collapsed.sidebarCollapsed).toBe(true);
+
+      const expanded = reduceWorkspace(collapsed, { type: 'toggleSidebar', collapsed: false });
+      expect(expanded.sidebarCollapsed).toBe(false);
+    });
+
+    it('toggles metadata drawer collapse state and auto-expands on startNewEntry', () => {
+      const initial = createWorkspaceState();
+      expect(initial.metadataCollapsed).toBe(true);
+
+      const opened = reduceWorkspace(initial, { type: 'toggleMetadata' });
+      expect(opened.metadataCollapsed).toBe(false);
+
+      const newEntry = reduceWorkspace(initial, { type: 'startNewEntry' });
+      expect(newEntry.metadataCollapsed).toBe(false);
+    });
+  });
+
   describe('selectEntry action', () => {
     it('sets selected slug, switches mode to edit, and keeps pane mode', () => {
       const initial = createWorkspaceState({ pane: 'editor' });
@@ -176,6 +210,8 @@ describe('Editor Workspace State', () => {
     it('clears selectedSlug, switches mode to create, resets dirty, and clears preview', () => {
       const state: EditorWorkspaceState = {
         pane: 'editor',
+        sidebarCollapsed: false,
+        metadataCollapsed: true,
         selectedSlug: 'existing-slug',
         mode: 'edit',
         dirty: true,
@@ -186,6 +222,8 @@ describe('Editor Workspace State', () => {
 
       expect(next).toEqual({
         pane: 'editor',
+        sidebarCollapsed: false,
+        metadataCollapsed: false,
         selectedSlug: null,
         mode: 'create',
         dirty: false,

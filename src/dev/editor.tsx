@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-  ENTRY_TYPES,
   ENTRY_TYPE_DEFINITIONS,
-  slugRegex,
   type EntryType,
 } from '../lib/entry-data';
 import {
@@ -16,34 +14,36 @@ import type {
   EditorEntryResponse,
   EditorEntrySummary,
   EditorErrorResponse,
-  EditorPreviewResponse,
   EditorSaveResponse,
 } from './server/editor-api';
+import { StudioToolbar } from './components/StudioToolbar';
+import { NavSidebar } from './components/NavSidebar';
+import { CompactHeader, type EntryFormState } from './components/CompactHeader';
+import { MarkdownToolbar } from './components/MarkdownToolbar';
+import { ArticleBinderPreview } from './components/ArticleBinderPreview';
+import { useEditorShortcuts } from './hooks/useEditorShortcuts';
+import { useDebouncedPreview } from './hooks/useDebouncedPreview';
+import { useGardenVocabulary } from './hooks/useGardenVocabulary';
+import { computeContentStats } from './lib/markdown-actions';
 import './editor.css';
 
-interface EntryFormData {
-  slug: string;
-  title: string;
-  summary: string;
-  type: EntryType;
-  draft: boolean;
-  source: 'self' | 'adapted' | 'external';
-  tags: string[];
-  links: Array<{ label: string; url: string }>;
-  related: string[];
-  createdAt: string;
-  publishedAt: string;
-  initialPublishedAt?: string;
-  updatedAt: string;
-  featuredOrder: string;
-  typeFields: Record<string, unknown>;
-  body: string;
-  extension: string;
-  isLocal: boolean;
-  revision: string;
+function toDateInputValue(val?: Date | string | null): string {
+  if (!val) return '';
+  if (typeof val === 'string') {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+    const d = new Date(val);
+    if (!isNaN(d.getTime())) {
+      return d.toISOString().slice(0, 10);
+    }
+    return val.slice(0, 10);
+  }
+  if (val instanceof Date && !isNaN(val.getTime())) {
+    return val.toISOString().slice(0, 10);
+  }
+  return '';
 }
 
-function createEmptyFormData(type: EntryType = 'prompt'): EntryFormData {
+function createEmptyFormData(type: EntryType = 'prompt'): EntryFormState {
   const today = new Date().toISOString().slice(0, 10);
   const typeDef = ENTRY_TYPE_DEFINITIONS[type];
   const typeFields: Record<string, unknown> = {};
@@ -77,23 +77,7 @@ function createEmptyFormData(type: EntryType = 'prompt'): EntryFormData {
   };
 }
 
-function toDateInputValue(val?: Date | string | null): string {
-  if (!val) return '';
-  if (typeof val === 'string') {
-    if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
-    const d = new Date(val);
-    if (!isNaN(d.getTime())) {
-      return d.toISOString().slice(0, 10);
-    }
-    return val.slice(0, 10);
-  }
-  if (val instanceof Date && !isNaN(val.getTime())) {
-    return val.toISOString().slice(0, 10);
-  }
-  return '';
-}
-
-function entryDetailToFormData(detail: EditorEntryDetail): EntryFormData {
+function entryDetailToFormData(detail: EditorEntryDetail): EntryFormState {
   const typeDef = ENTRY_TYPE_DEFINITIONS[detail.type];
   const typeFields: Record<string, unknown> = {};
   if (typeDef?.typeFields) {
@@ -136,129 +120,6 @@ function entryDetailToFormData(detail: EditorEntryDetail): EntryFormData {
   };
 }
 
-function buildPreviewDocument(html: string, title?: string): string {
-  const safeTitle = title
-    ? title
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;')
-    : '预览';
-  return `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${safeTitle}</title>
-  <style>
-    :root {
-      --black: #000000;
-      --white: #ffffff;
-      --red: #ff6b6b;
-      --teal: #4ecdc4;
-      --yellow: #ffe66d;
-      --mint: #95e1d3;
-      --coral: #f38181;
-      --dark: #111827;
-      --muted: #374151;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      padding: 24px;
-      font-family: JetBrains Mono, Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, PingFang SC, Hiragino Sans GB, Microsoft YaHei, monospace;
-      color: var(--black);
-      background: var(--white);
-      line-height: 1.7;
-    }
-    h1, h2, h3, h4, h5, h6 {
-      font-weight: 900;
-      text-transform: uppercase;
-      margin-top: 1.5em;
-      margin-bottom: 0.5em;
-      line-height: 1.2;
-    }
-    h1:first-child { margin-top: 0; }
-    h1 { font-size: 1.8rem; border-bottom: 4px solid var(--black); padding-bottom: 8px; }
-    h2 { font-size: 1.4rem; border-bottom: 3px solid var(--black); padding-bottom: 4px; }
-    h3 { font-size: 1.15rem; }
-    p { margin-bottom: 1em; }
-    a { color: var(--black); font-weight: 800; text-decoration: underline; }
-    ul, ol { margin-left: 24px; margin-bottom: 1em; }
-    li { margin-bottom: 0.25em; }
-    blockquote {
-      border-left: 6px solid var(--black);
-      background: #f3f4f6;
-      padding: 12px 16px;
-      margin: 1.5em 0;
-      font-style: italic;
-    }
-    pre {
-      background: var(--dark);
-      color: #f9fafb;
-      padding: 16px;
-      border: 3px solid var(--black);
-      box-shadow: 4px 4px 0 var(--black);
-      overflow-x: auto;
-      margin: 1.5em 0;
-      font-size: 0.9rem;
-    }
-    code {
-      font-family: inherit;
-      background: #e5e7eb;
-      color: var(--black);
-      padding: 2px 6px;
-      font-size: 0.9em;
-      border: 1px solid var(--black);
-    }
-    pre code {
-      background: transparent;
-      color: inherit;
-      padding: 0;
-      border: none;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1.5em 0;
-      border: 3px solid var(--black);
-    }
-    th, td {
-      border: 2px solid var(--black);
-      padding: 8px 12px;
-      text-align: left;
-    }
-    th {
-      background: var(--yellow);
-      font-weight: 900;
-    }
-    hr {
-      border: none;
-      border-top: 3px solid var(--black);
-      margin: 2em 0;
-    }
-    img {
-      max-width: 100%;
-      height: auto;
-      border: 3px solid var(--black);
-    }
-    .preview-relative-image-fallback {
-      display: inline-block;
-      padding: 6px 10px;
-      background: var(--yellow);
-      border: 2px solid var(--black);
-      font-size: 0.8rem;
-      font-weight: 800;
-      margin: 4px 0;
-    }
-  </style>
-</head>
-<body>
-  ${html}
-</body>
-</html>`;
-}
-
 export function LocalEntryEditorApp() {
   const [state, dispatch] = useReducer(
     reduceWorkspace<{ html: string }>,
@@ -270,18 +131,13 @@ export function LocalEntryEditorApp() {
   const [entriesLoading, setEntriesLoading] = useState(true);
   const [entriesError, setEntriesError] = useState<string | null>(null);
 
-  const [filterText, setFilterText] = useState('');
-  const [filterTab, setFilterTab] = useState<'ALL' | 'DRAFT' | 'LOCAL'>('ALL');
-  const [typeFilter, setTypeFilter] = useState<'ALL' | EntryType>('ALL');
-
-  const [formData, setFormData] = useState<EntryFormData>(() =>
+  const [formData, setFormData] = useState<EntryFormState>(() =>
     createEmptyFormData(),
   );
-  const formDataRef = useRef<EntryFormData>(formData);
+  const formDataRef = useRef<EntryFormState>(formData);
   formDataRef.current = formData;
 
-  const [tagInput, setTagInput] = useState('');
-  const [relatedSearch, setRelatedSearch] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const [detailLoading, setDetailLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
@@ -293,16 +149,14 @@ export function LocalEntryEditorApp() {
   } | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
-  const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
-  const [previewStale, setPreviewStale] = useState(false);
-
-  const previewAbortControllerRef = useRef<AbortController | null>(null);
-  const previewSeqRef = useRef<number>(0);
 
   const detailAbortControllerRef = useRef<AbortController | null>(null);
   const detailRequestSeqRef = useRef<number>(0);
 
+  const vocabulary = useGardenVocabulary(entries);
+
+  // Fetch Entry List
   const fetchEntries = useCallback(async () => {
     setEntriesLoading(true);
     setEntriesError(null);
@@ -326,174 +180,96 @@ export function LocalEntryEditorApp() {
     fetchEntries();
   }, [fetchEntries]);
 
-  const requestPreview = useCallback(
-    async (form: EntryFormData) => {
-      if (previewAbortControllerRef.current) {
-        previewAbortControllerRef.current.abort();
-      }
-
-      if (form.extension === '.mdx' || form.slug.endsWith('.mdx')) {
-        setPreviewError(
-          '暂不支持 MDX 预览。请保存条目后在站点页面中查看。',
-        );
-        dispatch({ type: 'setPreview', preview: null });
-        setPreviewLoading(false);
-        setPreviewStale(false);
-        return;
-      }
-
-      const controller = new AbortController();
-      previewAbortControllerRef.current = controller;
-      const reqId = ++previewSeqRef.current;
-
-      setPreviewLoading(true);
-      setPreviewError(null);
-
-      const payload: Record<string, unknown> = {
-        slug: form.slug || 'untitled-preview',
-        title: form.title || '未命名条目',
-        summary: form.summary || '预览摘要',
-        type: form.type,
-        draft: form.draft,
-        source: form.source,
-        tags: form.tags,
-        links: form.links.filter((l) => l.label.trim() && l.url.trim()),
-        related: form.related,
-        createdAt: form.createdAt || new Date().toISOString().slice(0, 10),
-        publishedAt:
-          !form.draft && form.publishedAt ? form.publishedAt : undefined,
-        updatedAt: form.updatedAt || new Date().toISOString().slice(0, 10),
-        featuredOrder: form.featuredOrder
-          ? Number(form.featuredOrder)
-          : undefined,
-        body: form.body,
-        extension: form.extension,
-      };
-
-      const currentTypeDef = ENTRY_TYPE_DEFINITIONS[form.type];
-      if (currentTypeDef?.typeFields) {
-        for (const [key, decl] of Object.entries(currentTypeDef.typeFields)) {
-          const rawVal = form.typeFields[key];
-          if (rawVal !== undefined && rawVal !== '') {
-            if (decl.control === 'number') {
-              payload[key] = Number(rawVal);
-            } else if (decl.control === 'checkbox') {
-              payload[key] = Boolean(rawVal);
-            } else {
-              payload[key] = rawVal;
-            }
-          }
-        }
-      }
-
-      try {
-        const res = await fetch('/__garden-editor/api/preview', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          signal: controller.signal,
-        });
-
-        if (reqId !== previewSeqRef.current) return;
-
-        if (res.status === 422) {
-          const errData = (await res.json()) as EditorErrorResponse;
-          if (reqId !== previewSeqRef.current) return;
-          setPreviewError(
-            errData.error ||
-              '暂不支持 MDX 预览。请保存条目后在站点页面中查看。',
-          );
-          dispatch({ type: 'setPreview', preview: null });
-          setPreviewStale(false);
-          return;
-        }
-
-        if (!res.ok) {
-          const errData = (await res.json()) as EditorErrorResponse;
-          if (reqId !== previewSeqRef.current) return;
-          setPreviewError(errData.error || `预览失败（${res.status}）`);
-          dispatch({ type: 'setPreview', preview: null });
-          setPreviewStale(false);
-          return;
-        }
-
-        const previewData = (await res.json()) as EditorPreviewResponse;
-        if (reqId !== previewSeqRef.current) return;
-        dispatch({ type: 'setPreview', preview: { html: previewData.html } });
-        setPreviewStale(false);
-      } catch (err) {
-        if (reqId !== previewSeqRef.current) return;
-        if ((err as Error).name !== 'AbortError') {
-          setPreviewError(
-            err instanceof Error ? err.message : '预览请求失败',
-          );
-        }
-      } finally {
-        if (reqId === previewSeqRef.current) {
-          setPreviewLoading(false);
-        }
-      }
+  // Form State Mutator
+  const updateForm = useCallback(
+    (patch: Partial<EntryFormState>) => {
+      const next = { ...formDataRef.current, ...patch };
+      formDataRef.current = next;
+      setFormData(next);
+      dispatch({ type: 'markDirty', dirty: true });
     },
-    [dispatch],
+    [],
   );
 
-  const loadEntry = useCallback(
-    async (slug: string) => {
-      if (detailAbortControllerRef.current) {
-        detailAbortControllerRef.current.abort();
+  // Debounced Live Preview
+  const { isLoading: previewLoading, triggerInstant: triggerInstantPreview } =
+    useDebouncedPreview({
+      formData,
+      delayMs: 300,
+      onPreviewSuccess: useCallback((html: string) => {
+        dispatch({ type: 'setPreview', preview: { html } });
+        setPreviewError(null);
+      }, []),
+      onPreviewError: useCallback((err: string | null) => {
+        setPreviewError(err);
+      }, []),
+    });
+
+  // Load Single Entry
+  const loadEntry = useCallback(async (slug: string) => {
+    if (detailAbortControllerRef.current) {
+      detailAbortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    detailAbortControllerRef.current = controller;
+    const reqId = ++detailRequestSeqRef.current;
+
+    setDetailLoading(true);
+    setBannerAlert(null);
+    setFieldErrors({});
+    setSavedUrl(null);
+
+    try {
+      const res = await fetch(`/__garden-editor/api/entries/${slug}`, {
+        signal: controller.signal,
+      });
+      if (reqId !== detailRequestSeqRef.current) return;
+
+      if (!res.ok) {
+        throw new Error(`加载条目“${slug}”失败（${res.status}）`);
       }
-      const controller = new AbortController();
-      detailAbortControllerRef.current = controller;
-      const reqId = ++detailRequestSeqRef.current;
+      const data = (await res.json()) as EditorEntryResponse;
+      if (reqId !== detailRequestSeqRef.current) return;
 
-      setDetailLoading(true);
-      setBannerAlert(null);
-      setFieldErrors({});
-      setSavedUrl(null);
-
-      try {
-        const res = await fetch(`/__garden-editor/api/entries/${slug}`, {
-          signal: controller.signal,
-        });
-        if (reqId !== detailRequestSeqRef.current) return;
-
-        if (!res.ok) {
-          throw new Error(`加载条目“${slug}”失败（${res.status}）`);
-        }
-        const data = (await res.json()) as EditorEntryResponse;
-        if (reqId !== detailRequestSeqRef.current) return;
-
-        const nextForm = entryDetailToFormData(data.entry);
-        formDataRef.current = nextForm;
-        setFormData(nextForm);
-        setSavedUrl(data.url);
-        requestPreview(nextForm);
-      } catch (err) {
-        if (reqId !== detailRequestSeqRef.current) return;
-        if ((err as Error).name === 'AbortError') return;
-        setBannerAlert({
-          type: 'error',
-          message:
-            err instanceof Error ? err.message : '加载条目详情失败',
-        });
-      } finally {
-        if (reqId === detailRequestSeqRef.current) {
-          setDetailLoading(false);
-        }
+      const nextForm = entryDetailToFormData(data.entry);
+      formDataRef.current = nextForm;
+      setFormData(nextForm);
+      setSavedUrl(data.url);
+    } catch (err) {
+      if (reqId !== detailRequestSeqRef.current) return;
+      if ((err as Error).name === 'AbortError') return;
+      setBannerAlert({
+        type: 'error',
+        message: err instanceof Error ? err.message : '加载条目详情失败',
+      });
+    } finally {
+      if (reqId === detailRequestSeqRef.current) {
+        setDetailLoading(false);
       }
-    },
-    [requestPreview],
-  );
+    }
+  }, []);
 
   const handleSelectEntry = useCallback(
     (slug: string) => {
+      if (state.dirty && state.selectedSlug && state.selectedSlug !== slug) {
+        const confirmed = window.confirm(
+          '当前条目有尚未保存的改动。切换到其他条目可能会丢失这些修改，确认切换吗？',
+        );
+        if (!confirmed) return;
+      }
       dispatch({ type: 'selectEntry', slug });
       loadEntry(slug);
     },
-    [loadEntry],
+    [state.dirty, state.selectedSlug, loadEntry],
   );
 
   const handleNewEntry = useCallback(() => {
+    if (state.dirty) {
+      const confirmed = window.confirm(
+        '当前条目有尚未保存的改动，确认创建新条目吗？',
+      );
+      if (!confirmed) return;
+    }
     if (detailAbortControllerRef.current) {
       detailAbortControllerRef.current.abort();
     }
@@ -507,29 +283,7 @@ export function LocalEntryEditorApp() {
     setSavedUrl(null);
     setBannerAlert(null);
     setFieldErrors({});
-    requestPreview(emptyForm);
-  }, [requestPreview]);
-
-  const updateForm = useCallback(
-    (
-      updater:
-        | Partial<EntryFormData>
-        | ((prev: EntryFormData) => EntryFormData),
-    ) => {
-      const prev = formDataRef.current;
-      const next =
-        typeof updater === 'function' ? updater(prev) : { ...prev, ...updater };
-      formDataRef.current = next;
-      setFormData(next);
-      dispatch({ type: 'markDirty', dirty: true });
-      setPreviewStale(true);
-    },
-    [dispatch],
-  );
-
-  const handleExplicitPreview = useCallback(() => {
-    requestPreview(formDataRef.current);
-  }, [requestPreview]);
+  }, [state.dirty]);
 
   const handleTypeChange = useCallback(
     (newType: EntryType) => {
@@ -549,112 +303,72 @@ export function LocalEntryEditorApp() {
     [updateForm],
   );
 
-  const handleAddTag = useCallback(() => {
-    const trimmed = tagInput.trim();
-    if (!trimmed) return;
-    if (!formData.tags.includes(trimmed)) {
-      updateForm({ tags: [...formData.tags, trimmed] });
-    }
-    setTagInput('');
-  }, [formData.tags, tagInput, updateForm]);
-
-  const handleRemoveTag = useCallback(
-    (tagToRemove: string) => {
-      updateForm({ tags: formData.tags.filter((t) => t !== tagToRemove) });
+  const handleQuickToday = useCallback(
+    (field: 'updatedAt' | 'publishedAt' | 'createdAt') => {
+      const today = new Date().toISOString().slice(0, 10);
+      updateForm({ [field]: today });
     },
-    [formData.tags, updateForm],
+    [updateForm],
   );
 
-  const handleAddLink = useCallback(() => {
-    updateForm({
-      links: [...formData.links, { label: '', url: '' }],
-    });
-  }, [formData.links, updateForm]);
-
-  const handleUpdateLink = useCallback(
-    (index: number, key: 'label' | 'url', value: string) => {
-      const nextLinks = [...formData.links];
-      nextLinks[index] = { ...nextLinks[index], [key]: value };
-      updateForm({ links: nextLinks });
-    },
-    [formData.links, updateForm],
-  );
-
-  const handleRemoveLink = useCallback(
-    (index: number) => {
-      updateForm({ links: formData.links.filter((_, i) => i !== index) });
-    },
-    [formData.links, updateForm],
-  );
-
-  const handleToggleRelated = useCallback(
-    (slug: string) => {
-      const isSelected = formData.related.includes(slug);
-      const nextRelated = isSelected
-        ? formData.related.filter((s) => s !== slug)
-        : [...formData.related, slug];
-      updateForm({ related: nextRelated });
-    },
-    [formData.related, updateForm],
-  );
-
+  // Save Draft to Disk
   const handleSave = useCallback(async () => {
     setSaveLoading(true);
     setBannerAlert(null);
     setFieldErrors({});
 
+    const currentForm = formDataRef.current;
     const isCreate = state.mode === 'create';
-    const cleanLinks = formData.links.filter(
+    const cleanLinks = currentForm.links.filter(
       (l) => l.label.trim() && l.url.trim(),
     );
 
     const payload: Record<string, unknown> = {
-      title: formData.title.trim(),
-      summary: formData.summary.trim(),
-      type: formData.type,
-      draft: formData.draft,
-      source: formData.source,
-      tags: formData.tags,
+      title: currentForm.title.trim(),
+      summary: currentForm.summary.trim(),
+      type: currentForm.type,
+      draft: currentForm.draft,
+      source: currentForm.source,
+      tags: currentForm.tags,
       links: cleanLinks,
-      related: formData.related,
-      createdAt: formData.createdAt,
-      updatedAt: formData.updatedAt,
-      body: formData.body,
+      related: currentForm.related,
+      createdAt: currentForm.createdAt,
+      updatedAt: currentForm.updatedAt,
+      body: currentForm.body,
     };
 
-    if (!formData.draft && formData.publishedAt) {
-      payload.publishedAt = formData.publishedAt;
+    if (!currentForm.draft && currentForm.publishedAt) {
+      payload.publishedAt = currentForm.publishedAt;
     }
 
-    if (formData.featuredOrder.trim()) {
-      payload.featuredOrder = Number(formData.featuredOrder);
+    if (currentForm.featuredOrder.trim()) {
+      payload.featuredOrder = Number(currentForm.featuredOrder);
     }
 
-    const currentTypeDef = ENTRY_TYPE_DEFINITIONS[formData.type];
+    const currentTypeDef = ENTRY_TYPE_DEFINITIONS[currentForm.type];
     if (currentTypeDef?.typeFields) {
       for (const [key, decl] of Object.entries(currentTypeDef.typeFields)) {
-        const rawVal = formData.typeFields[key];
+        const rawVal = currentForm.typeFields[key];
         if (rawVal !== undefined && rawVal !== '') {
-          if (decl.control === 'number') {
-            payload[key] = Number(rawVal);
-          } else if (decl.control === 'checkbox') {
-            payload[key] = Boolean(rawVal);
-          } else {
-            payload[key] = rawVal;
-          }
+          payload[key] =
+            decl.control === 'number'
+              ? Number(rawVal)
+              : decl.control === 'checkbox'
+                ? Boolean(rawVal)
+                : rawVal;
         }
       }
     }
 
     if (isCreate) {
-      payload.slug = formData.slug.trim();
+      payload.slug = currentForm.slug.trim();
     } else {
-      payload.revision = formData.revision;
+      payload.revision = currentForm.revision;
     }
 
     const endpoint = isCreate
       ? '/__garden-editor/api/entries'
-      : `/__garden-editor/api/entries/${formData.slug}`;
+      : `/__garden-editor/api/entries/${currentForm.slug}`;
     const method = isCreate ? 'POST' : 'PUT';
 
     try {
@@ -689,24 +403,14 @@ export function LocalEntryEditorApp() {
               const topField = String(issue.path[0]);
               const msg = issue.message || 'Invalid value';
               errMap[fullPath] = msg;
-              if (!errMap[topField]) {
-                errMap[topField] = msg;
-              }
-              if (issue.path.length >= 2) {
-                const prefix2 = `${issue.path[0]}.${issue.path[1]}`;
-                if (!errMap[prefix2]) {
-                  errMap[prefix2] = msg;
-                }
-              }
+              if (!errMap[topField]) errMap[topField] = msg;
             }
           }
         }
         setFieldErrors(errMap);
         setBannerAlert({
           type: 'error',
-          message:
-            errData.error ||
-            '校验失败。请修正字段错误后重试。',
+          message: errData.error || '校验失败。请修正字段错误后重试。',
         });
         return;
       }
@@ -724,1107 +428,196 @@ export function LocalEntryEditorApp() {
       dispatch({ type: 'markSaved', slug: saveRes.entry.slug });
       setBannerAlert({
         type: 'success',
-        message: `Saved entry "${saveRes.entry.slug}" successfully.`,
+        message: `条目 "${saveRes.entry.slug}" 已成功保存到磁盘。`,
       });
 
       fetchEntries();
-      requestPreview(updatedForm);
     } catch (err) {
       setBannerAlert({
         type: 'error',
-        message: err instanceof Error ? err.message : '保存条目失败',
+        message: err instanceof Error ? err.message : '保存条目时发生错误',
       });
     } finally {
       setSaveLoading(false);
     }
-  }, [
-    state.mode,
-    formData,
-    fetchEntries,
-    requestPreview,
-  ]);
+  }, [state.mode, fetchEntries]);
 
-  const filteredEntries = useMemo(() => {
-    return entries.filter((item) => {
-      if (filterTab === 'DRAFT' && !item.draft) return false;
-      if (filterTab === 'LOCAL' && !item.isLocal) return false;
-      if (typeFilter !== 'ALL' && item.type !== typeFilter) return false;
-      if (filterText.trim()) {
-        const q = filterText.toLowerCase().trim();
-        const matchTitle = item.title.toLowerCase().includes(q);
-        const matchSlug = item.slug.toLowerCase().includes(q);
-        if (!matchTitle && !matchSlug) return false;
-      }
-      return true;
-    });
-  }, [entries, filterTab, typeFilter, filterText]);
+  // Hook shortcuts
+  useEditorShortcuts({
+    textareaRef,
+    onSave: handleSave,
+    onContentChange: useCallback((nextBody: string) => {
+      updateForm({ body: nextBody });
+    }, [updateForm]),
+  });
 
-  const availableRelatedEntries = useMemo(() => {
-    return entries
-      .filter((e) => e.slug !== formData.slug)
-      .filter((e) => {
-        if (!relatedSearch.trim()) return true;
-        const q = relatedSearch.toLowerCase().trim();
-        return (
-          e.title.toLowerCase().includes(q) || e.slug.toLowerCase().includes(q)
-        );
-      });
-  }, [entries, formData.slug, relatedSearch]);
+  const contentStats = useMemo(() => {
+    return computeContentStats(formData.body || '');
+  }, [formData.body]);
 
-  const paneClass = `workbench-body pane-${state.pane}`;
+  const paneClass = `workbench-body pane-${state.pane} ${
+    state.sidebarCollapsed ? 'sidebar-collapsed' : ''
+  }`;
 
   return (
     <div className="workbench-container">
-      {/* Top Application Toolbar */}
-      <header className="workbench-toolbar">
-        <div className="toolbar-brand-group">
-          <div className="toolbar-brand">本地条目编辑器</div>
-          <div className="toolbar-status-badge">本机地址：127.0.0.1</div>
-          <div className="toolbar-summary">
-            {entriesLoading
-              ? '正在加载条目…'
-              : `${filteredEntries.length} / ${entries.length} 条目`}
-          </div>
-        </div>
+      {/* Top Application Header */}
+      <StudioToolbar
+        entriesCount={entries.length}
+        filteredCount={entries.length}
+        isLoading={entriesLoading}
+        pane={state.pane}
+        sidebarCollapsed={state.sidebarCollapsed}
+        onToggleSidebar={() => dispatch({ type: 'toggleSidebar' })}
+        onSetPane={(pane) => dispatch({ type: 'setPane', pane })}
+        onNewEntry={handleNewEntry}
+        onSave={handleSave}
+        isSaving={saveLoading}
+        isDirty={state.dirty}
+        hasSelectedEntry={state.mode !== 'idle'}
+      />
 
-        <div className="toolbar-actions">
-          {/* Pane View Toggles */}
-          <div className="pane-toggle-group" role="group" aria-label="视图布局切换">
-            <button
-              type="button"
-              className="pane-toggle-button"
-              aria-pressed={state.pane === 'editor'}
-              onClick={() =>
-                state.pane === 'editor'
-                  ? dispatch({ type: 'restoreSplit' })
-                  : dispatch({ type: 'expandEditor' })
-              }
-            >
-              放大编辑区
-            </button>
-            <button
-              type="button"
-              className="pane-toggle-button"
-              aria-pressed={state.pane === 'split'}
-              onClick={() => dispatch({ type: 'restoreSplit' })}
-            >
-              双栏视图
-            </button>
-            <button
-              type="button"
-              className="pane-toggle-button"
-              aria-pressed={state.pane === 'preview'}
-              onClick={() =>
-                state.pane === 'preview'
-                  ? dispatch({ type: 'restoreSplit' })
-                  : dispatch({ type: 'expandPreview' })
-              }
-            >
-              放大预览区
-            </button>
-          </div>
-
-          <button
-            type="button"
-            className="new-entry-btn"
-            onClick={handleNewEntry}
-          >
-            + 新建条目
-          </button>
-        </div>
-      </header>
-
-      {/* Main Three-Column Grid */}
+      {/* Main Grid View */}
       <div className={paneClass}>
-        {/* Left Column: Fixed Navigation */}
-        <nav className="workbench-nav-pane" aria-label="条目导航">
-          <div className="nav-header">
-            <h2 className="nav-title">查找条目</h2>
-          </div>
+        {/* Left Specimen Ledger Sidebar */}
+        <NavSidebar
+          entries={entries}
+          selectedSlug={state.selectedSlug}
+          isDirty={state.dirty}
+          isLoading={entriesLoading}
+          error={entriesError}
+          onSelectEntry={handleSelectEntry}
+        />
 
-          <div className="nav-controls">
-            <input
-              type="text"
-              className="nav-search-input"
-              placeholder="搜索标题或 Slug…"
-              value={filterText}
-              aria-label="按标题或路径名搜索条目"
-              onChange={(e) => setFilterText(e.target.value)}
-            />
-
-            <div className="nav-filter-tabs" role="group" aria-label="状态筛选">
-              <button
-                type="button"
-                className="nav-filter-tab"
-                aria-pressed={filterTab === 'ALL'}
-                onClick={() => setFilterTab('ALL')}
-              >
-                全部
-              </button>
-              <button
-                type="button"
-                className="nav-filter-tab"
-                aria-pressed={filterTab === 'DRAFT'}
-                onClick={() => setFilterTab('DRAFT')}
-              >
-                草稿
-              </button>
-              <button
-                type="button"
-                className="nav-filter-tab"
-                aria-pressed={filterTab === 'LOCAL'}
-                onClick={() => setFilterTab('LOCAL')}
-              >
-                本地
-              </button>
-            </div>
-
-            <select
-              className="nav-type-select"
-              value={typeFilter}
-              aria-label="按类型筛选条目"
-              onChange={(e) =>
-                setTypeFilter(e.target.value as 'ALL' | EntryType)
-              }
-            >
-              <option value="ALL">全部类型（{entries.length}）</option>
-              {ENTRY_TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {ENTRY_TYPE_DEFINITIONS[t].label} ({t})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <ul className="nav-entry-list">
-            {entriesLoading && (
-              <li className="nav-empty-message">正在加载条目…</li>
-            )}
-            {entriesError && (
-              <li className="nav-empty-message">{entriesError}</li>
-            )}
-            {!entriesLoading &&
-              !entriesError &&
-              filteredEntries.length === 0 && (
-                <li className="nav-empty-message">
-                  没有符合当前筛选条件的条目。
-                </li>
-              )}
-            {!entriesLoading &&
-              filteredEntries.map((item) => {
-                const isSelected =
-                  state.selectedSlug === item.slug && state.mode === 'edit';
-                const isUnsaved = isSelected && state.dirty;
-
-                return (
-                  <li key={item.slug} className="nav-entry-item">
-                    <button
-                      type="button"
-                      className={`nav-entry-button ${isSelected ? 'is-selected' : ''}`}
-                      aria-current={isSelected ? 'page' : undefined}
-                      onClick={() => handleSelectEntry(item.slug)}
-                    >
-                      <div className="entry-item-header">
-                        <span className={`badge badge-${item.type}`}>
-                          {ENTRY_TYPE_DEFINITIONS[item.type]?.label ||
-                            item.type}
-                        </span>
-                        {item.draft && (
-                          <span className="badge badge-draft">草稿</span>
-                        )}
-                        {item.isLocal && (
-                          <span className="badge badge-local">本地</span>
-                        )}
-                        <span className="badge">{item.extension || '.md'}</span>
-                      </div>
-
-                      <div className="entry-item-title">{item.title}</div>
-                      <div className="entry-item-slug">{item.slug}</div>
-
-                      <div className="entry-item-status-row">
-                        {isSelected && (
-                          <span className="status-selected-label">
-                            [已选择]
-                          </span>
-                        )}
-                        {isUnsaved && (
-                          <span className="status-unsaved-label">
-                            [未保存]
-                          </span>
-                        )}
-                      </div>
-                    </button>
-                  </li>
-                );
-              })}
-          </ul>
-        </nav>
-
-        {/* Center Column: Structured Editor Form */}
-        <main className="workbench-editor-pane" aria-label="条目编辑">
+        {/* Center Editing Canvas */}
+        <main className="workbench-editor-pane" aria-label="条目编辑区">
           {state.mode === 'idle' ? (
-            <div className="editor-empty-state">
-              <h2 className="editor-empty-title">尚未选择条目</h2>
-              <p className="editor-empty-desc">
-                请从左侧选择条目进行查看和编辑，或点击
-                <strong>+ 新建条目</strong> 创建新的 Markdown 条目。
+            <div
+              style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '40px',
+                textAlign: 'center',
+              }}
+            >
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, marginBottom: '12px' }}>
+                🗂 尚未选择条目
+              </h2>
+              <p style={{ color: 'var(--muted)', maxWidth: '420px', lineHeight: 1.6, marginBottom: '20px' }}>
+                从左侧卷宗列表中选择一个条目进行快速查看与编辑，或点击右上角
+                <strong> + 新建条目 </strong>开始撰写新的手账便签。
               </p>
               <button
                 type="button"
                 className="new-entry-btn"
                 onClick={handleNewEntry}
               >
-                + 新建条目
+                + 创建新条目
               </button>
             </div>
           ) : (
             <>
-              <div className="editor-header-bar">
-                <div className="editor-header-title">
-                  {state.mode === 'create'
-                    ? '+ 创建新条目'
-                    : `编辑：${formData.slug}`}
-                </div>
-                <div className="editor-header-meta">
-                  {state.mode === 'edit' && (
-                    <span>
-                      版本：{formData.revision || '未知'} |{' '}
-                      {formData.extension}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="editor-scroll-container">
-                {detailLoading && (
-                  <div className="editor-alert editor-alert--conflict">
-                    正在从磁盘加载条目详情…
-                  </div>
-                )}
-
-                {/* Banner Alerts */}
-                {bannerAlert && (
-                  <div
-                    className={`editor-alert editor-alert--${bannerAlert.type}`}
-                    role="alert"
+              {/* Alert Banners */}
+              {bannerAlert && (
+                <div
+                  className={`editor-alert-banner editor-alert-banner--${bannerAlert.type}`}
+                  role="alert"
+                >
+                  <span>{bannerAlert.message}</span>
+                  <button
+                    type="button"
+                    style={{ background: 'none', border: 'none', boxShadow: 'none' }}
+                    onClick={() => setBannerAlert(null)}
                   >
-                    <div>{bannerAlert.message}</div>
-                  </div>
-                )}
+                    ✕
+                  </button>
+                </div>
+              )}
 
-                {/* Section 1: BASIC INFO */}
-                <section className="form-section">
-                  <div className="form-section-header form-section-header--basic">
-                    1. 基本信息
-                  </div>
-                  <div className="form-section-body">
-                    <div className="form-group">
-                      <label htmlFor="field-title" className="field-label">
-                        标题 <span className="field-required">*</span>
-                      </label>
-                      <input
-                        id="field-title"
-                        type="text"
-                        className="field-input"
-                        value={formData.title}
-                        onChange={(e) => updateForm({ title: e.target.value })}
-                        placeholder="条目标题…"
-                        required
-                      />
-                      {fieldErrors.title && (
-                        <div className="field-error-message">
-                          {fieldErrors.title}
-                        </div>
-                      )}
-                    </div>
+              {detailLoading && (
+                <div className="editor-alert-banner editor-alert-banner--conflict">
+                  正在从磁盘加载条目详情…
+                </div>
+              )}
 
-                    <div className="form-group">
-                      <label htmlFor="field-summary" className="field-label">
-                        摘要 <span className="field-required">*</span>
-                      </label>
-                      <input
-                        id="field-summary"
-                        type="text"
-                        className="field-input"
-                        value={formData.summary}
-                        onChange={(e) =>
-                          updateForm({ summary: e.target.value })
-                        }
-                        placeholder="简短摘要说明…"
-                        required
-                      />
-                      {fieldErrors.summary && (
-                        <div className="field-error-message">
-                          {fieldErrors.summary}
-                        </div>
-                      )}
-                    </div>
+              {/* Compact Header for metadata */}
+              <CompactHeader
+                formData={formData}
+                mode={state.mode}
+                fieldErrors={fieldErrors}
+                collapsed={state.metadataCollapsed}
+                onToggleCollapsed={() => dispatch({ type: 'toggleMetadata' })}
+                onUpdateForm={updateForm}
+                vocabulary={vocabulary}
+                onQuickToday={handleQuickToday}
+                onTypeChange={handleTypeChange}
+              />
 
-                    <div className="form-group-row">
-                      <div className="form-group">
-                        <label htmlFor="field-type" className="field-label">
-                          类型 <span className="field-required">*</span>
-                        </label>
-                        {state.mode === 'create' ? (
-                          <select
-                            id="field-type"
-                            className="field-input"
-                            value={formData.type}
-                            onChange={(e) =>
-                              handleTypeChange(e.target.value as EntryType)
-                            }
-                          >
-                            {ENTRY_TYPES.map((t) => (
-                              <option key={t} value={t}>
-                                {ENTRY_TYPE_DEFINITIONS[t].label} ({t})
-                              </option>
-                            ))}
-                          </select>
-                        ) : (
-                          <div className="field-readonly" id="field-type">
-                            {ENTRY_TYPE_DEFINITIONS[formData.type]?.label ||
-                              formData.type}{' '}
-                            ({formData.type})
-                          </div>
-                        )}
-                        {fieldErrors.type && (
-                          <div className="field-error-message">
-                            {fieldErrors.type}
-                          </div>
-                        )}
-                      </div>
+              {/* Single-Row Markdown Micro-Toolbar */}
+              <MarkdownToolbar
+                textareaRef={textareaRef}
+                onContentChange={(nextBody) => updateForm({ body: nextBody })}
+                wordCount={contentStats.wordCount}
+                charCount={contentStats.charCount}
+                readingTimeMinutes={contentStats.readingTimeMinutes}
+              />
 
-                      <div className="form-group">
-                        <label htmlFor="field-slug" className="field-label">
-                          Slug <span className="field-required">*</span>
-                        </label>
-                        {state.mode === 'create' ? (
-                          <input
-                            id="field-slug"
-                            type="text"
-                            className="field-input"
-                            value={formData.slug}
-                            onChange={(e) =>
-                              updateForm({ slug: e.target.value.toLowerCase() })
-                            }
-                            placeholder="kebab-case-slug"
-                            required
-                          />
-                        ) : (
-                          <div className="field-readonly" id="field-slug">
-                            {formData.slug}
-                          </div>
-                        )}
-                        {fieldErrors.slug && (
-                          <div className="field-error-message">
-                            {fieldErrors.slug}
-                          </div>
-                        )}
-                        {state.mode === 'create' &&
-                          formData.slug &&
-                          !slugRegex.test(formData.slug) && (
-                            <div className="field-error-message">
-                              Slug 必须使用小写 ASCII kebab-case 格式（例如 my-new-entry）
-                            </div>
-                          )}
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                {/* Section 2: IDENTITY & PUBLISHING */}
-                <section className="form-section">
-                  <div className="form-section-header form-section-header--publishing">
-                    2. 身份与发布
-                  </div>
-                  <div className="form-section-body">
-                    <div className="form-group-row">
-                      <label className="checkbox-option">
-                        <input
-                          type="checkbox"
-                          checked={formData.draft}
-                          onChange={(e) =>
-                            updateForm({ draft: e.target.checked })
-                          }
-                        />
-                        <span>草稿状态</span>
-                      </label>
-
-                      <div className="form-group">
-                        <label
-                          htmlFor="field-featured-order"
-                          className="field-label"
-                        >
-                          精选序号（1–6）
-                        </label>
-                        <input
-                          id="field-featured-order"
-                          type="number"
-                          min="1"
-                          max="6"
-                          className="field-input"
-                          value={formData.featuredOrder}
-                          onChange={(e) =>
-                            updateForm({ featuredOrder: e.target.value })
-                          }
-                          placeholder="可选（1–6）"
-                        />
-                        {fieldErrors.featuredOrder && (
-                          <div className="field-error-message">
-                            {fieldErrors.featuredOrder}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="form-group-row">
-                      <div className="form-group">
-                        <label
-                          htmlFor="field-created-at"
-                          className="field-label"
-                        >
-                          创建日期 <span className="field-required">*</span>
-                        </label>
-                        <input
-                          id="field-created-at"
-                          type="date"
-                          className="field-input"
-                          value={formData.createdAt}
-                          onChange={(e) =>
-                            updateForm({ createdAt: e.target.value })
-                          }
-                          required
-                        />
-                        {fieldErrors.createdAt && (
-                          <div className="field-error-message">
-                            {fieldErrors.createdAt}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="form-group">
-                        <label
-                          htmlFor="field-published-at"
-                          className="field-label"
-                        >
-                          发布日期 {!formData.draft && <span className="field-required">*</span>}
-                        </label>
-                        {formData.initialPublishedAt ? (
-                          <>
-                            <div className="field-readonly" id="field-published-at">
-                              {formData.publishedAt}
-                            </div>
-                            <span className="field-help-text">
-                              发布日期一经设置不可修改。
-                            </span>
-                          </>
-                        ) : formData.draft ? (
-                          <>
-                            <input
-                              id="field-published-at"
-                              type="date"
-                              className="field-input"
-                              value=""
-                              disabled
-                            />
-                            <span className="field-help-text">
-                              草稿条目不能设置发布日期，请在正式发布时填写。
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            <input
-                              id="field-published-at"
-                              type="date"
-                              className="field-input"
-                              value={formData.publishedAt}
-                              onChange={(e) =>
-                                updateForm({ publishedAt: e.target.value })
-                              }
-                              required
-                            />
-                            {fieldErrors.publishedAt && (
-                              <div className="field-error-message">
-                                {fieldErrors.publishedAt}
-                              </div>
-                            )}
-                          </>
-                        )}
-                      </div>
-
-                      <div className="form-group">
-                        <label
-                          htmlFor="field-updated-at"
-                          className="field-label"
-                        >
-                          更新日期 <span className="field-required">*</span>
-                        </label>
-                        <input
-                          id="field-updated-at"
-                          type="date"
-                          className="field-input"
-                          value={formData.updatedAt}
-                          onChange={(e) =>
-                            updateForm({ updatedAt: e.target.value })
-                          }
-                          required
-                        />
-                        {fieldErrors.updatedAt && (
-                          <div className="field-error-message">
-                            {fieldErrors.updatedAt}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                {/* Section 3: ORGANIZE (Tags & Related) */}
-                <section className="form-section">
-                  <div className="form-section-header form-section-header--organize">
-                    3. 整理与关联
-                  </div>
-                  <div className="form-section-body">
-                    {/* Tags */}
-                    <div className="form-group">
-                      <label htmlFor="field-tag-input" className="field-label">标签</label>
-                      <div className="tag-container">
-                        {formData.tags.map((tag) => (
-                          <span key={tag} className="tag-chip">
-                            #{tag}
-                            <button
-                              type="button"
-                              className="tag-remove-btn"
-                              aria-label={`移除标签 ${tag}`}
-                              onClick={() => handleRemoveTag(tag)}
-                            >
-                              ✕
-                            </button>
-                          </span>
-                        ))}
-                      </div>
-                      <div className="tag-input-row">
-                        <input
-                          id="field-tag-input"
-                          type="text"
-                          className="field-input"
-                          placeholder="添加新标签…"
-                          value={tagInput}
-                          onChange={(e) => setTagInput(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              e.preventDefault();
-                              handleAddTag();
-                            }
-                          }}
-                        />
-                        <button
-                          type="button"
-                          className="tag-add-btn"
-                          onClick={handleAddTag}
-                        >
-                          + 添加标签
-                        </button>
-                      </div>
-                      {(fieldErrors.tags ||
-                        fieldErrors['tags.0'] ||
-                        Object.keys(fieldErrors).find((k) =>
-                          k.startsWith('tags.'),
-                        )) && (
-                        <div className="field-error-message">
-                          {fieldErrors.tags ||
-                            fieldErrors['tags.0'] ||
-                            Object.entries(fieldErrors).find(([k]) =>
-                              k.startsWith('tags.'),
-                            )?.[1]}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Related Entries */}
-                    <div className="form-group">
-                      <label htmlFor="field-related-search" className="field-label">关联条目</label>
-                      <div className="related-box">
-                        <input
-                          id="field-related-search"
-                          type="text"
-                          className="field-input"
-                          placeholder="搜索要关联的条目…"
-                          value={relatedSearch}
-                          onChange={(e) => setRelatedSearch(e.target.value)}
-                        />
-                        <div className="related-list">
-                          {availableRelatedEntries.length === 0 ? (
-                            <div className="field-help-text" style={{ padding: '8px' }}>
-                              没有可关联的匹配条目
-                            </div>
-                          ) : (
-                            availableRelatedEntries.map((e) => {
-                              const isChecked = formData.related.includes(
-                                e.slug,
-                              );
-                              return (
-                                <label
-                                  key={e.slug}
-                                  className={`related-item ${isChecked ? 'is-checked' : ''}`}
-                                >
-                                  <input
-                                    type="checkbox"
-                                    checked={isChecked}
-                                    onChange={() =>
-                                      handleToggleRelated(e.slug)
-                                    }
-                                  />
-                                  <span>
-                                    <strong>[{e.type}]</strong> {e.title}{' '}
-                                    <span style={{ color: 'var(--muted)' }}>
-                                      ({e.slug})
-                                    </span>
-                                  </span>
-                                </label>
-                              );
-                            })
-                          )}
-                        </div>
-                        {formData.related.length > 0 && (
-                          <div className="field-help-text">
-                            已选择：{formData.related.join(', ')}
-                          </div>
-                        )}
-                      </div>
-                      {(fieldErrors.related ||
-                        fieldErrors['related.0'] ||
-                        Object.keys(fieldErrors).find((k) =>
-                          k.startsWith('related.'),
-                        )) && (
-                        <div className="field-error-message">
-                          {fieldErrors.related ||
-                            fieldErrors['related.0'] ||
-                            Object.entries(fieldErrors).find(([k]) =>
-                              k.startsWith('related.'),
-                            )?.[1]}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </section>
-
-                {/* Section 4: SOURCE & LINKS */}
-                <section className="form-section">
-                  <div className="form-section-header form-section-header--source">
-                    4. 来源与链接
-                  </div>
-                  <div className="form-section-body">
-                    {/* Source Radio Group */}
-                    <div className="form-group">
-                      <span className="field-label">来源</span>
-                      <div className="radio-group" role="radiogroup" aria-label="条目来源">
-                        {(
-                          [
-                            ['self', '原创'],
-                            ['adapted', '改编'],
-                            ['external', '外部收录'],
-                          ] as const
-                        ).map(([val, label]) => (
-                          <label
-                            key={val}
-                            className={`radio-option ${formData.source === val ? 'is-selected' : ''}`}
-                          >
-                            <input
-                              type="radio"
-                              name="entry-source"
-                              value={val}
-                              checked={formData.source === val}
-                              onChange={() => updateForm({ source: val })}
-                            />
-                            <span>{label}</span>
-                          </label>
-                        ))}
-                      </div>
-                      {fieldErrors.source && (
-                        <div className="field-error-message">
-                          {fieldErrors.source}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Links Repeater */}
-                    <div className="form-group">
-                      <span className="field-label">相关链接</span>
-                      {fieldErrors.links && (
-                        <div className="field-error-message">
-                          {fieldErrors.links}
-                        </div>
-                      )}
-                      <div className="link-list">
-                        {formData.links.map((link, idx) => (
-                          <div key={idx} className="link-row-container">
-                            <div className="link-row">
-                              <div className="form-group" style={{ flex: 1 }}>
-                                <input
-                                  type="text"
-                                  className="field-input"
-                                  placeholder="链接名称…"
-                                  aria-label={`链接 ${idx + 1} 标签`}
-                                  value={link.label}
-                                  onChange={(e) =>
-                                    handleUpdateLink(
-                                      idx,
-                                      'label',
-                                      e.target.value,
-                                    )
-                                  }
-                                />
-                                {fieldErrors[`links.${idx}.label`] && (
-                                  <div className="field-error-message">
-                                    {fieldErrors[`links.${idx}.label`]}
-                                  </div>
-                                )}
-                              </div>
-                              <div className="form-group" style={{ flex: 2 }}>
-                                <input
-                                  type="url"
-                                  className="field-input"
-                                  placeholder="https://..."
-                                  aria-label={`链接 ${idx + 1} 网址`}
-                                  value={link.url}
-                                  onChange={(e) =>
-                                    handleUpdateLink(idx, 'url', e.target.value)
-                                  }
-                                />
-                                {fieldErrors[`links.${idx}.url`] && (
-                                  <div className="field-error-message">
-                                    {fieldErrors[`links.${idx}.url`]}
-                                  </div>
-                                )}
-                              </div>
-                              <button
-                                type="button"
-                                className="link-delete-btn"
-                                aria-label={`删除链接 ${idx + 1}`}
-                                onClick={() => handleRemoveLink(idx)}
-                              >
-                                删除
-                              </button>
-                            </div>
-                            {fieldErrors[`links.${idx}`] &&
-                              !fieldErrors[`links.${idx}.label`] &&
-                              !fieldErrors[`links.${idx}.url`] && (
-                                <div
-                                  className="field-error-message"
-                                  style={{ marginTop: '4px' }}
-                                >
-                                  {fieldErrors[`links.${idx}`]}
-                                </div>
-                              )}
-                          </div>
-                        ))}
-                        <button
-                          type="button"
-                          className="link-add-btn"
-                          onClick={handleAddLink}
-                        >
-                          + 添加链接
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                {/* Section 5: TYPE DETAILS */}
-                {(() => {
-                  const currentTypeDef = ENTRY_TYPE_DEFINITIONS[formData.type];
-                  const typeFieldEntries = currentTypeDef
-                    ? Object.entries(currentTypeDef.typeFields)
-                    : [];
-                  if (typeFieldEntries.length === 0) return null;
-
-                  return (
-                    <section className="form-section">
-                      <div className="form-section-header form-section-header--details">
-                        5. 类型详情（{currentTypeDef.label}）
-                      </div>
-                      <div className="form-section-body">
-                        {typeFieldEntries.map(([fieldKey, decl]) => {
-                          const fieldId = `field-type-${fieldKey}`;
-                          const val = formData.typeFields[fieldKey] ?? '';
-                          const errorMsg =
-                            fieldErrors[fieldKey] ||
-                            fieldErrors[`typeFields.${fieldKey}`];
-
-                          const handleFieldChange = (newVal: unknown) => {
-                            updateForm({
-                              typeFields: {
-                                ...formData.typeFields,
-                                [fieldKey]: newVal,
-                              },
-                            });
-                          };
-
-                          return (
-                            <div key={fieldKey} className="form-group">
-                              <label htmlFor={fieldId} className="field-label">
-                                {decl.label}{' '}
-                                {decl.required && (
-                                  <span className="field-required">*</span>
-                                )}
-                              </label>
-                              {decl.control === 'textarea' ? (
-                                <textarea
-                                  id={fieldId}
-                                  className="field-input"
-                                  style={{
-                                    minHeight: '80px',
-                                    resize: 'vertical',
-                                  }}
-                                  value={String(val)}
-                                  placeholder={decl.placeholder}
-                                  required={decl.required}
-                                  onChange={(e) =>
-                                    handleFieldChange(e.target.value)
-                                  }
-                                />
-                              ) : decl.control === 'number' ? (
-                                <input
-                                  id={fieldId}
-                                  type="number"
-                                  className="field-input"
-                                  value={String(val)}
-                                  placeholder={decl.placeholder}
-                                  required={decl.required}
-                                  onChange={(e) =>
-                                    handleFieldChange(e.target.value)
-                                  }
-                                />
-                              ) : decl.control === 'date' ? (
-                                <input
-                                  id={fieldId}
-                                  type="date"
-                                  className="field-input"
-                                  value={String(val)}
-                                  required={decl.required}
-                                  onChange={(e) =>
-                                    handleFieldChange(e.target.value)
-                                  }
-                                />
-                              ) : decl.control === 'checkbox' ? (
-                                <label className="checkbox-option">
-                                  <input
-                                    id={fieldId}
-                                    type="checkbox"
-                                    checked={Boolean(val)}
-                                    onChange={(e) =>
-                                      handleFieldChange(e.target.checked)
-                                    }
-                                  />
-                                  <span>{decl.label}</span>
-                                </label>
-                              ) : decl.control === 'select' && decl.options ? (
-                                <select
-                                  id={fieldId}
-                                  className="field-input"
-                                  value={String(val)}
-                                  required={decl.required}
-                                  onChange={(e) =>
-                                    handleFieldChange(e.target.value)
-                                  }
-                                >
-                                  <option value="">
-                                    {decl.placeholder || '请选择选项…'}
-                                  </option>
-                                  {decl.options.map((opt) => (
-                                    <option key={opt.value} value={opt.value}>
-                                      {opt.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              ) : decl.control === 'radio' && decl.options ? (
-                                <div
-                                  className="radio-group"
-                                  role="radiogroup"
-                                  aria-label={decl.label}
-                                >
-                                  {decl.options.map((opt) => (
-                                    <label
-                                      key={opt.value}
-                                      className={`radio-option ${String(val) === opt.value ? 'is-selected' : ''}`}
-                                    >
-                                      <input
-                                        type="radio"
-                                        name={fieldId}
-                                        value={opt.value}
-                                        checked={String(val) === opt.value}
-                                        onChange={() =>
-                                          handleFieldChange(opt.value)
-                                        }
-                                      />
-                                      <span>{opt.label}</span>
-                                    </label>
-                                  ))}
-                                </div>
-                              ) : (
-                                <input
-                                  id={fieldId}
-                                  type="text"
-                                  className="field-input"
-                                  value={String(val)}
-                                  placeholder={decl.placeholder}
-                                  required={decl.required}
-                                  onChange={(e) =>
-                                    handleFieldChange(e.target.value)
-                                  }
-                                />
-                              )}
-                              {decl.helpText && (
-                                <span className="field-help-text">
-                                  {decl.helpText}
-                                </span>
-                              )}
-                              {errorMsg && (
-                                <div className="field-error-message">
-                                  {errorMsg}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </section>
-                  );
-                })()}
-
-                {/* Section 6: MARKDOWN BODY */}
-                <section className="form-section">
-                  <div className="form-section-header form-section-header--body">
-                    6. Markdown 正文
-                  </div>
-                  <div className="form-section-body">
-                    <div className="form-group">
-                      <label htmlFor="field-body" className="field-label">
-                        Markdown 正文
-                      </label>
-                      <textarea
-                        id="field-body"
-                        className="markdown-textarea"
-                        value={formData.body}
-                        onChange={(e) => updateForm({ body: e.target.value })}
-                        placeholder="# 在这里编写 Markdown 正文…"
-                      />
-                    </div>
-                  </div>
-                </section>
+              {/* Full-Height Writing Textarea */}
+              <div className="markdown-editor-wrapper">
+                <textarea
+                  ref={textareaRef}
+                  id="field-body"
+                  className="markdown-textarea-main"
+                  placeholder="# 在这里开始输入 Markdown 正文...&#10;&#10;使用上方微型工具栏或快捷键 (Ctrl+B / Ctrl+K / Tab 缩进) 快速排版。"
+                  value={formData.body}
+                  onChange={(e) => updateForm({ body: e.target.value })}
+                />
               </div>
 
-              {/* Editor Footer Action Bar */}
-              <div className="editor-action-bar">
-                <div className="action-status-area">
+              {/* Footer Status Bar */}
+              <footer className="editor-status-bar">
+                <div className="status-indicator">
                   <span
-                    className={`save-status-text ${state.dirty ? 'is-dirty' : 'is-saved'}`}
+                    className={
+                      state.dirty ? 'status-badge-dirty' : 'status-badge-saved'
+                    }
                   >
-                    {state.dirty ? '有未保存改动' : '所有改动已保存'}
+                    {state.dirty ? '● 有未保存修改' : '✓ 全部改动已保存'}
                   </span>
                   {savedUrl && (
                     <a
                       href={savedUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="live-entry-link"
+                      className="live-site-link"
                     >
-                      查看站点条目（{savedUrl}）
+                      ↗ 查看前台站点条目
                     </a>
                   )}
                 </div>
 
-                <div className="editor-buttons">
-                  <button
-                    type="button"
-                    className="preview-button"
-                    disabled={
-                      previewLoading ||
-                      formData.extension === '.mdx' ||
-                      formData.slug.endsWith('.mdx')
-                    }
-                    onClick={handleExplicitPreview}
-                    aria-label="预览未保存内容"
-                  >
-                    {previewLoading ? '正在渲染…' : '预览'}
-                  </button>
-                  <button
-                    type="button"
-                    className="save-button"
-                    disabled={saveLoading}
-                    onClick={handleSave}
-                  >
-                    {saveLoading ? '正在保存…' : '保存条目'}
-                  </button>
+                <div style={{ color: 'var(--muted)', fontSize: '0.72rem' }}>
+                  {state.mode === 'create' ? '新建草稿模式' : `版本: ${formData.revision.slice(0, 8)}`}
                 </div>
-              </div>
+              </footer>
             </>
           )}
         </main>
 
-        {/* Right Column: Sandboxed Preview Pane */}
-        <aside className="workbench-preview-pane" aria-label="条目预览">
-          <div className="preview-header-bar">
-            <div className="preview-header-title">预览</div>
-            <div className="preview-header-tag">
-              {formData.extension === '.mdx' || formData.slug.endsWith('.mdx')
-                ? 'MDX（受限）'
-                : state.mode === 'idle'
-                  ? '尚未预览'
-                  : previewStale
-                    ? '预览已过期'
-                    : '预览已更新'}
-            </div>
-          </div>
-
-          {/* Boundaries / notices */}
-          {formData.extension === '.mdx' || formData.slug.endsWith('.mdx') ? (
-            <div className="preview-boundary-notice preview-boundary-notice--mdx">
-              暂不支持 MDX 预览。请保存条目后在站点页面中查看。
-            </div>
-          ) : (
-            <>
-              {previewStale && state.mode !== 'idle' && (
-                <div
-                  className="preview-boundary-notice preview-boundary-notice--stale"
-                  role="status"
-                >
-                  预览已过期。点击“预览”刷新。
-                </div>
-              )}
-              <div className="preview-boundary-notice">
-                提示：沙箱中无法预览本地相对图片（例如 ./img.png）。
-              </div>
-            </>
-          )}
-          <div className="preview-iframe-wrapper">
-            {previewLoading && (
-              <div className="preview-loading-overlay">
-                <div>正在渲染实时预览…</div>
-              </div>
-            )}
-
-            {previewError && !previewLoading && (
-              <div className="preview-error-overlay">
-                <div>{previewError}</div>
-              </div>
-            )}
-
-            {!previewLoading && !previewError && (
-              <iframe
-                title="条目实时预览"
-                sandbox="allow-same-origin"
-                srcDoc={buildPreviewDocument(
-                  state.preview?.html ||
-                    `<p style="color: var(--muted); font-style: italic;">No preview content available.</p>`,
-                  formData.title,
-                )}
-                className="preview-iframe"
-              />
-            )}
-          </div>
-        </aside>
+        {/* Right Authentic Article Binder Preview */}
+        <ArticleBinderPreview
+          formData={{
+            ...formData,
+            bodyHtml: state.preview?.html || '',
+          }}
+          previewHtml={state.preview?.html || null}
+          isLoading={previewLoading}
+          error={previewError}
+          onManualRefresh={triggerInstantPreview}
+        />
       </div>
     </div>
   );
