@@ -14,6 +14,8 @@ const entries: ExploreEntry[] = [
     title: 'Astro Guide',
     summary: 'Static site documentation.',
     tags: ['开发'],
+    body: '# Astro Guide\nDocumentation content here.',
+    links: [{ label: 'Official Doc', url: 'https://docs.astro.build' }],
     publishedAt: '2026-08-01',
     updatedAt: '2026-08-03',
     canonicalUrl: '/entries/astro-guide/',
@@ -24,6 +26,8 @@ const entries: ExploreEntry[] = [
     title: 'Garden Project',
     summary: 'A personal digital garden.',
     tags: ['写作'],
+    body: 'A personal digital garden notes.',
+    links: [],
     publishedAt: '2026-08-02',
     updatedAt: '2026-08-04',
     canonicalUrl: '/entries/garden-project/',
@@ -112,5 +116,14 @@ describe('Explore index', () => {
     expect(result[0].updatedAt).toBe('2026-08-06');
     expect(result[0].canonicalUrl).toBe('/entries/newer-item/');
     expect(result[1].slug).toBe('older-item');
+  });
+
+  it('provides compatible QuickViewEntry structures with body and links for modal previews', () => {
+    const entry = entries[0];
+    expect(entry.slug).toBe('astro-guide');
+    expect(entry.canonicalUrl).toBe('/entries/astro-guide/');
+    expect(entry.body).toContain('# Astro Guide');
+    expect(entry.links).toHaveLength(1);
+    expect(entry.links[0].label).toBe('Official Doc');
   });
 });

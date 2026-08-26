@@ -1,10 +1,13 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   filterExploreIndex,
   getVisibleEntries,
   type ExploreEntry,
   type ExploreEntryType,
+  type GardenOpenPreviewEventDetail,
+  type QuickViewEntry,
 } from '../../lib/explore-index';
+import QuickViewModal from './QuickViewModal';
 
 const PAGE_SIZE = 6;
 
@@ -25,7 +28,24 @@ export default function ExploreIsland({ entries }: Props) {
   const [selectedType, setSelectedType] = useState<ExploreEntryType | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [activeModalEntry, setActiveModalEntry] = useState<QuickViewEntry | null>(null);
+  const [modalTriggerEl, setModalTriggerEl] = useState<HTMLElement | null>(null);
 
+  // Register global listener for cross-section modal triggers (e.g. FeaturedSection)
+  useEffect(() => {
+    const handleOpenPreview = (e: Event) => {
+      const customEvent = e as CustomEvent<GardenOpenPreviewEventDetail>;
+      if (customEvent.detail && customEvent.detail.entry) {
+        setActiveModalEntry(customEvent.detail.entry);
+        setModalTriggerEl(customEvent.detail.triggerElement || null);
+      }
+    };
+
+    window.addEventListener('garden:open-entry-preview', handleOpenPreview);
+    return () => {
+      window.removeEventListener('garden:open-entry-preview', handleOpenPreview);
+    };
+  }, []);
   const availableTags = useMemo(() => {
     const tagSet = new Set(entries.flatMap((entry) => entry.tags));
     return Array.from(tagSet).sort((a, b) => a.localeCompare(b, 'zh-CN'));
@@ -260,11 +280,23 @@ export default function ExploreIsland({ entries }: Props) {
               {visibleEntries.map((entry, index) => {
                 const itemNum = String(index + 1).padStart(2, '0');
                 return (
-                  <a
+                  <div
                     key={entry.slug}
                     className={`explore-specimen-card explore-specimen-card--${entry.type}`}
-                    href={entry.canonicalUrl}
-                    role="listitem"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`速览条目: ${entry.title}`}
+                    onClick={(e) => {
+                      setModalTriggerEl(e.currentTarget);
+                      setActiveModalEntry(entry);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setModalTriggerEl(e.currentTarget);
+                        setActiveModalEntry(entry);
+                      }
+                    }}
                   >
                     <div className="card-top-row">
                       <span className="specimen-seq-tag">NO. {itemNum}</span>
@@ -287,9 +319,31 @@ export default function ExploreIsland({ entries }: Props) {
                       <time dateTime={entry.updatedAt} className="card-date-label">
                         {entry.updatedAt}
                       </time>
-                      <span className="card-action-cue">提取标本</span>
+                      <a
+                        href={entry.canonicalUrl}
+                        className="specimen-direct-btn"
+                        onClick={(e) => e.stopPropagation()}
+                        aria-label={`直接进入 ${entry.title} 详情页`}
+                      >
+                        <span>进入详情</span>
+                        <svg
+                          className="direct-btn-icon"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                        >
+                          <line x1="7" y1="17" x2="17" y2="7" />
+                          <polyline points="7 7 17 7 17 17" />
+                        </svg>
+                      </a>
                     </div>
-                  </a>
+                  </div>
                 );
               })}
             </div>
@@ -322,6 +376,14 @@ export default function ExploreIsland({ entries }: Props) {
           </div>
         )}
       </main>
+
+      {/* Quick-View Modal */}
+      <QuickViewModal
+        entry={activeModalEntry}
+        onClose={() => setActiveModalEntry(null)}
+        onTagClick={handleTagSelect}
+        triggerElement={modalTriggerEl}
+      />
     </div>
   );
 }

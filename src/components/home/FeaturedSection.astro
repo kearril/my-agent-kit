@@ -40,8 +40,25 @@ const formatDate = (date: Date) =>
 		<div class="featured-grid">
 			{entries.map((entry, index) => {
 				const itemNumber = String(index + 1).padStart(2, '0');
+				const entryPreviewData = JSON.stringify({
+					slug: entry.id,
+					type: entry.data.type,
+					title: entry.data.title,
+					summary: entry.data.summary,
+					tags: entry.data.tags || [],
+					body: entry.body || '',
+					links: entry.data.links || [],
+					publishedAt: formatDate(entry.data.publishedAt || entry.data.updatedAt),
+					updatedAt: formatDate(entry.data.updatedAt),
+					canonicalUrl: getEntryPath(entry),
+				});
 				return (
-					<a class={`specimen-card specimen-card--${entry.data.type}`} href={getEntryPath(entry)}>
+					<a
+						class={`specimen-card specimen-card--${entry.data.type}`}
+						href={getEntryPath(entry)}
+						data-entry-preview={entryPreviewData}
+						aria-label={`速览条目: ${entry.data.title}`}
+					>
 						<div class="specimen-card-header">
 							<span class="specimen-index-tag">NO. {itemNumber}</span>
 							<span class={`mini-badge mini-badge--${entry.data.type}`}>{entry.data.type}</span>
@@ -59,7 +76,13 @@ const formatDate = (date: Date) =>
 							<time datetime={entry.data.updatedAt.toISOString()} class="specimen-date">
 								{formatDate(entry.data.updatedAt)}
 							</time>
-							<span class="specimen-action-cue">标本详情</span>
+							<span class="specimen-direct-btn" aria-label={`直接进入 ${entry.data.title} 详情页`}>
+								<span>进入详情</span>
+								<svg class="direct-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+									<line x1="7" y1="17" x2="17" y2="7" />
+									<polyline points="7 7 17 7 17 17" />
+								</svg>
+							</span>
 						</div>
 					</a>
 				);
@@ -73,3 +96,30 @@ const formatDate = (date: Date) =>
 	)}
 	<div class="featured-bottom-tape" aria-hidden="true"></div>
 </section>
+
+<script>
+	document.querySelectorAll('.featured-grid .specimen-card').forEach((card) => {
+		card.addEventListener('click', (e) => {
+			const target = e.target as HTMLElement | null;
+			// If direct button was clicked, let browser navigate directly to the href
+			if (target?.closest('.specimen-direct-btn')) {
+				return;
+			}
+
+			// Otherwise, intercept and trigger quick-view modal
+			const rawData = (card as HTMLElement).dataset.entryPreview;
+			if (!rawData) return;
+			try {
+				const entry = JSON.parse(rawData);
+				e.preventDefault();
+				window.dispatchEvent(
+					new CustomEvent('garden:open-entry-preview', {
+						detail: { entry, triggerElement: card as HTMLElement },
+					})
+				);
+			} catch {
+				// Fallback to normal navigation
+			}
+		});
+	});
+</script>

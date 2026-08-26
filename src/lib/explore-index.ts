@@ -1,13 +1,29 @@
 export type ExploreEntryType = 'prompt' | 'skill' | 'mcp' | 'website' | 'project';
+export interface ExploreEntryLink {
+  label: string;
+  url: string;
+}
+
 export interface ExploreEntry {
   slug: string;
   type: ExploreEntryType;
   title: string;
   summary: string;
   tags: string[];
+  body: string;
+  links: ExploreEntryLink[];
   publishedAt: string;
   updatedAt: string;
   canonicalUrl: string;
+}
+
+/** Alias for entry data used in the quick-view modal */
+export type QuickViewEntry = ExploreEntry;
+
+/** Custom event detail for cross-component modal triggers */
+export interface GardenOpenPreviewEventDetail {
+  entry: QuickViewEntry;
+  triggerElement?: HTMLElement | null;
 }
 
 export interface ExploreFilters {
@@ -18,11 +34,14 @@ export interface ExploreFilters {
 
 export interface RawGardenEntry {
   id: string;
+  body?: string;
   data: {
     type: ExploreEntryType | 'note';
     title: string;
     summary: string;
     tags: string[];
+    links?: Array<{ label: string; url: string }>;
+    source?: string;
     publishedAt?: Date;
     updatedAt: Date;
     draft?: boolean;
@@ -45,6 +64,8 @@ export function createExploreIndex(entries: readonly RawGardenEntry[]): ExploreE
     title: entry.data.title,
     summary: entry.data.summary,
     tags: [...entry.data.tags],
+    body: entry.body || '',
+    links: entry.data.links ? [...entry.data.links] : [],
     publishedAt: entry.data.publishedAt ? formatDateString(entry.data.publishedAt) : formatDateString(entry.data.updatedAt),
     updatedAt: formatDateString(entry.data.updatedAt),
     canonicalUrl: `/entries/${entry.id}/`,

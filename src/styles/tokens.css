@@ -30,6 +30,11 @@
 	--shadow-xl: 8px 8px 0 var(--black);
 	--shadow-teal: 6px 6px 0 var(--teal);
 
+
+	/* Modal & Layering Tokens */
+	--z-modal-backdrop: 1000;
+	--z-modal-content: 1001;
+	--backdrop-color: rgba(24, 24, 27, 0.7);
 	/* Motion & Transitions */
 	--ease-out: cubic-bezier(0, 0, 0.2, 1);
 	--duration-fast: 0.15s;

@@ -239,6 +239,30 @@
 		align-items: flex-start;
 		gap: 12px;
 	}
+	.quickview-modal-backdrop {
+		padding: 10px;
+	}
+	.quickview-dossier-card {
+		max-height: 92vh;
+		width: 100%;
+	}
+	.dossier-top-clamp {
+		padding: 10px 14px;
+	}
+	.dossier-body-scroll {
+		padding: 16px 14px;
+		gap: 16px;
+	}
+	.dossier-footer-deck {
+		padding: 12px 14px;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 12px;
+	}
+	.dossier-full-page-btn {
+		justify-content: center;
+		width: 100%;
+	}
 }
 @media (prefers-reduced-motion:reduce) {
 	*, :before, :after {
@@ -248,6 +272,16 @@
 	}
 	.wordmark:hover, .desktop-nav a:hover, .plain-link:hover, .button:hover, .button:active, .specimen-card:hover, .entry-card:hover, .receipt-row-item:hover, .note-stacked-card:hover, .explore-specimen-card:hover, .band-switch-btn:hover, .cockpit-tag-btn:hover, .specimen-load-more-btn:hover, .note-row:hover, .note-row:focus-within, .stat-card:hover, .about-overview-sheet:hover, .ledger-row:hover, .blueprint-card:hover, .boundary-card:hover, .article-link-list li a:hover, .article-connection-list li a:hover, .hero:hover .clipboard-board, .hero:hover .collage-card--prompt, .hero:hover .collage-card--skill, .hero:hover .collage-card--mcp, .hero:hover .collage-card--note, .hero:hover .shape--square, .hero:hover .shape--diamond, .hero:hover .shape--star, .explore-card:hover, .explore-type-btn:hover, .explore-type-btn:active, .explore-tag-btn:hover, .explore-clear-btn:hover {
 		transform:none!important
+	}
+	.quickview-dossier-card,
+	.quickview-modal-backdrop,
+	.dossier-close-btn:hover,
+	.dossier-tag-chip:hover,
+	.dossier-full-page-btn:hover,
+	.dossier-external-link-btn:hover,
+	.specimen-direct-btn:hover {
+		animation: none !important;
+		transform: none !important;
 	}
 }
 @media (max-width: 1024px) and (min-width: 769px) {
