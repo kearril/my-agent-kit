@@ -1,6 +1,7 @@
 ---
 import { getEntryPath } from '../../lib/entry-path';
 import type { GardenEntry } from '../../lib/entries';
+import { Tag } from '@lucide/astro';
 
 interface Props {
 	entries: GardenEntry[];
@@ -68,7 +69,10 @@ const formatDate = (date: Date) =>
 						{entry.data.tags && entry.data.tags.length > 0 && (
 							<div class="specimen-tag-list">
 								{entry.data.tags.slice(0, 3).map((tag) => (
-									<span class="specimen-tag">#{tag}</span>
+									<span class="specimen-tag">
+										<Tag size={10} stroke-width={2.5} style="display: inline; vertical-align: -1px; margin-right: 3px;" />
+										<span>{tag}</span>
+									</span>
 								))}
 							</div>
 						)}

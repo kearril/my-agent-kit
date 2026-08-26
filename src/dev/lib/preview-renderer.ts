@@ -439,7 +439,7 @@ export function buildFullArticlePreview(data: PreviewData): string {
       <div class="meta-item" style="flex: 1 1 100%;">
         <span class="meta-label">标签:</span>
         <div class="tags-group">
-          ${data.tags.map((t) => `<span class="tag-chip">#${escapeHtml(t)}</span>`).join('')}
+          ${data.tags.map((t) => `<span class="tag-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: inline; vertical-align: -1px; margin-right: 3px;"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg><span>${escapeHtml(t)}</span></span>`).join('')}
         </div>
       </div>` : ''}
     </div>

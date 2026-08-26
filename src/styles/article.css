@@ -175,6 +175,9 @@
 }
 
 .article-tag-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
 	font-family: ui-monospace, monospace;
 	font-size: 0.72rem;
 	font-weight: 800;

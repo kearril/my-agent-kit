@@ -1,5 +1,6 @@
 ---
 import type { ExploreEntry } from '../../lib/explore-index';
+import { Tag } from '@lucide/astro';
 
 interface Props {
 	entries: ExploreEntry[];
@@ -30,7 +31,10 @@ const { entries } = Astro.props;
 						{entry.tags.length > 0 && (
 							<div class="card-tags-list">
 								{entry.tags.map((tag) => (
-									<span class="specimen-pill-tag">#{tag}</span>
+									<span class="specimen-pill-tag">
+										<Tag size={10} stroke-width={2.5} style="display: inline; vertical-align: -1px; margin-right: 3px;" />
+										<span>{tag}</span>
+									</span>
 								))}
 							</div>
 						)}

@@ -1314,6 +1314,9 @@
 	margin-bottom: 16px;
 }
 .specimen-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
 	font-family: ui-monospace, monospace;
 	font-size: 0.72rem;
 	font-weight: 800;
@@ -2039,6 +2042,9 @@
 	gap: 6px;
 }
 .note-tag-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
 	font-family: ui-monospace, monospace;
 	font-size: 0.72rem;
 	font-weight: 800;
@@ -2399,6 +2405,9 @@
 	gap: 5px;
 }
 .cockpit-tag-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
 	border: 1.5px solid var(--black);
 	background: var(--white);
 	box-shadow: 1.5px 1.5px 0 var(--black);
@@ -2585,6 +2594,9 @@
 	margin-bottom: 12px;
 }
 .specimen-pill-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
 	font-family: ui-monospace, monospace;
 	font-size: 0.68rem;
 	font-weight: 800;

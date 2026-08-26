@@ -89,8 +89,8 @@ const formatDate = (date: Date) =>
 						<div class="article-tags-group">
 							{entry.data.tags.map((tag) => (
 								<span class="article-tag-chip">
-									<Tag size={11} stroke-width={2.5} style="display: inline; vertical-align: -1px; margin-right: 2px;" />
-									#{tag}
+									<Tag size={11} stroke-width={2.5} style="display: inline; vertical-align: -1px; margin-right: 3px;" />
+									<span>{tag}</span>
 								</span>
 							))}
 						</div>

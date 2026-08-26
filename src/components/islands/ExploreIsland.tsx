@@ -223,7 +223,22 @@ export default function ExploreIsland({ entries }: Props) {
                     onClick={() => handleTagSelect(tag)}
                     aria-pressed={isSelected}
                   >
-                    #{tag}
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                      style={{ display: 'inline', verticalAlign: '-1px', marginRight: '3px' }}
+                    >
+                      <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" />
+                      <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" />
+                    </svg>
+                    <span>{tag}</span>
                   </button>
                 );
               })}
@@ -310,7 +325,22 @@ export default function ExploreIsland({ entries }: Props) {
                       <div className="card-tags-list">
                         {entry.tags.map((tag) => (
                           <span key={tag} className="specimen-pill-tag">
-                            #{tag}
+                            <svg
+                              width="10"
+                              height="10"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              aria-hidden="true"
+                              style={{ display: 'inline', verticalAlign: '-1px', marginRight: '3px' }}
+                            >
+                              <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" />
+                              <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" />
+                            </svg>
+                            <span>{tag}</span>
                           </span>
                         ))}
                       </div>

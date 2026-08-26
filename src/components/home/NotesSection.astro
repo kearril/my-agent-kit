@@ -1,6 +1,7 @@
 ---
 import { getEntryPath } from '../../lib/entry-path';
 import type { NoteEntry } from '../../lib/entries';
+import { Tag } from '@lucide/astro';
 
 interface Props {
 	entries: NoteEntry[];
@@ -106,7 +107,10 @@ const volumes = Array.from(categoryMap.entries()).map(([category, items], index)
 													{entry.data.tags && entry.data.tags.length > 0 && (
 														<div class="note-tag-list">
 															{entry.data.tags.map((tag) => (
-																<span class="note-tag-pill">#{tag}</span>
+																<span class="note-tag-pill">
+																	<Tag size={10} stroke-width={2.5} style="display: inline; vertical-align: -1px; margin-right: 3px;" />
+																	<span>{tag}</span>
+																</span>
 															))}
 														</div>
 													)}
