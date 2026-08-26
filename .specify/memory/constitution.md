@@ -1,17 +1,10 @@
 <!--
 Sync Impact Report
-- Version change: uninitialized template → 1.0.0
+- Version change: 1.0.0 → 1.0.1
 - Modified principles:
--  - `PRINCIPLE_1_NAME` → I. Static-First Astro and Island Boundaries
--  - `PRINCIPLE_2_NAME` → II. Content Collections as the Source of Truth
--  - `PRINCIPLE_3_NAME` → III. Stable Public Content Identity
--  - `PRINCIPLE_4_NAME` → IV. Intentional Simplicity and Clear Boundaries
--  - `PRINCIPLE_5_NAME` → V. Verifiable Quality and Traceable Delivery
-- Added sections:
-  - Design, Accessibility, and Public Experience
-  - Documentation, Content, and Change Control
-  - Governance rules, amendment procedure, and compliance gates
-- Removed sections: Unresolved template placeholder sections
+  - `Design, Accessibility, and Public Experience`: Clarified reading binder comfort, soft-wrapping engineering paper code blocks with anti-overlap zones, tactile physical button feedback, and Lucide SVG iconography standards.
+- Added sections: None
+- Removed sections: None
 - Follow-up TODOs: None
 -->
 
@@ -87,8 +80,14 @@ MUST 对照 spec、plan 和 tasks 进行收敛检查，不得只以“代码看�
 ## Design, Accessibility, and Public Experience
 
 公开 UI MUST 遵守 `docs/DESIGN.md` 的俏皮野兽派设计规范。交付实现 MUST
-使用直角结构、纯黑粗边框和硬边实色阴影；不得使用圆角、渐变、模糊阴影、
-玻璃态、过度旋转或默认的柔和灰色主题。旋转角度 MUST NOT 超过 3 度。
+使用直角结构、纯黑粗边框（2.5px ~ 4px）和硬边实色阴影（4px ~ 8px）；不得使用
+圆角、渐变、模糊阴影、玻璃态、过度旋转或默认的柔和灰色主题。旋转角度 MUST NOT
+超过 3 度。
+
+长文阅读页 MUST 采用温润纸品底色、65~75 字符黄金行宽与 1.8 舒适行高；代码与
+提示词展示块 MUST 采用浅色工程纸底色（`#f0eae1`）与深墨色文字，使用智能软折行
+消除横向滚动条，并预留安全操作栏杜绝一键复制控件与正文重叠遮挡。装饰与功能图标
+MUST 使用统一线宽的 SVG 线性图标，禁止使用原生 Emoji 作为页面装饰符号。
 
 每个交互元素 MUST 有可访问名称、清晰的 `focus-visible` 状态和不小于 44px
 的触控目标。弹窗 MUST 管理焦点、支持 Esc 关闭并恢复背景滚动；搜索、筛选、
@@ -139,7 +138,7 @@ MUST 对照 spec、plan 和 tasks 进行收敛检查，不得只以“代码看�
 - PATCH：澄清措辞、修正错误或不改变治理含义的细节调整。
 
 实施方案 MUST 通过 Constitution Check。违反 MUST 原则时，方案 MUST 先
-调整；若确实需要例外，plan.md 的 Complexity Tracking MUST 记录违反的原则、
+调整；若确实需要例外，plan.md 的 Complexity Tracking MUST记录违反的原则、
 业务或技术理由，以及为什么更简单的方案不可行。例外不得通过删除检查、
 特殊输入分支或沉默忽略来实现。
 
@@ -154,4 +153,4 @@ MUST 对照 spec、plan 和 tasks 进行收敛检查，不得只以“代码看�
 `node_modules`、`dist` 或本地环境文件。公开部署前 MUST 完成内容、公开边界、
 首发文案和部署清单审查。
 
-**Version**: 1.0.0 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-08-25
+**Version**: 1.0.1 | **Ratified**: 2026-08-25 | **Last Amended**: 2026-08-26
