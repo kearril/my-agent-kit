@@ -114,11 +114,9 @@ const formatDate = (date: Date) =>
 						{entry.data.links.map((link) => (
 							<li>
 								<a href={link.url} target="_blank" rel="noopener noreferrer">
-									<span style="display: inline-flex; align-items: center; gap: 8px;">
-										<LinkIcon size={16} stroke-width={2.5} />
-										{link.label}
-									</span>
-									<ExternalLink size={16} stroke-width={2.5} class="article-external-arrow" />
+									<LinkIcon size={15} stroke-width={2.5} />
+									<span>{link.label}</span>
+									<ExternalLink size={14} stroke-width={2.5} class="article-external-arrow" />
 								</a>
 							</li>
 						))}
