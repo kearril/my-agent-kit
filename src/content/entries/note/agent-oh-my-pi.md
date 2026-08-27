@@ -13,7 +13,8 @@ links:
     url: https://github.com/can1357/oh-my-pi
   - label: 官网地址
     url: https://omp.sh/
-related: []
+related:
+  - oh-my-pi
 createdAt: 2026-08-24
 publishedAt: 2026-08-24
 updatedAt: 2026-08-24
