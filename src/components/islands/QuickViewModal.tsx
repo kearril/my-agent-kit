@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Marked } from 'marked';
+import markedKatex from 'marked-katex-extension';
 import type { QuickViewEntry } from '../../lib/explore-index';
 
 interface Props {
@@ -12,8 +13,7 @@ interface Props {
 const markedInstance = new Marked({
   gfm: true,
   breaks: true,
-});
-
+}).use(markedKatex({ throwOnError: false }));
 export default function QuickViewModal({
   entry,
   onClose,

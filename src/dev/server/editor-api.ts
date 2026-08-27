@@ -1,4 +1,5 @@
 import { Marked } from 'marked';
+import markedKatex from 'marked-katex-extension';
 import { z } from 'astro/zod';
 import {
   parseEditorEntry,
@@ -129,8 +130,7 @@ export function createDefaultMarkdownRenderer(): (
         return false;
       },
     },
-  });
-
+  }).use(markedKatex({ throwOnError: false }));
   return async (content: string): Promise<string> => {
     const result = marked.parse(content);
     return typeof result === 'string' ? result : await result;
