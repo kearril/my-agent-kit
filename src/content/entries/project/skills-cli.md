@@ -15,7 +15,9 @@ links:
     url: https://github.com/vercel-labs/skills
   - label: 官方注册表
     url: https://skills.sh
-related: []
+related:
+  - matt-pocock-skills
+  - superpowers
 createdAt: 2026-08-27
 publishedAt: 2026-08-27
 updatedAt: 2026-08-27

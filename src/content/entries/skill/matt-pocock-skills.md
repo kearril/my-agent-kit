@@ -18,6 +18,7 @@ links:
     url: https://skills.sh/mattpocock/skills
 related:
   - skills-cli
+  - superpowers
 createdAt: 2026-08-27
 publishedAt: 2026-08-27
 updatedAt: 2026-08-27
