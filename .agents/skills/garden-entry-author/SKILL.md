@@ -28,6 +28,7 @@ description: 在进行任何条目撰写或修订时，必须先使用该套技�
 2. **元数据与标签核验**：必读 `references/frontmatter.md`；
 3. **条目类型专属骨架**：
    - 处理 `type: skill` 时，必读 `references/types/skill.md`；
+   - 处理 `type: project` 时，必读 `references/types/project.md`；
    - （其他类型的骨架规范将在后续实践中逐步沉淀）。
 
 ---
