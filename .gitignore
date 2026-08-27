@@ -29,5 +29,6 @@ src/content/entries/**/*.local.md
 src/content/entries/**/*.local.mdx
 
 .omp/skills
+.agents/skills
 
 skills-lock.json
