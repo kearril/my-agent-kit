@@ -35,42 +35,19 @@ Superpowers 是一套专门面向编码 Agent 的软件工程方法论套件。�
 2. **测试红灯先于业务实现**（Red-Green-Refactor）：严格遵循测试驱动开发，必须先编写能够稳定复现失败的测试用例，再编写最小实现代码；所有在测试用例写好前凭空生成的业务代码必须全部删除；
 3. **主动裁决代替原地挂起**（Rulings, not stalls）：在自主执行计划期间，遇到非破坏性分歧或文档模糊点时，主控制器必须主动根据常理做出裁决并将决策记入账本，不因细枝末节频繁打断开发者。
 
-## 二、 生态安装与运行时配置
+## 二、 安装与配置
 
-Superpowers 支持两种安装与分发途径：
-
-### 1. 通用标准模式安装（推荐）
-
-通过 `skills-cli` 将全部 14 个核心技能以通用模式安装到当前项目或全局环境：
+推荐使用 `skills-cli` 将全部 14 个核心技能以通用模式安装到当前项目：
 
 ```bash
-# 安装到当前项目 (.agents/skills/)
+# 通用模式安装到当前项目 (.agents/skills/)
 npx skills add obra/superpowers -a universal
 
 # 或者全局安装到用户级技能目录
 npx skills add obra/superpowers -g -a universal
 ```
 
-### 2. 平台原生插件安装
-
-针对具备插件扩展体系的特定客户端，也可使用官方市场命令安装：
-
-- **Claude Code**：
-  ```bash
-  /plugin install superpowers@claude-plugins-official
-  ```
-- **Pi**：
-  ```bash
-  pi install git:github.com/obra/superpowers
-  ```
-- **Antigravity**：
-  ```bash
-  agy plugin install https://github.com/obra/superpowers
-  ```
-- **Cursor**：在 Agent 对话框中输入 `/add-plugin superpowers`。
-
-原生插件安装会在会话启动（Session-Start）与上下文压缩后（Post-Compaction）自动向模型底层注入引导指令，使 Agent 从交互伊始便主动遵守工程守则。
-
+如果使用的是支持官方插件市场的客户端（如 Claude Code、Cursor、Pi、Antigravity 等），也可以直接通过各宿主环境的原生插件体系安装。原生插件方式会在会话启动（Session-Start）与上下文压缩后（Post-Compaction）自动向模型底层注入引导钩子，让 Agent 在对话伊始便主动加载并遵守整套工程守则。
 ## 三、 七阶段端到端工程交付流水线
 
 在实际交付一个功能或进行系统重构时，Superpowers 引导 Agent 按照 7 个先后承接的阶段推进：
