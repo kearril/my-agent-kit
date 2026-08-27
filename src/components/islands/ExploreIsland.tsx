@@ -9,7 +9,7 @@ import {
 } from '../../lib/explore-index';
 import QuickViewModal from './QuickViewModal';
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 8;
 
 const ENTRY_TYPES: readonly { type: ExploreEntryType; label: string; desc: string }[] = [
   { type: 'prompt', label: 'PROMPT', desc: '提示词' },
