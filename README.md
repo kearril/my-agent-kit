@@ -34,7 +34,7 @@ pnpm preview
 ## 计划中的公开地址与部署
 
 - 规范公开地址计划为 `https://kearril.com`；`www.kearril.com` 将在正式上线时永久重定向至根域名。
-- 计划使用 Cloudflare Pages 连接 GitHub 私有仓库发布静态产物；当前尚未创建私有远程仓库、Pages 项目或 DNS 绑定。
+- 计划使用 Cloudflare Pages 连接 GitHub 私有仓库发布静态产物；私有远程仓库已创建，尚未创建 Pages 项目或 DNS 绑定。
 - 统一条目路由为 `/entries/<slug>/`；构建会生成 `/feed.xml`、`sitemap-index.xml` 和 `/robots.txt`，但它们目前只用于本地验证。
 - 私有仓库存放源码、内容与开发资料；只有经 Cloudflare Pages 发布的静态产物对外公开。
 
@@ -47,4 +47,4 @@ pnpm preview
 1. 在 `src/content/entries/<type>/` 录入首批确认公开的 Markdown / MDX 条目，遵守 `docs/CONTENT.md` 的字段、目录和不可变 slug 规则；本地开发时也可通过 `pnpm dev` 输出的编辑台地址在浏览器中创建或编辑条目。
 2. 用真实标题、摘要、标签、链接、关联关系和少量截图检查首页、条目页、Explore、RSS 与 sitemap 的信息密度和可读性。
 3. 运行 `pnpm test && pnpm build`。
-4. 只有首批内容、公开边界与首发文案均确认后，才按 `docs/DEPLOYMENT.md` 创建私有仓库、Cloudflare Pages 项目和域名绑定。
+4. 只有首批内容、公开边界与首发文案均确认后，才按 `docs/DEPLOYMENT.md` 推送至私有仓库、创建 Cloudflare Pages 项目和域名绑定。
