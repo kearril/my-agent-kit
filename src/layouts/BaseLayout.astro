@@ -16,8 +16,8 @@ const { title, description, canonicalPath } = Astro.props;
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="description" content={description} />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="icon" type="image/png" href="/kearril-seal-master.png" />
+		<link rel="apple-touch-icon" href="/kearril-seal-master.png" />
 		<title>{title}</title>
 		{canonicalPath ? <link rel="canonical" href={Astro.site ? new URL(canonicalPath, Astro.site).href : canonicalPath} /> : null}
 	</head>

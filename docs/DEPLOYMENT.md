@@ -1,10 +1,10 @@
 # Cloudflare Pages 首发准备手册
 
-本文档记录已确认的未来部署方案与正式上线步骤。它不是当前运行状态：截至内容准备阶段，尚未创建公开 GitHub 仓库、Cloudflare Pages 项目、DNS 绑定或线上站点。
+本文档记录已确认的未来部署方案与正式上线步骤。它不是当前运行状态：截至内容准备阶段，尚未创建私有 GitHub 仓库、Cloudflare Pages 项目、DNS 绑定或线上站点。
 ## 1. 架构与部署模型
 
 ```text
-GitHub public repository (paracosm-garden)
+GitHub private repository (paracosm-garden)
                   │ push / merge to main
                   ▼
    Cloudflare Pages Git Integration
@@ -19,7 +19,7 @@ GitHub public repository (paracosm-garden)
 - **规范域名**：`https://kearril.com`。
 - **发布机制**：由 Cloudflare Pages 的原生 GitHub Git 集成驱动，每次向 `main` 推送自动触发生产构建。
 - **预览机制**：非 `main` 分支或 PR 自动生成独立 Cloudflare Preview 预览部署。
-- **安全与边界**：不使用 GitHub Actions 部署密钥、不使用 `CNAME` 文件、不手工上传 `dist/` 目录；GitHub 公开仓库是公开源码与内容的唯一事实来源。
+- **安全与边界**：不使用 GitHub Actions 部署密钥、不使用 `CNAME` 文件、不手工上传 `dist/` 目录；GitHub 私有仓库是源码与开发资料的唯一事实来源，只有 Cloudflare Pages 发布的静态产物对外公开。
 
 ## 2. 启动部署的前提
 
@@ -27,10 +27,10 @@ GitHub public repository (paracosm-garden)
 
 - 首批正式公开内容已替换本地演示条目。
 - 已用真实内容检查首页、条目页、Explore、RSS 与 sitemap。
-- 已确认公开仓库、内容、图片、链接和 Git 历史不含不愿长期公开的信息。
+- 已确认所有将进入公开静态产物的内容、图片、链接与构建产物不含不愿长期公开的信息。
 - 已确认首发文案、精选条目、许可证策略和公开边界。
 
-在此之前，只运行本地 `pnpm test && pnpm build`；不创建远程仓库、不连接 Pages，也不改动 `kearril.com` 的 DNS。
+在此之前，只运行本地 `pnpm test && pnpm build`；不创建私有远程仓库、不连接 Pages，也不改动 `kearril.com` 的 DNS。
 
 ## 3. 准备工作
 
@@ -43,9 +43,9 @@ GitHub public repository (paracosm-garden)
 
 ## 4. 正式上线步骤
 
-### 第一步：创建并推送 GitHub 公开仓库
+### 第一步：创建并推送 GitHub 私有仓库
 
-1. 在 GitHub 上创建名为 `paracosm-garden` 的公开仓库（Public Repository）。
+1. 在 GitHub 上创建名为 `paracosm-garden` 的私有仓库（Private Repository）。
 2. 将本地默认主分支设为 `main`。
 3. 添加远程仓库地址并推送源码：
    ```bash
@@ -73,7 +73,7 @@ GitHub public repository (paracosm-garden)
 2. 点击 **Set up a custom domain**，输入根域名 `kearril.com`。
 3. 允许 Cloudflare 自动创建/更新对应的 DNS 记录（CNAME/Apex 记录指向 Pages）。
 4. 再次点击 **Set up a custom domain**，添加 `www.kearril.com`。
-5. 在 Cloudflare DNS 或 Page Rules / Redirect Rules 中，配置 `www.kearril.com` 永久重定向（301/308）至 `https://kearril.com`，确保全站唯一规范入口。
+5. 在 Cloudflare 的 **Bulk Redirects** 中，配置 `www.kearril.com` 永久重定向（301）至 `https://kearril.com`，并保留路径与查询参数，确保全站唯一规范入口。
 
 ### 第四步：等待域名解析与 HTTPS 证书签发
 
@@ -105,4 +105,4 @@ GitHub public repository (paracosm-garden)
 
 - **构建失败**：在 Cloudflare Pages 控制台查看 Build Log，常见原因为 Node 版本未达标、Markdown Frontmatter 缺少必填字段（如 `slug`、`publishedAt`）或 `related` 引用了不存在的 slug。本地先运行 `pnpm test && pnpm build` 复现并修复。
 - **域名未生效**：检查 Cloudflare DNS 记录是否为 Proxied 状态，确认 SSL/TLS 加密模式为 Full 或 Strict。
-- **草稿防泄露**：确保 `draft: true` 的条目没有设置 `publishedAt`，且未合并到 `main` 分支的私密材料不得推送到公开远程仓库。
+- **草稿防泄露**：确保 `draft: true` 的条目没有设置 `publishedAt`；未确认公开的信息不得写入公开条目的正文或 Frontmatter、`public/` 资产，或任何会进入 feed / sitemap 的生成数据。
