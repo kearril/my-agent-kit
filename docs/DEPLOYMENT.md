@@ -1,6 +1,6 @@
-# Cloudflare Pages 首发准备手册
+# Cloudflare Pages 部署与发布手册
 
-本文档记录已确认的未来部署方案与正式上线步骤。它不是当前运行状态：截至首发准备阶段，私有 GitHub 仓库已创建，尚未创建 Cloudflare Pages 项目、DNS 绑定或线上站点。
+本文档记录已确认的部署方案、首发过程与后续发布步骤。私有 GitHub 仓库、Cloudflare Pages 项目、`kearril.com` 自定义域、HTTPS 与 `www` 永久重定向均已生效，线上站点为 `https://kearril.com`。
 ## 1. 架构与部署模型
 
 ```text
@@ -21,16 +21,16 @@ GitHub private repository (paracosm-garden)
 - **预览机制**：非 `main` 分支或 PR 自动生成独立 Cloudflare Preview 预览部署。
 - **安全与边界**：不使用 GitHub Actions 部署密钥、不使用 `CNAME` 文件、不手工上传 `dist/` 目录；GitHub 私有仓库是源码与开发资料的唯一事实来源，只有 Cloudflare Pages 发布的静态产物对外公开。
 
-## 2. 启动部署的前提
+## 2. 首次部署前提
 
-同时满足以下条件后才执行第 4 节。
+首次部署前，同时满足以下条件后才执行第 4 节。
 
 - 首批正式公开内容已替换本地演示条目。
 - 已用真实内容检查首页、条目页、Explore、RSS 与 sitemap。
 - 已确认所有将进入公开静态产物的内容、图片、链接与构建产物不含不愿长期公开的信息。
 - 已确认首发文案、精选条目、许可证策略和公开边界。
 
-在此之前，只运行本地 `pnpm test && pnpm build`；不连接 Pages，也不改动 `kearril.com` 的 DNS。
+首次部署前，只运行本地 `pnpm test && pnpm build`；不连接 Pages，也不改动 `kearril.com` 的 DNS。
 
 ## 3. 准备工作
 

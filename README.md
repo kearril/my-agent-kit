@@ -31,20 +31,20 @@ pnpm preview
 - [内容模型](./docs/CONTENT.md)
 - [架构决策记录](./docs/adr/)
 
-## 计划中的公开地址与部署
+## 公开地址与部署
 
-- 规范公开地址计划为 `https://kearril.com`；`www.kearril.com` 将在正式上线时永久重定向至根域名。
-- 计划使用 Cloudflare Pages 连接 GitHub 私有仓库发布静态产物；私有远程仓库已创建，尚未创建 Pages 项目或 DNS 绑定。
-- 统一条目路由为 `/entries/<slug>/`；构建会生成 `/feed.xml`、`sitemap-index.xml` 和 `/robots.txt`，但它们目前只用于本地验证。
+- 规范公开地址为 `https://kearril.com`；`www.kearril.com` 永久重定向至根域名。
+- Cloudflare Pages 连接 GitHub 私有仓库发布静态产物；`kearril.com`、HTTPS 与 `www` 重定向均已生效。
+- 统一条目路由为 `/entries/<slug>/`；构建生成的 `/feed.xml`、`sitemap-index.xml` 和 `/robots.txt` 是线上发现入口。
 - 私有仓库存放源码、内容与开发资料；只有经 Cloudflare Pages 发布的静态产物对外公开。
 
 ## 当前状态
 
-静态核心、内容集合校验、统一条目路由、关联与反向链接、Explore Island、本地条目编辑台、RSS 和站点地图均已完成并通过本地验证。项目仍处于**内容准备与首发校验阶段**：没有正式公开内容，也没有线上部署。
+静态核心、内容集合校验、统一条目路由、关联与反向链接、Explore Island、本地条目编辑台、RSS 和站点地图均已完成。首发版本已部署至 `https://kearril.com`，后续按既定发布流程持续维护。
 
 ## 当前维护流程
 
 1. 在 `src/content/entries/<type>/` 录入首批确认公开的 Markdown / MDX 条目，遵守 `docs/CONTENT.md` 的字段、目录和不可变 slug 规则；本地开发时也可通过 `pnpm dev` 输出的编辑台地址在浏览器中创建或编辑条目。
 2. 用真实标题、摘要、标签、链接、关联关系和少量截图检查首页、条目页、Explore、RSS 与 sitemap 的信息密度和可读性。
 3. 运行 `pnpm test && pnpm build`。
-4. 只有首批内容、公开边界与首发文案均确认后，才按 `docs/DEPLOYMENT.md` 推送至私有仓库、创建 Cloudflare Pages 项目和域名绑定。
+4. 内容更新在本地完成验证后推送 `main`；页面、组件、路由或全局配置变更先通过分支 Preview 验收，再合并发布。
