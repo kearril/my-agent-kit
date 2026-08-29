@@ -31,6 +31,11 @@
 	--shadow-teal: 6px 6px 0 var(--teal);
 
 
+	/* Detail Workbench & Grid Layout Tokens */
+	--workbench-max-width: 1560px;
+	--article-track-max-width: 880px;
+	--dossier-panel-width: 300px;
+
 	/* Modal & Layering Tokens */
 	--z-modal-backdrop: 1000;
 	--z-modal-content: 1001;

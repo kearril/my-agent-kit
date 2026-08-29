@@ -277,6 +277,10 @@
 	.quickview-modal-backdrop,
 	.dossier-close-btn:hover,
 	.dossier-tag-chip:hover,
+	.dossier-link-item:hover,
+	.dossier-graph-item:hover,
+	.dossier-accordion-indicator:hover,
+	.article-breadcrumb-btn:hover,
 	.dossier-full-page-btn:hover,
 	.dossier-external-link-btn:hover,
 	.specimen-direct-btn:hover {

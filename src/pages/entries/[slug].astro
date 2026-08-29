@@ -1,9 +1,10 @@
 ---
 import { render } from 'astro:content';
-import { ArrowLeft, Calendar, Clock, Tag, ExternalLink, Layers, Link as LinkIcon, Sparkles, Wrench, Compass, FolderGit2, StickyNote } from '@lucide/astro';
+import { ArrowLeft } from '@lucide/astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteHeader from '../../components/layout/SiteHeader.astro';
 import SiteFooter from '../../components/layout/SiteFooter.astro';
+import EntryMetadataPanel from '../../components/article/EntryMetadataPanel.astro';
 import { getEntryConnections, getPublicEntries, getPublicEntry } from '../../lib/entries';
 import { getEntryPath } from '../../lib/entry-path';
 
@@ -15,14 +16,6 @@ const entry = await getPublicEntry(Astro.params.slug ?? '');
 if (!entry) throw new Error(`Could not find public entry "${Astro.params.slug}".`);
 const { Content } = await render(entry);
 const { related, backlinks } = await getEntryConnections(entry.id);
-
-const formatDate = (date: Date) =>
-	new Intl.DateTimeFormat('zh-CN', {
-		year: 'numeric',
-		month: '2-digit',
-		day: '2-digit',
-	}).format(date);
-
 ---
 
 <BaseLayout
@@ -40,139 +33,37 @@ const formatDate = (date: Date) =>
 			</a>
 			<span class="article-specimen-id">SPECIMEN // {entry.id}</span>
 		</div>
-		<article class="article-content">
-			<!-- Article Header -->
-			<header class="article-header">
-				<div class="article-badges-row">
-					<span class:list={['mini-badge', `mini-badge--${entry.data.type}`]}>
-						{entry.data.type.toUpperCase()}
-					</span>
-					{entry.data.type === 'note' && entry.data.category && (
-						<span class="article-category-badge">
-							VOL // {entry.data.category}
-						</span>
-					)}
-					<div class="article-status-stamp" aria-hidden="true">
-						[ VERIFIED SPECIMEN ]
-					</div>
-				</div>
 
-				<h1 class="article-main-title">{entry.data.title}</h1>
-
-				{entry.data.summary && (
-					<div class="article-summary-box">
-						<p class="article-summary-text">{entry.data.summary}</p>
-					</div>
-				)}
-
-				<div class="article-meta-deck">
-					<div class="article-meta-dates">
-						{entry.data.publishedAt && (
-							<div class="article-meta-item">
-								<Calendar size={14} stroke-width={2.5} />
-								<span class="meta-label">首次收录:</span>
-								<time datetime={entry.data.publishedAt.toISOString()}>
-									{formatDate(entry.data.publishedAt)}
-								</time>
-							</div>
-						)}
-						<div class="article-meta-item">
-							<Clock size={14} stroke-width={2.5} />
-							<span class="meta-label">最近修订:</span>
-							<time datetime={entry.data.updatedAt.toISOString()}>
-								{formatDate(entry.data.updatedAt)}
-							</time>
-						</div>
-					</div>
-
-					{entry.data.tags && entry.data.tags.length > 0 && (
-						<div class="article-tags-group">
-							{entry.data.tags.map((tag) => (
-								<span class="article-tag-chip">
-									<Tag size={11} stroke-width={2.5} style="display: inline; vertical-align: -1px; margin-right: 3px;" />
-									<span>{tag}</span>
-								</span>
-							))}
-						</div>
-					)}
-				</div>
-			</header>
-
-			<!-- Prose Body -->
-			<div class="prose">
-				<Content />
+		<div class="article-workbench-grid">
+			<!-- Left Wing: Standalone Metadata Dossier Panel -->
+			<div class="article-left-wing">
+				<EntryMetadataPanel entry={entry} related={related} backlinks={backlinks} />
 			</div>
 
-			<!-- External Links Section -->
-			{entry.data.links && entry.data.links.length > 0 && (
-				<section class="article-section" aria-labelledby="external-links-title">
-					<div class="article-section-header">
-						<span class="section-header-dot" aria-hidden="true" />
-						<h2 id="external-links-title">外部资源与关联链接</h2>
-					</div>
-					<ul class="article-link-list">
-						{entry.data.links.map((link) => (
-							<li>
-								<a href={link.url} target="_blank" rel="noopener noreferrer">
-									<LinkIcon size={15} stroke-width={2.5} />
-									<span>{link.label}</span>
-									<ExternalLink size={14} stroke-width={2.5} class="article-external-arrow" />
-								</a>
-							</li>
-						))}
-					</ul>
-				</section>
-			)}
-			<!-- Bi-directional Graph Connections -->
-			{related.length > 0 && (
-				<section class="article-section" aria-labelledby="related-entries-title">
-					<div class="article-section-header">
-						<span class="section-header-dot" aria-hidden="true" />
-						<h2 id="related-entries-title">双向关联条目 (Related)</h2>
-					</div>
-					<ul class="article-connection-list">
-						{related.map((item) => (
-							<li>
-								<a href={getEntryPath(item)}>
-									<div class="article-connection-header">
-										<span class:list={['mini-badge', `mini-badge--${item.data.type}`]}>
-											{item.data.type.toUpperCase()}
-										</span>
-										<strong>{item.data.title}</strong>
-									</div>
-									<p>{item.data.summary}</p>
-								</a>
-							</li>
-						))}
-					</ul>
-				</section>
-			)}
+			<!-- Main Track: Centered Pure Reading Binder -->
+			<div class="article-main-track">
+				<article class="article-content">
+					<!-- Pure Article Header -->
+					<header class="article-header">
+						<h1 class="article-main-title">{entry.data.title}</h1>
 
-			<!-- Backlinks Section -->
-			{backlinks.length > 0 && (
-				<section class="article-section" aria-labelledby="backlinks-title">
-					<div class="article-section-header">
-						<span class="section-header-dot" aria-hidden="true" />
-						<h2 id="backlinks-title">反向引用 (Backlinks)</h2>
+						{entry.data.summary && (
+							<div class="article-summary-box">
+								<p class="article-summary-text">{entry.data.summary}</p>
+							</div>
+						)}
+					</header>
+
+					<!-- Pure Prose Body -->
+					<div class="prose">
+						<Content />
 					</div>
-					<ul class="article-connection-list">
-						{backlinks.map((item) => (
-							<li>
-								<a href={getEntryPath(item)}>
-									<div class="article-connection-header">
-										<span class:list={['mini-badge', `mini-badge--${item.data.type}`]}>
-											{item.data.type.toUpperCase()}
-										</span>
-										<strong>{item.data.title}</strong>
-									</div>
-									<p>{item.data.summary}</p>
-								</a>
-							</li>
-						))}
-					</ul>
-				</section>
-			)}
-		</article>
+				</article>
+			</div>
+
+			<!-- Right Wing Spacer for Symmetry -->
+			<div class="article-right-wing-spacer" aria-hidden="true" />
+		</div>
 	</main>
 
 	<SiteFooter />
