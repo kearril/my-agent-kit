@@ -1,14 +1,11 @@
 ---
-slug: agent-oh-my-pi
 title: Oh My Pi (omp) 个人使用手册
-type: note
+date: 2026-08-24
 summary: 个人日常主力终端编程 Agent 的使用手册与速查指南。
 tags:
   - AI
   - agent
   - harness
-category: AI
-source: self
 links:
   - label: GitHub 仓库
     url: https://github.com/can1357/oh-my-pi
@@ -16,10 +13,6 @@ links:
     url: https://github.com/can1357/oh-my-pi/tree/main/docs
 related:
   - oh-my-pi
-createdAt: 2026-08-24
-publishedAt: 2026-08-24
-updatedAt: 2026-09-04
-draft: false
 ---
 ## 一、 使用边界与核对基线
 

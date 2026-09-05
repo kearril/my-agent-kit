@@ -1,30 +1,45 @@
-# Paracosm Garden (Manuscripts)
+# Paracosm Notes
 
-个人知识库与手稿收纳库。收纳个人 Prompt、Skill、项目记录、网站收藏、Note 与思维模型。
+个人极简技术笔记与手稿收纳库。收纳个人 Prompt、Skill、项目记录、网站收藏与实践 Note。
 
-> **项目状态变更说明**：  
-> 原 Astro 静态网站项目已撤销并封存。全部网站源码、组件、样式、构建配置及测试历史已归档至 Git 分支 `archive/website-final` 与 Tag `v1.0-website-sunset`。当前主分支仅保留核心手稿资产与元数据参考规范。
+> **归档说明**：  
+> 原 Astro 数字花园网站项目已撤销。全部网站源码、组件、样式与构建配置历史已完整封存在 Git 归档分支 `archive/website-final` 与 Tag `v1.0-website-sunset`。
 
 ## 目录结构
 
 ```text
-manuscripts/
-├── note/        # 深度笔记与速查手册（如 Oh My Pi 手册）
-├── project/     # 关注或维护的项目记录（oh-my-pi, spec-kit, powertoys 等）
-├── prompt/      # 提示词与决策工作流（如 strategy-plan-confidence-loop）
-├── skill/       # Agent Skill 与工具链
-├── website/     # 实用网站与资源收藏
-├── assets/      # 手稿关联媒体与图片资产（如个人印章）
-└── guides/      # 条目 Frontmatter 规范与写作参考手册
+.
+├── notes/       # 深度实践笔记与速查手册（Oh My Pi 使用手册等）
+├── projects/    # 关注与维护的项目（oh-my-pi, spec-kit, powertoys, skills-cli）
+├── prompts/     # 提示词与决策工作流（strategy-plan-confidence-loop）
+├── skills/      # Agent 技能与工具链（matt-pocock-skills, superpowers）
+├── websites/    # 实用工具与基础设施网站（cloudflare, website-vpsknow）
+└── assets/      # 笔记关联媒体与图片资源
 ```
 
-## 手稿格式
+## 笔记格式规范
 
-所有手稿采用标准 Markdown 格式，头部保留结构化 YAML Frontmatter（包含 `title`、`tags`、`category`、`summary`、`related` 等属性），与 Obsidian、Logseq 或其它 Markdown 知识管理工具完全兼容。
+所有笔记均为原生 Markdown 文本，头部保留极简 YAML Frontmatter（与 Obsidian / Logseq 等本地工具原生兼容）：
 
-## 归档历史检索
+```yaml
+---
+title: 笔记标题
+date: 2026-08-24
+summary: 一句话摘要说明
+tags:
+  - 标签A
+  - 标签B
+links:
+  - label: 相关链接名称
+    url: https://example.com
+related:
+  - 关联文档名
+---
+```
 
-如需查阅原网站前端工程代码：
+## 历史代码检索
+
+如需查阅或回滚原网站前端工程：
 
 ```bash
 git checkout archive/website-final

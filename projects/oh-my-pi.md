@@ -1,7 +1,6 @@
 ---
-slug: oh-my-pi
 title: "[开源工具] Oh My Pi (omp)：终端 AI 编程 Agent"
-type: project
+date: 2026-08-27
 summary: 这是我个人最喜爱的终端 AI 编程 Agent。由于项目处于高频演进中，本文重点梳理其跨平台安装方式、全局与项目级配置文件的完整定义规范以及专属的三大魔法词机制。
 tags:
   - AI
@@ -10,7 +9,6 @@ tags:
   - 工具
   - harness
   - rust
-source: external
 links:
   - label: 官方网站
     url: https://omp.sh
@@ -18,10 +16,6 @@ links:
     url: https://github.com/can1357/oh-my-pi
 related:
   - agent-oh-my-pi
-createdAt: 2026-08-27
-publishedAt: 2026-08-27
-updatedAt: 2026-08-27
-draft: false
 ---
 
 > 在日常 AI 辅助编程实践中，Oh My Pi（命令行缩写为 `omp`）是我个人最喜爱、实际编码体感最顺畅的终端 Agent。由于该项目正处于高频演进与持续迭代中，最新特性与架构演变请直接查阅官方仓库与文档；本文主要整理其安装途径、配置文件的定义规范以及专属的三大魔法词机制。

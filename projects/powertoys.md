@@ -1,14 +1,12 @@
 ---
-slug: powertoys
 title: "[开源软件] Microsoft PowerToys：Windows 系统级增强工具集"
-type: project
+date: 2026-08-27
 summary: 微软官方开源的 Windows 桌面系统级增强工具箱，整合了许多实用的快捷指令和工具，为日常开发与桌面操作提供高效的体验基座。
 tags:
   - Windows
   - 效率工具
   - 系统增强
   - 开发环境
-source: external
 links:
   - label: GitHub 仓库
     url: https://github.com/microsoft/PowerToys
@@ -16,11 +14,6 @@ links:
     url: https://learn.microsoft.com/windows/powertoys/
   - label: GitHub Releases
     url: https://github.com/microsoft/PowerToys/releases
-related: []
-createdAt: 2026-08-27
-publishedAt: 2026-08-27
-updatedAt: 2026-08-27
-draft: false
 ---
 
 ## 软件定位与概述

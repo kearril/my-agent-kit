@@ -1,7 +1,6 @@
 ---
-slug: matt-pocock-skills
 title: "[Agent 技能] Matt Pocock's Skills：面向严谨工程实践的 Agent 技能集"
-type: skill
+date: 2026-08-27
 summary: TypeScript 专家 Matt Pocock 开源的 Agent 技能套件，涵盖多轮需求拷问、领域建模、TDD 循环、双轴代码审查与架构熵增治理，引导 AI 遵循严谨的软件工程纪律。
 tags:
   - AI
@@ -10,7 +9,6 @@ tags:
   - 架构
   - TDD
   - DDD
-source: external
 links:
   - label: GitHub 仓库
     url: https://github.com/mattpocock/skills
@@ -19,10 +17,6 @@ links:
 related:
   - skills-cli
   - superpowers
-createdAt: 2026-08-27
-publishedAt: 2026-08-27
-updatedAt: 2026-08-27
-draft: false
 ---
 
 > 本条目基于官方仓库 `mattpocock/skills` **v1.2.3** 版本进行梳理与收录。

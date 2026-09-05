@@ -1,7 +1,6 @@
 ---
-slug: cloudflare
 title: "[网站收藏] Cloudflare：全球边缘网络与全栈云基础设施"
-type: website
+date: 2026-08-27
 summary: 集 Anycast 权威 DNS、边缘 CDN 与 DDoS 流量清洗于一体的网络平台，并提供 Pages、Workers、R2 等全栈边缘计算与免公网出站费存储套件。
 tags:
   - 基础设施
@@ -9,7 +8,6 @@ tags:
   - 网络
   - 安全
   - 开发
-source: external
 links:
   - label: 官方网站
     url: https://www.cloudflare.com/
@@ -17,11 +15,6 @@ links:
     url: https://developers.cloudflare.com/
   - label: 控制台登录
     url: https://dash.cloudflare.com/
-related: []
-createdAt: 2026-08-27
-publishedAt: 2026-08-27
-updatedAt: 2026-08-28
-draft: false
 ---
 
 > 本条目基于 Cloudflare 官方产品文档与核心平台能力，于 **2026 年 8 月** 调研收录。
