@@ -1,2 +1,0 @@
-# Keep text files stable across Windows and Unix worktrees.
-* text=auto eol=lf
