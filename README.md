@@ -1,7 +1,8 @@
 # My Agent Kit
 
-个人私有 Agent 插件市场与能力集成库，专为 Oh My Pi (omp) 深度适配。
+[![Sync Upstream Mirrors](https://github.com/kearril/my-agent-kit/actions/workflows/sync-upstream.yml/badge.svg)](https://github.com/kearril/my-agent-kit/actions/workflows/sync-upstream.yml)
 
+个人私有 Agent 插件市场与能力集成库，专为 Oh My Pi (omp) 深度适配。
 ---
 
 ## 插件套件安装（Plugins）
@@ -30,7 +31,11 @@ omp plugin upgrade ponytail@my-agent-kit
 本地代码改动实时在 OMP 中生效（无需提交或重装）：
 
 ```bash
-# 挂载本地插件（适用于本地目录已重命名为 my-agent-kit）
+# 方式 1：在当前仓库根目录下执行（推荐，相对路径，跨环境通用）
+omp plugin link ./plugins/caveman
+omp plugin link ./plugins/ponytail
+
+# 方式 2：使用绝对路径（在外部任何目录均可执行）
 omp plugin link "D:/MyProjects/my-agent-kit/plugins/caveman"
 omp plugin link "D:/MyProjects/my-agent-kit/plugins/ponytail"
 
