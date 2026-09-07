@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "my-agent-kit",
+  "description": "Personal Agent Kit & Plugins Marketplace for Oh My Pi (omp).",
+  "owner": {
+    "name": "kearril",
+    "url": "https://github.com/kearril"
+  },
+  "plugins": [
+    {
+      "name": "caveman",
+      "description": "Caveman 极简通信与工程方法论规范套件（削减 65% 输出 Token，保持完整技术精度）",
+      "source": "./plugins/caveman",
+      "category": "productivity"
+    },
+    {
+      "name": "ponytail",
+      "description": "Ponytail 防过度工程化架构规范（梯子法则：YAGNI、标库优先、极简交付）",
+      "source": "./plugins/ponytail",
+      "category": "architecture"
+    }
+  ]
+}
