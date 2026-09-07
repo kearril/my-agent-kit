@@ -1,0 +1,21 @@
+{
+  "name": "@my-agent-kit/ponytail",
+  "version": "1.0.0",
+  "description": "Ponytail minimal anti-overengineering prompt suite and native extension for Oh My Pi (omp).",
+  "keywords": [
+    "omp-plugin",
+    "pi-package",
+    "ponytail"
+  ],
+  "license": "MIT",
+  "omp": {
+    "extensions": [
+      "./extensions/index.ts"
+    ]
+  },
+  "pi": {
+    "extensions": [
+      "./extensions/index.ts"
+    ]
+  }
+}
