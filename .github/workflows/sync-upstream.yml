@@ -1,0 +1,39 @@
+name: Sync Upstream Mirrors
+
+on:
+  schedule:
+    # Runs every Monday at 03:00 UTC (11:00 AM Beijing Time)
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Sync Caveman upstream
+        run: |
+          echo "Syncing plugins/upstream/caveman..."
+          git subtree pull --prefix=plugins/upstream/caveman https://github.com/JuliusBrussee/caveman main --squash -m "chore(deps): sync upstream caveman" || echo "Caveman already up to date or sync skipped"
+
+      - name: Sync Ponytail upstream
+        run: |
+          echo "Syncing plugins/upstream/ponytail..."
+          git subtree pull --prefix=plugins/upstream/ponytail https://github.com/DietrichGebert/ponytail main --squash -m "chore(deps): sync upstream ponytail" || echo "Ponytail already up to date or sync skipped"
+
+      - name: Push changes to main
+        run: |
+          git push origin main
