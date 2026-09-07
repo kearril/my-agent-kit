@@ -50,7 +50,7 @@ ${
 }`;
 }
 
-export default function cavemanExtension(pi: ExtensionAPI) {
+export default function cavemanExtension(omp: ExtensionAPI) {
   let currentMode: CavemanMode = (process.env.CAVEMAN_DEFAULT_MODE?.toLowerCase() as CavemanMode) || "full";
   if (!VALID_MODES.includes(currentMode)) {
     currentMode = "full";
@@ -97,8 +97,8 @@ export default function cavemanExtension(pi: ExtensionAPI) {
     }
   }
 
-  // Register /caveman command
-  pi.registerCommand("caveman", {
+  // Register /caveman command (OMP Extension Command)
+  omp.registerCommand("caveman", {
     description: "Set caveman mode: lite | full | ultra | wenyan | off",
     handler: async (args, ctx) => {
       const trimmed = String(args || "").trim().toLowerCase();
@@ -126,23 +126,23 @@ export default function cavemanExtension(pi: ExtensionAPI) {
   });
 
   // Session lifecycle
-  pi.on("session_start", async (_event, ctx) => {
+  omp.on("session_start", async (_event, ctx) => {
     lastCtx = ctx;
     syncStatus(ctx);
   });
 
-  pi.on("agent_start", async (_event, ctx) => {
+  omp.on("agent_start", async (_event, ctx) => {
     isActive = true;
     syncStatus(ctx);
   });
 
-  pi.on("agent_end", async (_event, ctx) => {
+  omp.on("agent_end", async (_event, ctx) => {
     isActive = false;
     syncStatus(ctx);
   });
 
   // Natural language deactivation
-  pi.on("input", async (event) => {
+  omp.on("input", async (event) => {
     if (event?.source === "extension") return;
     const text = String(event?.text || "").trim().toLowerCase();
     if (
@@ -153,8 +153,8 @@ export default function cavemanExtension(pi: ExtensionAPI) {
     }
   });
 
-  // Inject system prompt when active
-  pi.on("before_agent_start", async (event) => {
+  // Inject system prompt dynamically before each agent turn
+  omp.on("before_agent_start", async (event) => {
     if (currentMode === "off") return undefined;
 
     const existingList = Array.isArray(event?.systemPrompt)
