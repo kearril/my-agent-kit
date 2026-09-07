@@ -6,6 +6,10 @@ on:
     - cron: '0 3 * * *'
   workflow_dispatch:
 
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -24,16 +28,67 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Sync Caveman upstream
+      - name: Sync upstream mirrors safely
         run: |
-          echo "Syncing plugins/upstream/caveman..."
-          git subtree pull --prefix=plugins/upstream/caveman https://github.com/JuliusBrussee/caveman main --squash -m "chore(deps): sync upstream caveman" || echo "Caveman already up to date or sync skipped"
+          set -e
 
-      - name: Sync Ponytail upstream
-        run: |
-          echo "Syncing plugins/upstream/ponytail..."
-          git subtree pull --prefix=plugins/upstream/ponytail https://github.com/DietrichGebert/ponytail main --squash -m "chore(deps): sync upstream ponytail" || echo "Ponytail already up to date or sync skipped"
+          # Record initial HEAD to detect real changes
+          BEFORE_SHA=$(git rev-parse HEAD)
+          echo "Starting HEAD: $BEFORE_SHA"
 
-      - name: Push changes to main
-        run: |
+          # Function to safely pull a subtree
+          sync_subtree() {
+            local prefix="$1"
+            local remote_name="$2"
+            local remote_url="$3"
+            local branch="$4"
+
+            echo "=== Syncing $prefix from $remote_name ($branch) ==="
+            
+            # Setup or update named remote
+            if ! git remote get-url "$remote_name" >/dev/null 2>&1; then
+              git remote add "$remote_name" "$remote_url"
+            else
+              git remote set-url "$remote_name" "$remote_url"
+            fi
+
+            git fetch "$remote_name" "$branch"
+
+            # Execute subtree pull with automatic abort on failure
+            if ! git subtree pull --prefix="$prefix" "$remote_name" "$branch" --squash -m "chore(deps): sync upstream $prefix"; then
+              echo "::error::Subtree pull failed for $prefix! Cleaning up merge state..."
+              if [ -f .git/MERGE_HEAD ]; then
+                git merge --abort || true
+              fi
+              git reset --hard HEAD
+              echo "Working tree restored to safe state. Skipping $prefix."
+              return 1
+            fi
+
+            echo "Successfully updated $prefix."
+            return 0
+          }
+
+          # Sync each upstream independently
+          sync_subtree "plugins/upstream/caveman" "upstream-caveman" "https://github.com/JuliusBrussee/caveman.git" "main" || true
+          sync_subtree "plugins/upstream/ponytail" "upstream-ponytail" "https://github.com/DietrichGebert/ponytail.git" "main" || true
+
+          # Check if HEAD moved
+          AFTER_SHA=$(git rev-parse HEAD)
+          echo "Finished HEAD: $AFTER_SHA"
+
+          if [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
+            echo "No upstream changes detected. Nothing to push."
+            exit 0
+          fi
+
+          # Ensure working tree is clean before pushing
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::Working tree is dirty after sync! Aborting push to prevent corruption."
+            git status
+            exit 1
+          fi
+
+          echo "Changes detected ($BEFORE_SHA -> $AFTER_SHA). Pushing to origin main..."
+          git pull --rebase origin main
           git push origin main
