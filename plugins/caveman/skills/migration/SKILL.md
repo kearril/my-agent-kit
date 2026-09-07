@@ -1,6 +1,6 @@
 ---
 name: migration
-description: Implement reversible compatibility-safe transitions. Use for schema, data, API, protocol, configuration, or dependency migrations requiring rollback and preservation proof.
+description: 实施可逆且兼容安全的平滑过渡。用于需要回滚能力与状态保留证明的 schema、数据、API、协议、配置或依赖迁移。
 ---
 
 # Migration

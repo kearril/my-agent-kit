@@ -1,11 +1,8 @@
 ---
 name: ponytail-debt
 description: >
-  Harvest every `ponytail:` comment in the codebase into a debt ledger, so the
-  deliberate shortcuts and deferrals ponytail leaves behind get tracked instead
-  of rotting into "later means never". Use when the user says "ponytail debt",
-  "/ponytail-debt", "what did ponytail defer", "list the shortcuts", "ponytail
-  ledger", or "what did we mark to do later". One-shot report, changes nothing.
+  将代码库中的每个 ponytail: 注释汇总到技术债台账中，以便对 ponytail 留下的刻意简化与延迟实现进行跟踪，防止其恶化为“以后做等于永不做”。
+  当用户提到 "ponytail debt"、"/ponytail-debt"、"what did ponytail defer"、"list the shortcuts"、"ponytail ledger" 或 "what did we mark to do later" 时使用。一次性报告，不修改任何内容。
 ---
 
 Every deliberate ponytail shortcut is marked with a `ponytail:` comment naming

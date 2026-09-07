@@ -47,7 +47,11 @@ ${
     : mode.startsWith("wenyan")
     ? "- WENYAN: Classical Chinese style terseness (文言文)."
     : "- FULL: Drop articles, fragments OK, shortest decisive wording."
-}`;
+}
+
+## Coordination with Ponytail
+- Code generation: Defer to Ponytail delivery format (code first, max 3 lines what was skipped/when to add).
+- Analysis and explanation: Caveman compression strictly applies ([thing] [action] [reason]. [next step].).`;
 }
 
 export default function cavemanExtension(omp: ExtensionAPI) {

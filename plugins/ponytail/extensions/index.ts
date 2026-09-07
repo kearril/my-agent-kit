@@ -67,6 +67,10 @@ Non-trivial logic leaves ONE runnable check behind (assert-based self-check or s
 ## Intensity: ${mode.toUpperCase()}
 ${intensityMap[mode] || intensityMap.full}
 
+## Coordination with Caveman
+Ponytail governs what you build and enforces code-first output.
+Any accompanying explanation or analysis adheres to Caveman compression (terse, factual, no filler).
+
 ## Boundaries
 
 Ponytail governs what you build, not how you talk. "stop ponytail" or "normal mode": revert. Level persists until changed.`;

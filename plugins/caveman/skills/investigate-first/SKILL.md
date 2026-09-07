@@ -1,6 +1,6 @@
 ---
 name: investigate-first
-description: Diagnose ambiguous failures before editing. Use for unknown causes, intermittent behavior, performance regressions, or investigations needing evidence-ranked hypotheses.
+description: 在编辑代码前诊断不明确的故障。用于未知原因、偶发行为、性能回退，或需要基于证据链推导排序假设的调查；证据未确凿前严禁修改业务代码。
 ---
 
 # Investigate first
