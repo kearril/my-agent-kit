@@ -1,0 +1,22 @@
+{
+  "name": "@my-agent-kit/caveman",
+  "version": "1.0.0",
+  "description": "Caveman minimal prompt suite and native extension for Oh My Pi (omp).",
+  "keywords": [
+    "pi-package",
+    "omp-plugin",
+    "caveman"
+  ],
+  "license": "MIT",
+  "pi": {
+    "extensions": [
+      "./extensions/index.ts"
+    ],
+    "skills": [
+      "./skills"
+    ],
+    "commands": [
+      "./commands"
+    ]
+  }
+}
