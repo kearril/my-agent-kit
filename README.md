@@ -1,48 +1,34 @@
-# Paracosm Notes
+# My Agent Kit
 
-个人极简技术笔记与手稿收纳库。收纳个人 Prompt、Skill、项目记录、网站收藏与实践 Note。
-
-> **归档说明**：  
-> 原 Astro 数字花园网站项目已撤销。全部网站源码、组件、样式与构建配置历史已完整封存在 Git 归档分支 `archive/website-final` 与 Tag `v1.0-website-sunset`。
+个人私有 Agent 工具箱与能力集成库。收纳、改造外部优秀 Agent/Tool 项目，并提供统一的 Skill 与 Plugin 集合。
 
 ## 目录结构
 
 ```text
 .
-├── notes/       # 深度实践笔记与速查手册（Oh My Pi 使用手册等）
-├── projects/    # 关注与维护的项目（oh-my-pi, spec-kit, powertoys, skills-cli）
-├── prompts/     # 提示词与决策工作流（strategy-plan-confidence-loop）
-├── skills/      # Agent 技能与工具链（matt-pocock-skills, superpowers）
-├── websites/    # 实用工具与基础设施网站（cloudflare, website-vpsknow）
-└── assets/      # 笔记关联媒体与图片资源
+├── skills/             # 零散原子技能（Prompt、单文件 Tool、规则等）
+├── plugins/            # 成套插件与外部集成项目
+│   ├── upstream/       # 上游 Subtree 镜像区（只读不改，方便吸收更新）
+│   └── <project>/      # 本地改造区（裁剪与二次开发）
+├── 文档/                # 原有实践笔记、手稿与参考资料（保留现状）
+│   ├── notes/
+│   ├── projects/
+│   ├── prompts/
+│   ├── skills/
+│   └── websites/
+└── assets/             # 关联静态媒体资源
 ```
 
-## 笔记格式规范
+## 上游集成规则（Git Subtree）
 
-所有笔记均为原生 Markdown 文本，头部保留极简 YAML Frontmatter（与 Obsidian / Logseq 等本地工具原生兼容）：
-
-```yaml
----
-title: 笔记标题
-date: 2026-08-24
-summary: 一句话摘要说明
-tags:
-  - 标签A
-  - 标签B
-links:
-  - label: 相关链接名称
-    url: https://example.com
-related:
-  - 关联文档名
----
-```
-
-## 历史代码检索
-
-如需查阅或回滚原网站前端工程：
+外部项目引入遵循**隔离改造**原则：
 
 ```bash
-git checkout archive/website-final
-# 或
-git checkout v1.0-website-sunset
+# 1. 引入新项目镜像
+git subtree add --prefix=plugins/upstream/<name> <repo-url> <branch> --squash
+
+# 2. 同步上游更新
+git subtree pull --prefix=plugins/upstream/<name> <repo-url> <branch> --squash
 ```
+
+本地定制与吸收代码一律在 `plugins/<name>/` 下开发，避免与上游产生合并冲突。
