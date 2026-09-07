@@ -1,14 +1,36 @@
 # Ponytail Plugin for Oh My Pi (omp)
 
-纯净提取自 [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) 的防过度工程化与资深极简架构规范，专为 Oh My Pi (omp) 适配。
+纯净提取自 [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) 的防过度工程化与资深极简架构规范，专为 Oh My Pi (omp) 原生适配。
+
+---
+
+## 项目说明
+
+### 1. 核心定位
+Ponytail 解决的核心痛点是 **AI Agent 过度工程化、滥用设计模式、堆砌单实现接口与防御性样板**。
+它化身见多识广的极简老架构师，贯彻“梯子法则”（The Ladder）：
+1. **必要性质疑**：任务真的需要存在吗？(YAGNI)
+2. **代码库已有？**：已有相关 helper/util/type 直接复用。
+3. **标准库已有？**：优先使用语言标准库 (stdlib)。
+4. **原生平台能力涵盖？**：优先使用平台/环境原生基础能力 (native)。
+5. **现存依赖可解？**：绝不随意新增无谓第三方依赖。
+6. **能一行搞定？**：一行搞定。
+7. **最后底线**：仅输出能满足测试通过的最小代码。
+
+### 2. 纯净提纯决策
+- **剔除营销与噪音**：移除了原版硬编码测试基准假数据的 `ponytail-gain` 以及包含旧版升级说明的 `ponytail-help`。
+- **剔除多余胶水层**：剔除了 10 余种第三方 IDE 配置目录（如 `.cursor/`、`.windsurf/`、`.claude-plugin/` 等）。
+- **与 Caveman 协同**：Ponytail 严格管辖“写什么代码”与“代码优先交付”，伴随的解释、审查与分析语言自动遵循 Caveman 极简压缩。
+
+---
 
 ## 包含内容
 
 ### 1. 核心技能 (`skills/`)
-- `ponytail`：核心人设与梯子法则（The Ladder: YAGNI → 复用已有 → 标库优先 → 原生能力优先 → 依赖优先 → 单行极简）。
-- `ponytail-review`：Diff 过度设计专项审查（标记 `delete`、`stdlib`、`native`、`yagni`、`shrink`）。
-- `ponytail-audit`：全库过度工程化扫荡审计。
-- `ponytail-debt`：代码库内 `ponytail:` 注释技术债扫描与台账。
+- `ponytail`：核心人设与梯子法则（支持 `lite`、`full`、`ultra` 三档强度）。
+- `ponytail-review`：专审过度设计的代码审查（标记 `delete` 死代码、`stdlib` 重造轮子、`native` 原生替代、`yagni` 多余抽象，统计净削减行数）。
+- `ponytail-audit`：全仓库过度工程化扫描与裁剪审计。
+- `ponytail-debt`：扫描代码库中的 `ponytail:` 注释，生成已跟踪的技术债台账。
 
 ### 2. OMP 斜杠命令 (`commands/`)
 - `ponytail-review.md` (`/ponytail-review`)
@@ -16,7 +38,25 @@
 - `ponytail-debt.md` (`/ponytail-debt`)
 
 ### 3. OMP 原生扩展 (`extensions/index.ts`)
-- 注册 `/ponytail [lite|full|ultra|off]` 动态控制强度。
-- 终端状态栏原生指示灯（`🐴 ponytail: ⚡ FULL`）。
-- 自然语言命令识别（`stop ponytail` / `normal mode` 自动退回关闭状态）。
-- 运行时在 `before_agent_start` 动态注入精简 Prompt，并通过会话记录持久化状态。
+- 注册 `/ponytail [lite|full|ultra|off|status]` 本地命令。
+- 终端状态栏显示模式指示灯（`🐴 ponytail: ⚡ FULL`）。
+- 监听 `input` 事件，输入 `stop ponytail` 或 `normal mode` 自动退回关闭状态。
+- 在 `before_agent_start` 动态注入梯子法则提示词约束，并利用会话分支记录实现状态跨轮次持久化。
+
+---
+
+## 维护规则
+
+为确保插件长期稳定且便于吸收上游更新，必须遵循以下维护铁律：
+
+1. **隔离修改原则**：
+   - 上游镜像位于 `plugins/upstream/ponytail/`，**严格只读，禁止手动修改**。
+   - 本地定制、审查边界划分与适配代码必须在 `plugins/ponytail/` 目录下进行。
+2. **上游吸收流**：
+   - 根目录 GitHub Actions 每日自动通过 `git subtree pull --squash` 将上游最新提交同步至 `plugins/upstream/ponytail/`。
+   - 上游有规则强化或新反模式归纳时，由维护者手动比对并吸收至 `plugins/ponytail/skills/`。
+3. **审查职责边界守则**：
+   - `ponytail-review` 必须严守“只查复杂度与过度设计”的边界，**严禁越界审查业务逻辑 Bug**（代码正确性与运行时异常由 `/caveman-review` 专职处理）。
+4. **语言分离原则**：
+   - 梯子法则与技巧规则正文（`SKILL.md`）保持纯英文，确保与上游源码一致。
+   - 用户可见元数据（Frontmatter `description` 与 `commands/*.md` 描述）保持精准中文化。

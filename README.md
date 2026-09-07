@@ -41,6 +41,33 @@ omp plugin uninstall @my-agent-kit/ponytail
 
 ---
 
+## 收纳插件矩阵 (Plugins Matrix)
+
+当前仓库已收纳并原生提纯以下核心插件：
+
+### 1. Caveman (`caveman`)
+- **介绍**：
+  专注于**交互输出压缩与工程方法论**。提取自 `JuliusBrussee/caveman` 的 Small Rock 核心。通过在 OMP 运行生命周期（`before_agent_start`）前置注入压缩约束，砍掉代码周围的寒暄套话、流程自白和虚词，在保持 100% 代码与报错技术精度的同时削减约 65% 的输出 Token。
+- **相关命令**：
+  - `/caveman [lite|full|ultra|wenyan|off|status]`：动态切换会话输出压缩强度（支持无参数切换启闭）。
+  - `/caveman-commit`：生成意图优先、≤50 字符的极简 Conventional Commits 提交信息。
+  - `/caveman-review`：单行正确性审查（专查代码正确性、运行时 Bug、未捕获异常与风险）。
+  - 自然语言命令：输入 `stop caveman` 或 `normal mode` 自动退回正常模式。
+
+---
+
+### 2. Ponytail (`ponytail`)
+- **介绍**：
+  专注于**防过度工程化与资深极简架构**。提取自 `DietrichGebert/ponytail`。核心贯彻“梯子法则”（The Ladder: YAGNI → 复用已有 → 标库优先 → 原生平台能力优先 → 现存依赖优先 → 单行解决），强行约束模型不写未要求的预设抽象、不造轮子、不堆样板代码，实现代码优先与最小闭环交付。
+- **相关命令**：
+  - `/ponytail [lite|full|ultra|off|status]`：动态控制极简编码梯子法则的执行严格度。
+  - `/ponytail-review`：过度设计专项审查（标记 `delete` 死代码、`stdlib` 轮子、`native` 原生替代、`yagni` 多余抽象，输出净削减行数）。
+  - `/ponytail-audit`：全仓库过度工程化扫描与裁剪审计。
+  - `/ponytail-debt`：扫描代码库中的 `ponytail:` 注释并生成技术债台账。
+  - 自然语言命令：输入 `stop ponytail` 或 `normal mode` 自动退回正常模式。
+
+---
+
 ## 仓库结构
 
 ```text
