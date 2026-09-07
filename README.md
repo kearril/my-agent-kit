@@ -39,6 +39,22 @@ omp plugin uninstall @my-agent-kit/caveman
 omp plugin uninstall @my-agent-kit/ponytail
 ```
 
+
+---
+
+## 命令速查表 (Commands Cheatsheet)
+
+| 斜杠命令 / 快捷调用 | 所属组件 | 功能与定位 |
+| :--- | :--- | :--- |
+| `/caveman [mode]` | `caveman` | 会话级输出压缩开关与强度切换（`lite` / `full` / `ultra` / `wenyan` / `off`） |
+| `/caveman-commit` | `caveman` | 50 字符极简 Conventional Commits 提交信息生成（意图优先，无客套废话） |
+| `/caveman-review` | `caveman` | 单行代码审查评注（专查代码正确性、运行时 Bug 与未捕获异常） |
+| `stop caveman` | `caveman` | 自然语言直接关闭 Caveman 压缩模式 |
+| `/ponytail [mode]` | `ponytail` | 防过度工程化梯子法则开关（`lite` / `full` / `ultra` / `off`） |
+| `/ponytail-review` | `ponytail` | 单行过度设计专项审查（标记死代码、自造轮子、多余抽象，统计净削减行数） |
+| `/ponytail-audit` | `ponytail` | 全仓库过度工程化与复杂度扫荡审计 |
+| `/ponytail-debt` | `ponytail` | 扫描代码中的 `ponytail:` 注释并生成技术债台账 |
+| `stop ponytail` | `ponytail` | 自然语言直接关闭 Ponytail 极简模式 |
 ---
 
 ## 收纳插件矩阵 (Plugins Matrix)
