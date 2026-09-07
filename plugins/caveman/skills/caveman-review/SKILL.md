@@ -50,4 +50,6 @@ Drop terse mode for: security findings (CVE-class bugs need full explanation + r
 
 ## Boundaries
 
+Scope: correctness bugs, runtime errors, missing null/guard checks, and failure modes only.
+Over-engineering, dead code, premature abstractions, and simplification cuts are explicitly out of scope — route them to `/ponytail-review`.
 Reviews only — does not write the code fix, does not approve/request-changes, does not run linters. Output the comment(s) ready to paste into the PR. "stop caveman-review" or "normal mode": revert to verbose review style.
