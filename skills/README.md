@@ -14,6 +14,31 @@
 
 ---
 
+## 单个技能安装指南 (`npx skills`)
+
+本目录下的原子技能原生兼容标准 Agent Skills 规范，支持通过 `npx skills` 按需精准安装单个技能：
+
+### 1. 项目级安装（推荐，仅在当前工作项目生效）
+在你的目标项目根目录下打开终端执行（默认安装至当前项目）：
+
+```bash
+# 按需安装单个技能
+npx skills add kearril/my-agent-kit --skill tdd
+npx skills add kearril/my-agent-kit --skill codebase-design
+npx skills add kearril/my-agent-kit --skill grilling
+```
+
+### 2. 全局安装（所有项目通用）
+如果希望该技能在当前机器的所有项目里都能被 OMP 调用，追加 `-g` 标志：
+
+```bash
+npx skills add kearril/my-agent-kit --skill tdd -g
+npx skills add kearril/my-agent-kit --skill codebase-design -g
+npx skills add kearril/my-agent-kit --skill grilling -g
+```
+
+---
+
 ## 规范与添加模板
 
 所有新增技能必须遵循 OMP 规范（单层目录结构，严禁嵌套，且必须包含 YAML Frontmatter 元数据）：

@@ -1,46 +1,68 @@
 # My Agent Kit
 
-个人私有 Agent 插件市场与能力集成库，专为 Oh My Pi (omp) 适配。
+个人私有 Agent 插件市场与能力集成库，专为 Oh My Pi (omp) 深度适配。
 
 ---
 
-## 插件安装与接入指南
+## 插件套件安装（Plugins）
 
-本仓库原生支持 **OMP 插件市场（Marketplace）** 与 **本地软链开发（Link）** 两种安装模式：
+插件为成套工具箱，原生支持 **OMP 插件市场（Marketplace）** 与 **本地软链开发（Link）**：
 
-### 方式 A：OMP 市场源安装（推荐，跨设备与远程使用）
+### 方式 A：OMP 市场源安装（推荐，跨设备与远程）
 
-直接将本仓库作为 OMP 插件源添加，按需安装单个插件：
+直接添加本仓库为市场源，按需安装成套插件：
 
 ```bash
 # 1. 添加本仓库作为私有插件市场
 omp marketplace add kearril/my-agent-kit
 
-# 2. 安装插件与核心技能库
+# 2. 按需安装插件套件
 omp plugin install caveman@my-agent-kit
 omp plugin install ponytail@my-agent-kit
-omp plugin install core-skills@my-agent-kit
 
-# 3. 以后更新组件
+# 3. 以后更新插件
 omp plugin upgrade caveman@my-agent-kit
 omp plugin upgrade ponytail@my-agent-kit
-omp plugin upgrade core-skills@my-agent-kit
+```
 
 ### 方式 B：本地开发软链（本地实时调试）
 
 本地代码改动实时在 OMP 中生效（无需提交或重装）：
 
 ```bash
-# 挂载本地插件与核心技能库（适用于本地目录为 my-agent-kit）
-omp plugin link "D:/MyProjects/my-agent-kit"
+# 挂载本地插件（适用于本地目录已重命名为 my-agent-kit）
 omp plugin link "D:/MyProjects/my-agent-kit/plugins/caveman"
 omp plugin link "D:/MyProjects/my-agent-kit/plugins/ponytail"
 
-# 如需解除软链
-omp plugin uninstall @my-agent-kit/core-skills
+# 解除软链
 omp plugin uninstall @my-agent-kit/caveman
 omp plugin uninstall @my-agent-kit/ponytail
+```
 
+---
+
+## 独立原子技能安装（Skills）
+
+收录在 `skills/` 下的原子技能支持通过标准 Agent Skills 工具 **按需单独安装**，精准掌控每个项目所需的技能：
+
+### 1. 项目级安装（推荐，仅在当前工作项目生效）
+进入你的目标项目根目录执行（默认仅安装至当前工作区，不污染全局）：
+
+```bash
+# 按需单独安装指定技能
+npx skills add kearril/my-agent-kit --skill tdd
+npx skills add kearril/my-agent-kit --skill codebase-design
+npx skills add kearril/my-agent-kit --skill grilling
+```
+
+### 2. 全局安装（所有项目通用）
+如果希望某个技能全机所有项目都能调用，追加 `-g` 标志：
+
+```bash
+npx skills add kearril/my-agent-kit --skill tdd -g
+npx skills add kearril/my-agent-kit --skill codebase-design -g
+npx skills add kearril/my-agent-kit --skill grilling -g
+```
 
 ---
 
@@ -57,11 +79,12 @@ omp plugin uninstall @my-agent-kit/ponytail
 | `/ponytail-audit` | `ponytail` | 全仓库过度工程化与复杂度扫荡审计 |
 | `/ponytail-debt` | `ponytail` | 扫描代码中的 `ponytail:` 注释并生成技术债台账 |
 | `stop ponytail` | `ponytail` | 自然语言直接关闭 Ponytail 极简模式 |
+
 ---
 
 ## 收纳插件矩阵 (Plugins Matrix)
 
-当前仓库已收纳并原生提纯以下核心插件：
+当前仓库已收纳并原生提纯以下核心插件套件：
 
 ### 1. Caveman (`caveman`)
 - **介绍**：
@@ -86,14 +109,13 @@ omp plugin uninstall @my-agent-kit/ponytail
 
 ---
 
-### 3. Core Skills (`core-skills`)
-- **介绍**：
-  收录在 `skills/` 下的**通用核心工程原子技能集**。作为独立技能包发布，直接供 OMP 模型在 System Prompt 编目中自主调用：
-  - `codebase-design`：Deep Modules 与 Seam 接缝设计。
-  - `tdd`：测试驱动开发规范与 Red-Green Loop。
-  - `grilling`：需求动工前深度探究反问。
-- **调用机制**：
-  安装后全局生效。Agent 会在处理相关任务时通过 `skill://codebase-design` 等自主加载，亦可通过交互模式输入 `/skill:tdd` 等快捷调用。
+## 独立原子技能库 (Skills Catalog)
+
+收录于 `skills/` 下的独立技能，支持单点按需引用：
+
+- **`codebase-design`**：Deep Modules 与 Seam 架构设计。设计深层模块（小接口大行为）、识别代码接缝、提供备选接口设计机制。
+- **`tdd`**：测试驱动开发规范。严守 Red → Green Loop、优质集成测试判定准则与 Mock 防反模式。
+- **`grilling`**：需求动工前深度探究追问。针对不明确边界与潜在技术风险进行连续质询反问。
 
 ---
 
@@ -102,17 +124,19 @@ omp plugin uninstall @my-agent-kit/ponytail
 ```text
 .
 ├── .omp-plugin/
-│   └── marketplace.json    # OMP 插件市场清单定义
-├── skills/                 # 零散原子技能
+│   └── marketplace.json    # OMP 插件市场清单定义（caveman, ponytail）
+├── skills/                 # 独立原子技能收纳区（支持单点安装）
 │   ├── codebase-design/    # Deep Modules 与 Seam 架构设计
 │   ├── grilling/           # 编码前深度质疑与探究
-│   └── tdd/                # 测试驱动开发与 Red-Green 规范
+│   ├── tdd/                # 测试驱动开发与 Red-Green 规范
+│   └── README.md           # 技能清单与单点安装说明
 ├── plugins/                # 成套提纯插件（原生 OMP 支持）
 │   ├── caveman/            # 极简通信与工程规范套件（削减 65% 输出 Token）
 │   ├── ponytail/           # 防过度工程化架构规范（梯子法则、YAGNI）
-│   └── upstream/           # 上游 Subtree 镜像（只读隔离）
-│       ├── caveman/
-│       └── ponytail/
+│   ├── upstream/           # 上游 Subtree 镜像（只读隔离）
+│   │   ├── caveman/
+│   │   └── ponytail/
+│   └── README.md           # 插件清单与 3 步走接入 SOP
 ├── 文档/                    # 实践笔记与参考手稿
 └── assets/                 # 静态媒体资产
 ```
