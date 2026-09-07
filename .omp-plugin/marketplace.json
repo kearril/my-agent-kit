@@ -18,6 +18,12 @@
       "description": "Ponytail 防过度工程化架构规范（梯子法则：YAGNI、标库优先、极简交付）",
       "source": "./plugins/ponytail",
       "category": "architecture"
+    },
+    {
+      "name": "core-skills",
+      "description": "通用核心工程技能集（Deep Modules 架构设计、TDD、编码前深度探究）",
+      "source": "./",
+      "category": "engineering"
     }
   ]
 }

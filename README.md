@@ -16,28 +16,30 @@
 # 1. 添加本仓库作为私有插件市场
 omp marketplace add kearril/my-agent-kit
 
-# 2. 安装插件
+# 2. 安装插件与核心技能库
 omp plugin install caveman@my-agent-kit
 omp plugin install ponytail@my-agent-kit
+omp plugin install core-skills@my-agent-kit
 
-# 3. 以后更新插件
+# 3. 以后更新组件
 omp plugin upgrade caveman@my-agent-kit
 omp plugin upgrade ponytail@my-agent-kit
-```
+omp plugin upgrade core-skills@my-agent-kit
 
 ### 方式 B：本地开发软链（本地实时调试）
 
 本地代码改动实时在 OMP 中生效（无需提交或重装）：
 
 ```bash
-# 挂载本地插件（适用于本地目录为 my-agent-kit）
+# 挂载本地插件与核心技能库（适用于本地目录为 my-agent-kit）
+omp plugin link "D:/MyProjects/my-agent-kit"
 omp plugin link "D:/MyProjects/my-agent-kit/plugins/caveman"
 omp plugin link "D:/MyProjects/my-agent-kit/plugins/ponytail"
 
 # 如需解除软链
+omp plugin uninstall @my-agent-kit/core-skills
 omp plugin uninstall @my-agent-kit/caveman
 omp plugin uninstall @my-agent-kit/ponytail
-```
 
 
 ---
@@ -81,6 +83,17 @@ omp plugin uninstall @my-agent-kit/ponytail
   - `/ponytail-audit`：全仓库过度工程化扫描与裁剪审计。
   - `/ponytail-debt`：扫描代码库中的 `ponytail:` 注释并生成技术债台账。
   - 自然语言命令：输入 `stop ponytail` 或 `normal mode` 自动退回正常模式。
+
+---
+
+### 3. Core Skills (`core-skills`)
+- **介绍**：
+  收录在 `skills/` 下的**通用核心工程原子技能集**。作为独立技能包发布，直接供 OMP 模型在 System Prompt 编目中自主调用：
+  - `codebase-design`：Deep Modules 与 Seam 接缝设计。
+  - `tdd`：测试驱动开发规范与 Red-Green Loop。
+  - `grilling`：需求动工前深度探究反问。
+- **调用机制**：
+  安装后全局生效。Agent 会在处理相关任务时通过 `skill://codebase-design` 等自主加载，亦可通过交互模式输入 `/skill:tdd` 等快捷调用。
 
 ---
 

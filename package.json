@@ -1,0 +1,13 @@
+{
+  "name": "@my-agent-kit/core-skills",
+  "version": "1.0.0",
+  "description": "通用核心工程技能集（Deep Modules 架构设计、TDD 与测试规范、编码前深度探究）",
+  "keywords": [
+    "omp-plugin",
+    "pi-package",
+    "skills"
+  ],
+  "license": "MIT",
+  "omp": {},
+  "pi": {}
+}
