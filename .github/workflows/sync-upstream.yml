@@ -2,8 +2,8 @@ name: Sync Upstream Mirrors
 
 on:
   schedule:
-    # Runs every Monday at 03:00 UTC (11:00 AM Beijing Time)
-    - cron: '0 3 * * 1'
+    # Runs daily at 03:00 UTC (11:00 AM Beijing Time)
+    - cron: '0 3 * * *'
   workflow_dispatch:
 
 permissions:
