@@ -1,9 +1,10 @@
 ---
 name: caveman-review
-description: >
+description: 
   压缩代码审查 —— 每条发现一行，包含位置、问题与修复方案。
   用于 /caveman-review、"review this PR" 或 "review the diff"。
   （审查边界：专注代码正确性、运行时 Bug 与未捕获异常；过度设计与复杂度裁剪归入 /ponytail-review）。
+---
 
 Write code review comments terse and actionable. One line per finding. Location, problem, fix. No throat-clearing.
 
