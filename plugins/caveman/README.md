@@ -10,33 +10,30 @@
 Caveman 解决的核心痛点是 **AI Agent 啰嗦、套话多、输出 Token 严重膨胀**。
 本插件完整保留了原项目的“小石头”（Small Rock）理念，通过提示词约束与 OMP 生命周期拦截，在保证代码、路径、错误堆栈 100% 绝对精确的前提下，削减约 65% 的无效输出 Token。
 
-### 2. 纯净提纯决策
+### 2. 纯净提纯与协同瘦身
 - **彻底抛弃「大石头」**：剔除所有 Go 本地代理、SQLite 记忆与二进制（如 proxy、shrink、rewriter、mem、browse 等），保持零编译、零外部守护进程。
 - **剔除失效技能**：删除了强依赖外部 Claude API 的 `caveman-compress`、依赖特定日志结构的 `caveman-stats` 与未提供预设的 `cavecrew`。
-- **职责去重**：原版的 `lean-build` 与本仓库的 `ponytail` 插件完全重叠，已由 `ponytail` 上位替代并在此剔除。
-- **与 Ponytail 协同**：生成代码实现时遵循 Ponytail 代码优先交付；分析、诊断与解释过程遵循 Caveman 极简压缩。
-
+- **与 Matt Pocock 套件对齐瘦身**：
+  - 代码审查职责统一归入 Matt 的 `code-review`（双轴审查），剔除 `caveman-review`。
+  - 故障排查统一归入 Matt 的 `diagnosing-bugs`（六步反馈循环），剔除 `investigate-first` 与 `surgical-patch`。
+  - 重构规程统一归入 Matt 的 `tdd` 与 `codebase-design`（深模块），剔除 `safe-refactor`。
+- **三大套件生态协同**：
+  - **Caveman**：底层专注**会话输出压缩**与**极简 Git Commit 交付**。
+  - **Ponytail**：底层专注**极简编码梯子法则**与**技术债治理**。
+  - **Matt Pocock's Skills**：顶层主导**全流程工程流、TDD、DDD 与双轴审查**。
 ---
 
 ## 包含内容
 
-### 1. 核心提示词 (`skills/`)
+### 1. 核心技能 (`skills/`)
 - `caveman/`：核心压缩说话模式（支持 `lite`、`full`、`ultra`、`wenyan` 系列等）。
 - `caveman-commit/`：极简意图 Conventional Commits 规范（≤50 字符，强调 Why 而非重复 Diff）。
-- `caveman-review/`：单行正确性与风险审查（专查逻辑 Bug、Null 崩溃；复杂度交由 `/ponytail-review`）。
+- `migration/`：数据模型、Schema 与协议变更的可逆性保障与平滑过渡规程。
+- `verify-and-stop/`：验证达标即刻停手，严禁画蛇添足与范围无限蔓延。
 
-### 2. 五大工程工作流规范 (`skills/`)
-- `investigate-first`：先查明证据链与根因，未明确前严禁修改业务代码。
-- `surgical-patch`：外科手术级微创修复，限制在最窄责任层，避免无关改动。
-- `safe-refactor`：安全等价重构，前后必须具备严密验证支撑。
-- `migration`：数据/协议迁移需保证回滚能力与平滑兼容。
-- `verify-and-stop`：验证达标即停，严禁画蛇添足。
-
-### 3. OMP 斜杠命令 (`commands/`)
-- `caveman-commit.md` (`/caveman-commit`)
-- `caveman-review.md` (`/caveman-review`)
-
-### 4. OMP 原生扩展 (`extensions/index.ts`)
+### 2. OMP 斜杠命令 (`commands/`)
+- `caveman-commit.md` (`/caveman-commit`)：一键生成意图优先的 50 字符 Conventional Commits 消息。
+### 3. OMP 原生扩展 (`extensions/index.ts`)
 - 注册 `/caveman [lite|full|ultra|wenyan|off|status]` 本地命令。
 - 终端状态栏显示模式指示灯（`⚡ FULL` 等）。
 - 监听 `input` 事件，输入 `stop caveman` 或 `normal mode` 自动退回关闭状态。

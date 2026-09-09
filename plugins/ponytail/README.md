@@ -17,26 +17,27 @@ Ponytail 解决的核心痛点是 **AI Agent 过度工程化、滥用设计模�
 6. **能一行搞定？**：一行搞定。
 7. **最后底线**：仅输出能满足测试通过的最小代码。
 
-### 2. 纯净提纯决策
+### 2. 纯净提纯与协同瘦身
 - **剔除营销与噪音**：移除了原版硬编码测试基准假数据的 `ponytail-gain` 以及包含旧版升级说明的 `ponytail-help`。
 - **剔除多余胶水层**：剔除了 10 余种第三方 IDE 配置目录（如 `.cursor/`、`.windsurf/`、`.claude-plugin/` 等）。
-- **与 Caveman 协同**：Ponytail 严格管辖“写什么代码”与“代码优先交付”，伴随的解释、审查与分析语言自动遵循 Caveman 极简压缩。
+- **与 Matt Pocock 套件对齐瘦身**：
+  - 局部代码审查（过度设计与 Fowler 坏味道）统一归入 Matt 的 `code-review`（Standards 轴），剔除 `ponytail-review`。
+  - 全仓库架构巡检统一归入 Matt 的 `/improve-codebase-architecture`（深度模块扫描与可视化报告），剔除 `ponytail-audit`。
+- **三大套件生态协同**：
+  - **Ponytail**：底层专注**极简编码梯子法则硬拦截**与**技术债台账治理**。
+  - **Caveman**：底层专注**会话输出压缩**与**极简 Git Commit 交付**。
+  - **Matt Pocock's Skills**：顶层主导**全流程工程流、TDD、DDD 与双轴审查**。
 
 ---
 
 ## 包含内容
 
 ### 1. 核心技能 (`skills/`)
-- `ponytail`：核心人设与梯子法则（支持 `lite`、`full`、`ultra` 三档强度）。
-- `ponytail-review`：专审过度设计的代码审查（标记 `delete` 死代码、`stdlib` 重造轮子、`native` 原生替代、`yagni` 多余抽象，统计净削减行数）。
-- `ponytail-audit`：全仓库过度工程化扫描与裁剪审计。
-- `ponytail-debt`：扫描代码库中的 `ponytail:` 注释，生成已跟踪的技术债台账。
+- `ponytail`：核心人设与梯子法则（支持 `lite`、`full`、`ultra` 三档强度），在底层拦截盲目引包与过度抽象。
+- `ponytail-debt`：扫描代码库中的 `ponytail:` 注释，生成已跟踪的技术债台账，防止简化变烂尾。
 
 ### 2. OMP 斜杠命令 (`commands/`)
-- `ponytail-review.md` (`/ponytail-review`)
-- `ponytail-audit.md` (`/ponytail-audit`)
-- `ponytail-debt.md` (`/ponytail-debt`)
-
+- `ponytail-debt.md` (`/ponytail-debt`)：一键收集全库 `ponytail:` 注释至结构化台账。
 ### 3. OMP 原生扩展 (`extensions/index.ts`)
 - 注册 `/ponytail [lite|full|ultra|off|status]` 本地命令。
 - 终端状态栏显示模式指示灯（`🐴 ponytail: ⚡ FULL`）。
@@ -55,8 +56,7 @@ Ponytail 解决的核心痛点是 **AI Agent 过度工程化、滥用设计模�
 2. **上游吸收流**：
    - 本地通过 `scripts/sync-upstream.*` 脚本同步上游最新提交至 `.upstream/ponytail/`。
    - 上游有规则强化或新反模式归纳时，由维护者手动比对并吸收至 `plugins/ponytail/skills/`。
-3. **审查职责边界守则**：
-   - `ponytail-review` 必须严守“只查复杂度与过度设计”的边界，**严禁越界审查业务逻辑 Bug**（代码正确性与运行时异常由 `/caveman-review` 专职处理）。
-4. **语言分离原则**：
+3. **专注极简与债务守则**：
+   - Ponytail 专职守住“极简底线”（能不写就不写、标库与原生优先），通过 `ponytail-debt` 对刻意延后的实现进行跟踪，不越界替代顶层工程流程。
    - 梯子法则与技巧规则正文（`SKILL.md`）保持纯英文，确保与上游源码一致。
    - 用户可见元数据（Frontmatter `description` 与 `commands/*.md` 描述）保持精准中文化。
