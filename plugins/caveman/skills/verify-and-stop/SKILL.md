@@ -1,6 +1,6 @@
 ---
 name: verify-and-stop
-description: 在不扩大范围的前提下证明现有工作符合验收条件。用于纯验证任务、完成检查、重点门禁运行以及最后一公里交付证明。
+description: Prove existing work meets acceptance conditions without expanding scope. Use for validation-only tasks, completion checks, focused gate runs, and last-mile proof.
 ---
 
 # Verify and stop

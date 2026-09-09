@@ -1,8 +1,8 @@
 ---
 name: caveman-commit
-description: 
-  编写仅压缩至意图的 Conventional Commits 提交信息（Subject ≤50 字符，强调 Why 而非重复 Diff，无套话）。
-  用于 "write a commit"、"commit message"、/commit 或 /caveman-commit。
+description: >
+  Write a Conventional Commits message compressed to intent only. Use for
+  "write a commit", "commit message", /commit or /caveman-commit.
 ---
 
 Write commit messages terse and exact. Conventional Commits format. No fluff. Why over what.
