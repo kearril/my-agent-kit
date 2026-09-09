@@ -64,3 +64,7 @@
 - 必须严格遵循 Conventional Commits 规范：`<type>(<scope>): <imperative summary>`。
 - 标题必须 $\le 50$ 字符，祈使语气，类型后全小写，末尾不加句号。
 - 强调修改原因（Why over what），拒绝废话。
+
+### 铁律 8：版本变更纪律（改动必自增）
+- 任何插件的代码、技能、命令或配置发生变更，提交前**必须在其 `package.json` 中递增版本号**（遵循 SemVer 规范，如 Patch 升级 `1.0.x`），并同步更新 `plugins/README.md` 的版本基线表。
+- **原因**：OMP 依赖版本号判断插件升级（`omp plugin upgrade <name>@my-agent-kit`）。若不递增版本，远端安装用户将无法拉取最新的优化与修复。

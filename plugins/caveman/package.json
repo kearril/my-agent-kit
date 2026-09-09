@@ -1,6 +1,6 @@
 {
   "name": "@my-agent-kit/caveman",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Caveman minimal prompt suite and native extension for Oh My Pi (omp).",
   "keywords": [
     "omp-plugin",
