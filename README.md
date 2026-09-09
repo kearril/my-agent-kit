@@ -1,16 +1,14 @@
 # My Agent Kit
 
+[![CI](https://github.com/kearril/my-agent-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/kearril/my-agent-kit/actions/workflows/ci.yml)
+
 个人私有 Agent 插件市场与工程能力套件，专为 **Oh My Pi (omp)** 深度适配。
 
 ---
 
 ## 插件套件安装（Plugins）
 
-本仓库原生兼容 **OMP 插件市场（Marketplace）** 与 **本地软链开发（Link）**：
-
-### 方式 A：OMP 市场源安装（推荐，跨设备与远程）
-
-直接添加本仓库为私有市场源，按需安装成套插件：
+直接添加本仓库作为私有插件市场源，一键远程安装与更新成套插件：
 
 ```bash
 # 1. 添加本仓库作为私有插件市场
@@ -26,23 +24,6 @@ omp plugin upgrade caveman@my-agent-kit
 omp plugin upgrade ponytail@my-agent-kit
 omp plugin upgrade mattpocock-skills@my-agent-kit
 ```
-
-### 方式 B：本地软链调试（本地开发即时生效）
-
-在当前仓库根目录下执行（相对路径，跨环境通用）：
-
-```bash
-# 建立软链
-omp plugin link ./plugins/caveman
-omp plugin link ./plugins/ponytail
-omp plugin link ./plugins/mattpocock-skills
-
-# 解除软链
-omp plugin uninstall @my-agent-kit/caveman
-omp plugin uninstall @my-agent-kit/ponytail
-omp plugin uninstall @my-agent-kit/mattpocock-skills
-```
-
 ---
 
 ## 三大插件黄金协同流 (The Golden Loop)
