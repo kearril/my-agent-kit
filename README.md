@@ -35,6 +35,13 @@ omp plugin upgrade caveman@my-agent-kit
 - `skills/`：单体原子技能独立存放区
 - `docs/`：个人实践笔记与体系调研手稿
 
+## 致谢 (Acknowledgments)
+
+- **[mattpocock/skills](https://github.com/mattpocock/skills)** by [@mattpocock](https://github.com/mattpocock)
+- **[DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail)** by [@DietrichGebert](https://github.com/DietrichGebert)
+- **[JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)** by [@JuliusBrussee](https://github.com/JuliusBrussee)
+- **[Oh My Pi (omp)](https://github.com/canisminor1990/oh-my-pi)**
+
 ## License
 
 [MIT License](./LICENSE)
