@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "my-agent-kit",
-  "description": "面向 Oh My Pi (omp) 的 Agent 插件市场与工程能力套件。",
+  "description": "个人收集整理的面向 Oh My Pi (omp) 的 Agent 插件市场与工程能力套件。",
   "owner": {
     "name": "kearril",
     "url": "https://github.com/kearril"

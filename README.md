@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/kearril/my-agent-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/kearril/my-agent-kit/actions/workflows/ci.yml)
 
-面向 **Oh My Pi (omp)** 的 Agent 插件市场与工程能力套件。
+个人收集整理的面向 **Oh My Pi (omp)** 的 Agent 插件市场与工程能力套件。
 
 ---
 
