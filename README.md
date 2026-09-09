@@ -23,9 +23,9 @@ omp plugin upgrade caveman@my-agent-kit
 
 | 插件 | 版本 | 核心定位 | 命令入口 |
 | :--- | :--- | :--- | :--- |
-| **`matt`** | `v1.0.1` | 全流程严谨工程交付（反向拷问、Spec/Ticket、TDD、代码审查） | `/matt:*` (14 项) |
-| **`ponytail`** | `v1.0.2` | 防过度工程化架构守门（梯子法则、YAGNI、技术债台账） | `/ponytail`, `/ponytail:debt` |
-| **`caveman`** | `v1.0.3` | 会话输出极简压缩（削减 65% Token 输出，50 字符极简提交） | `/caveman`, `/caveman:commit` |
+| **`matt`** | `v1.0.1` | 强大无需多言 | `/matt:*` (14 项) |
+| **`ponytail`** | `v1.0.2` | 防过度工程化架构守门 | `/ponytail`, `/ponytail:debt` |
+| **`caveman`** | `v1.0.3` | 会话输出极简压缩 | `/caveman`, `/caveman:commit` |
 
 ---
 
