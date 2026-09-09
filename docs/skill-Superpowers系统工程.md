@@ -1,21 +1,11 @@
 ---
-title: "[Agent 技能] Superpowers：面向编码 Agent 的系统级软件工程方法论"
-date: 2026-08-27
-summary: Jesse Vincent 开源的编码 Agent 软件工程方法论套件，涵盖意图澄清、Git Worktree 物理隔离、TDD 红绿循环、四阶段根因排错与基于进度账本的 SDD 子 Agent 协同交付流水线。
-tags:
-  - AI
-  - 开发
-  - agent
-  - 架构
-  - TDD
-  - 调试
 links:
   - label: GitHub 仓库
     url: https://github.com/obra/superpowers
-related:
-  - skills-cli
-  - matt-pocock-skills
 ---
+
+# Superpowers：面向编码 Agent 的系统级软件工程方法论
+
 
 > 本条目基于官方仓库 `obra/superpowers` **v6.3.0** 版本进行梳理与收录。
 

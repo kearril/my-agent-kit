@@ -1,22 +1,13 @@
 ---
-title: "[开源工具] Skills CLI：跨 Agent 宿主环境的通用技能包管理器"
-date: 2026-08-27
-summary: Vercel Labs 开源的跨宿主 Agent 技能包管理工具，统一多工具碎片化配置路径，支持跨 Agent 软链接分发、版本更新、即时试用与 Lockfile 锁定，已适配 70+ 种 AI 编程环境。
-tags:
-  - AI
-  - 开发
-  - agent
-  - 工具
-  - 包管理
 links:
   - label: GitHub 仓库
     url: https://github.com/vercel-labs/skills
   - label: 官方注册表
     url: https://skills.sh
-related:
-  - superpowers
-  - matt-pocock-skills
 ---
+
+# Skills CLI：跨 Agent 宿主环境的通用技能包管理器
+
 
 > 本条目基于官方仓库 `vercel-labs/skills` **v1.5.23** 进行梳理与收录。
 

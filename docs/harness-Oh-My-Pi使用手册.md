@@ -1,19 +1,13 @@
 ---
-title: Oh My Pi (omp) 个人使用手册
-date: 2026-08-24
-summary: 个人日常主力终端编程 Agent 的使用手册与速查指南。
-tags:
-  - AI
-  - agent
-  - harness
 links:
   - label: GitHub 仓库
     url: https://github.com/can1357/oh-my-pi
   - label: 官方文档
     url: https://github.com/can1357/oh-my-pi/tree/main/docs
-related:
-  - oh-my-pi
 ---
+
+# Oh My Pi (omp) 个人使用手册
+
 ## 一、 使用边界与核对基线
 
 本文按 Oh My Pi `v18.1.6` 整理，核对时间为 2026 年 9 月 3 日。命令定义以官方文档和内建 Slash Command Registry 为准。

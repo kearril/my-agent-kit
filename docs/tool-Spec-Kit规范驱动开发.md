@@ -1,22 +1,13 @@
 ---
-title: "[开源工具] Spec Kit：面向 AI 编程的规范驱动开发工具包"
-date: 2026-08-27
-summary: GitHub 开源的规范驱动开发（SDD）工具包，通过在编码前将需求、架构与原则沉淀为结构化规范文件，引导 AI Agent 按序执行设计、任务拆分、代码实现与对账收敛。
-tags:
-  - AI
-  - 开发
-  - agent
-  - 架构
-  - 规范驱动
 links:
   - label: GitHub 仓库
     url: https://github.com/github/spec-kit
   - label: 官方文档
     url: https://github.github.io/spec-kit/
-related:
-  - superpowers
-  - skills-cli
 ---
+
+# Spec Kit：面向 AI 编程的规范驱动开发工具包
+
 
 > 本条目基于官方仓库 `github/spec-kit` **v1.0.1** 进行梳理与收录。
 
