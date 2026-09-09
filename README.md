@@ -1,16 +1,16 @@
 # My Agent Kit
 
+个人私有 Agent 插件市场与工程能力套件，专为 **Oh My Pi (omp)** 深度适配。
 
-个人私有 Agent 插件市场与能力集成库，专为 Oh My Pi (omp) 深度适配。
 ---
 
 ## 插件套件安装（Plugins）
 
-插件为成套工具箱，原生支持 **OMP 插件市场（Marketplace）** 与 **本地软链开发（Link）**：
+本仓库原生兼容 **OMP 插件市场（Marketplace）** 与 **本地软链开发（Link）**：
 
 ### 方式 A：OMP 市场源安装（推荐，跨设备与远程）
 
-直接添加本仓库为市场源，按需安装成套插件：
+直接添加本仓库为私有市场源，按需安装成套插件：
 
 ```bash
 # 1. 添加本仓库作为私有插件市场
@@ -27,20 +27,15 @@ omp plugin upgrade ponytail@my-agent-kit
 omp plugin upgrade mattpocock-skills@my-agent-kit
 ```
 
-### 方式 B：本地开发软链（本地实时调试）
+### 方式 B：本地软链调试（本地开发即时生效）
 
-本地代码改动实时在 OMP 中生效（无需提交或重装）：
+在当前仓库根目录下执行（相对路径，跨环境通用）：
 
 ```bash
-# 方式 1：在当前仓库根目录下执行（推荐，相对路径，跨环境通用）
+# 建立软链
 omp plugin link ./plugins/caveman
 omp plugin link ./plugins/ponytail
 omp plugin link ./plugins/mattpocock-skills
-
-# 方式 2：使用绝对路径（在外部任何目录均可执行）
-omp plugin link "D:/MyProjects/my-agent-kit/plugins/caveman"
-omp plugin link "D:/MyProjects/my-agent-kit/plugins/ponytail"
-omp plugin link "D:/MyProjects/my-agent-kit/plugins/mattpocock-skills"
 
 # 解除软链
 omp plugin uninstall @my-agent-kit/caveman
@@ -50,41 +45,46 @@ omp plugin uninstall @my-agent-kit/mattpocock-skills
 
 ---
 
-## 独立原子技能安装（Skills）
+## 三大插件黄金协同流 (The Golden Loop)
 
-收录在 `skills/` 下的原子技能支持通过标准 Agent Skills 工具 **按需单独安装**，精准掌控每个项目所需的技能：
+本仓库将三大插件组合为一套**无死角、零废话的工程闭环流水线**：
 
-### 1. 项目级安装（推荐，仅在当前工作项目生效）
-进入你的目标项目根目录执行（默认仅安装至当前工作区，不污染全局）：
-
-```bash
-# 按需单独安装指定技能
-npx skills add kearril/my-agent-kit --skill <skill-name>
-```
-
-### 2. 全局安装（所有项目通用）
-如果希望某个技能全机所有项目都能调用，追加 `-g` 标志：
-
-```bash
-npx skills add kearril/my-agent-kit --skill <skill-name> -g
+```text
+① /matt-grill-with-docs ──► 动工前反向拷问，沉淀 CONTEXT.md（统一词典）与 ADR
+       │
+② /matt-to-spec          ──► 对话共识一键整理为正式需求规范 (Spec)
+       │
+③ /matt-to-tickets       ──► 切解为带 Blocking 依赖关系的原子工单卡
+       │
+       ▼  【建议此时 /clear 或开新会话，保持上下文纯净】
+④ /matt-implement        ──► 读取工单驱动实现（底层自动走 tdd 红绿测试）
+   + 开启 /ponytail full  ──► 强制梯子法则：不盲目引三方包、标库与原生优先、极简交付
+       │
+⑤ 底层自动 code-review    ──► 提交前双轴审查（规范基线 + 工单需求还原度）
+       │
+⑥ /caveman-commit        ──► 50 字符意图优先 Conventional Commits 极简落库
+       │
+⑦ /ponytail-debt         ──► 发布前排查一次，盘点刻意简化留下的技术债
 ```
 
 ---
 
-## 命令速查表 (Commands Cheatsheet)
+## 全局命令速查表 (Commands Cheatsheet)
+
+在 OMP 聊天终端中输入 `/` 即可触发自动补全。所有命令均带顶级前缀，规整分布：
 
 | 斜杠命令 / 快捷调用 | 所属组件 | 功能与定位 |
 | :--- | :--- | :--- |
-| `/caveman [mode]` | `caveman` | 会话级输出压缩开关与强度切换（`lite` / `full` / `ultra` / `wenyan` / `off`） |
-| `/caveman-commit` | `caveman` | 50 字符极简 Conventional Commits 提交信息生成（意图优先，无客套废话） |
-| `stop caveman` | `caveman` | 自然语言直接关闭 Caveman 压缩模式 |
-| `/ponytail [mode]` | `ponytail` | 防过度工程化梯子法则开关（`lite` / `full` / `ultra` / `off`） |
-| `/ponytail-debt` | `ponytail` | 扫描代码中的 `ponytail:` 注释并生成技术债台账 |
-| `stop ponytail` | `ponytail` | 自然语言直接关闭 Ponytail 极简模式 |
-| `/matt-ask-matt` | `mattpocock-skills` | 技能路由器与流程导航（根据现状推荐最适技能路线） |
+| `/caveman [mode]` | `caveman` | 会话输出压缩开关（`lite` / `full` / `ultra` / `wenyan` / `off`） |
+| `/caveman-commit` | `caveman` | 50 字符极简 Conventional Commits 提交信息生成（意图优先） |
+| `stop caveman` | `caveman` | 自然语言快速关闭 Caveman 压缩模式 |
+| `/ponytail [mode]` | `ponytail` | 极简架构梯子法则开关（`lite` / `full` / `ultra` / `off`） |
+| `/ponytail-debt` | `ponytail` | 扫描代码库中的 `ponytail:` 注释并生成技术债台账 |
+| `stop ponytail` | `ponytail` | 自然语言快速关闭 Ponytail 极简模式 |
+| `/matt-ask-matt` | `mattpocock-skills` | 技能路由器与流程导航（根据现状推荐最适工程路线） |
 | `/matt-grill-with-docs` | `mattpocock-skills` | 动工前反向提问澄清，实时更新 `CONTEXT.md` 统一词典与 ADR |
-| `/matt-to-spec` | `mattpocock-skills` | 将讨论共识一键整理固化为正式不可篡改的 Spec 需求规范 |
-| `/matt-to-tickets` | `mattpocock-skills` | 将 Spec 切割为垂直切片工单卡，显式标注 Blocking 依赖图 |
+| `/matt-to-spec` | `mattpocock-skills` | 将讨论共识一键固化为正式不可篡改的 Spec 需求规范 |
+| `/matt-to-tickets` | `mattpocock-skills` | 将 Spec 切解为垂直切片工单卡，显式标注 Blocking 依赖图 |
 | `/matt-implement` | `mattpocock-skills` | 读取工单驱动实现，内嵌 TDD 红绿循环并在收工时驱动双轴审查 |
 | `/matt-improve-codebase-architecture` | `mattpocock-skills` | 静态扫描模块深度（Deep Modules），输出 HTML 诊断报告 |
 | `/matt-setup-matt-pocock-skills` | `mattpocock-skills` | 一次性初始化工程配置（工单系统类型、分拣标签字典等） |
@@ -95,83 +95,42 @@ npx skills add kearril/my-agent-kit --skill <skill-name> -g
 | `/matt-teach` | `mattpocock-skills` | 以当前工作区为交互演练沙盒，跨会话分步讲解复杂概念 |
 | `/matt-to-questionnaire` | `mattpocock-skills` | 将技术决策盲区转化为 Markdown 调查问卷异步收集反馈 |
 | `/matt-wait-what` | `mattpocock-skills` | 紧急纠偏：结合项目 CONTEXT.md 词典与极简白话重新解释 |
----
-
-## 收纳插件矩阵 (Plugins Matrix)
-
-当前仓库已收纳并原生提纯以下核心插件套件：
-
-### 1. Caveman (`caveman`)
-- **介绍**：
-  专注于**交互输出压缩与极简提交交付**。提取自 `JuliusBrussee/caveman` 的 Small Rock 核心。通过在 OMP 运行生命周期（`before_agent_start`）前置注入压缩约束，砍掉代码周围的寒暄套话、流程自白和虚词，在保持 100% 代码与报错技术精度的同时削减约 65% 的输出 Token。
-- **协同定位**：
-  与 Matt Pocock 套件深度配合，由 Matt 主导工程规范，Caveman 在底层专职治理啰嗦与负责最后一步 Git Commit 收尾。
-- **相关命令**：
-  - `/caveman [lite|full|ultra|wenyan|off|status]`：动态切换会话输出压缩强度（支持无参数切换启闭）。
-  - `/caveman-commit`：生成意图优先、≤50 字符的极简 Conventional Commits 提交信息。
-  - 自然语言命令：输入 `stop caveman` 或 `normal mode` 自动退回正常模式。
 
 ---
 
-### 2. Ponytail (`ponytail`)
-- **介绍**：
-  专注于**极简架构底线与技术债治理**。提取自 `DietrichGebert/ponytail`。核心贯彻“梯子法则”（The Ladder: YAGNI → 复用已有 → 标库优先 → 原生平台能力优先 → 现存依赖优先 → 单行解决），强行约束模型不盲目引包、不写未要求的预设抽象、不堆样板代码。
-- **协同定位**：
-  与 Matt Pocock 套件深度配合，作为底层思维守门员防代码膨胀，并通过技术债台账防止极简演变为烂尾。
-- **相关命令**：
-  - `/ponytail [lite|full|ultra|off|status]`：动态控制极简编码梯子法则的执行严格度。
-  - `/ponytail-debt`：扫描代码库中的 `ponytail:` 注释并生成技术债台账。
-  - 自然语言命令：输入 `stop ponytail` 或 `normal mode` 自动退回正常模式。
----
+## 插件矩阵定位 (Plugins Matrix)
 
-### 3. Matt Pocock's Skills (`mattpocock-skills`)
-- **介绍**：
-  专注于**严谨工程规范与反向思维纪律**。提取自 `mattpocock/skills`（Total TypeScript 创始人）。针对凭感觉写代码（Vibe Coding）的顽疾，提供完整的 25 个生产级技能与 14 个快捷交互命令，涵盖反向需求拷问（Grilling）、领域统一词典维护（`CONTEXT.md` / ADR）、测试驱动开发（TDD）、双轴并行代码审查与架构深度巡检。
-- **核心主交付流**：
-  `/matt-grill-with-docs`（反向澄清） $\to$ `/matt-to-spec`（规范固化） $\to$ `/matt-to-tickets`（切解工单） $\to$ `/matt-implement`（TDD 实现） $\to$ `code-review`（双轴审查）。
-- **相关命令**：
-  包含以 `/matt-` 为统一顶级命名空间的 14 个 Slash Commands（如 `/matt-ask-matt`、`/matt-grill-with-docs`、`/matt-to-spec`、`/matt-to-tickets`、`/matt-implement`、`/matt-improve-codebase-architecture` 等）。
+三大插件正交协作，职能绝不踩踏：
 
-## 独立原子技能库 (Skills Catalog)
-
-收录于 `skills/` 下的独立技能，支持单点按需引用：
-（当前暂无独立收录的原子技能）
+1. **`mattpocock-skills`（顶层主导 · 工程纪律与交付主线）**：
+   - 全流程驱动从需求澄清到规范工单再到实现落地。
+   - 内置 25 项原汁原味权威技能（TDD 红绿循环、六步排错、双轴审查、深模块架构词典）。
+2. **`ponytail`（底层守门 · 极简架构与防膨胀）**：
+   - 贯彻“梯子法则”：YAGNI → 标库优先 → 原生优先 → 单行解决。
+   - 动态拦截未经审视的三方依赖与推测性抽象，配合债务台账防止偷工减料演变为烂尾。
+3. **`caveman`（底层交付 · 输出压缩与终点交付）**：
+   - 砍掉 65% 无效寒暄与套话自白，保持 100% 技术精度，大幅降低 Token 消耗。
+   - 专职接管最后一步 50 字符极简提交、验证即停止损规程、以及生产级数据安全迁移保障。
 
 ---
 
-## 仓库结构
+## 目录结构
 
 ```text
 .
+├── AGENTS.md               # Agent 行为准则与仓库宪法
+├── README.md               # 用户安装与全局命令速查手册
 ├── .omp-plugin/
-│   └── marketplace.json    # OMP 插件市场清单定义（caveman, ponytail）
-├── skills/                 # 独立原子技能收纳区（支持单点安装）
-│   └── README.md           # 技能清单与单点安装说明
+│   └── marketplace.json    # OMP 插件市场清单定义
 ├── plugins/                # 成套提纯插件（原生 OMP 支持）
-│   ├── caveman/            # 极简通信与工程规范套件（削减 65% 输出 Token）
-│   ├── ponytail/           # 防过度工程化架构规范（梯子法则、YAGNI）
-│   ├── mattpocock-skills/  # 严谨工程实践套件（TDD、DDD、双轴审查、架构巡检）
-│   └── README.md           # 插件清单与接入 SOP
-├── scripts/                # 本地维护与校验脚本
-│   ├── check.ps1           # PowerShell 扩展类型与语法校验
-│   ├── check.sh            # Bash 扩展类型与语法校验
-│   ├── sync-upstream.ps1   # PowerShell 上游镜像同步
-│   └── sync-upstream.sh    # Bash 上游镜像同步
-├── docs/                   # 实践笔记与参考手稿
-└── assets/                 # 静态媒体资产
-```
-
----
-## 上游镜像与本地同步
-
-上游参考源码存放于本地 `.upstream/` 目录（已加入 `.gitignore`，不提交远端仓库，保持远端纯净）。
-
-如需拉取或更新最新上游源码，可运行本地同步脚本：
-
-```bash
-# PowerShell
-./scripts/sync-upstream.ps1
-
-# Bash
-./scripts/sync-upstream.sh
+│   ├── caveman/            # 会话输出压缩与极简提交交付套件
+│   ├── ponytail/           # 防过度工程化与技术债治理套件
+│   ├── mattpocock-skills/  # 严谨工程实践与全流程交付套件
+│   └── README.md           # 插件架构设计与 3 步走接入 SOP
+├── skills/                 # 独立单体原子技能收纳区
+│   └── README.md           # 原子技能说明与独立安装指南
+├── scripts/                # 自动化维护与校验脚本
+│   ├── check.sh / .ps1     # 双平台语法、类型与市场合法性校验
+│   └── sync-upstream.sh / .ps1 # 上游只读镜像一键同步
+└── docs/                   # 实践笔记与研究手稿
 ```
