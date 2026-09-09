@@ -4,12 +4,15 @@
 
 ---
 
-## 一、 包含插件清单
+## 一、 包含插件清单与上游精确对齐基线
 
-- **`mattpocock-skills/`**：全流程工程主导套件（需求拷问、生成 Spec、切分工单、TDD 循环、六步排错、双轴审查、架构深度巡检）。
-- **`ponytail/`**：极简架构守门套件（梯子法则硬约束、YAGNI 守门、标库与原生优先、`ponytail:` 债务台账）。
-- **`caveman/`**：输出压缩与交付辅助套件（削减 65% 输出 Token、50 字符极简提交、验证即停止损、数据安全迁移保障）。
+所有插件均从对应开源上游的特定不可变 Commit 抽离提纯，本地初始版本统一由 `1.0.0` 起步递增：
 
+| 本地插件 | 本地版本 | 上游仓库 URL | 上游精确基线 (Commit / 日期) | 核心提纯与裁剪裁决备忘 |
+|---|---|---|---|---|
+| **`caveman`** | `v1.0.2` | `https://github.com/JuliusBrussee/caveman.git` | `15581d1` *(2026-09-07)* | 剥离 Go 本地代理与二进制；审查排错与重构规程裁归 Matt；保留 4 技能 + 压缩引擎 + `/caveman-commit`。 |
+| **`ponytail`** | `v1.0.1` | `https://github.com/DietrichGebert/ponytail.git` | `356918e` *(2026-09-07)* | 剥离测试假数据与 IDE 配置；过度设计审查与全库巡检裁归 Matt；保留 2 技能 + 梯子引擎 + `/ponytail-debt`。 |
+| **`mattpocock-skills`** | `v1.0.0` | `https://github.com/mattpocock/skills.git` | `3cca18b` *(2026-09-04, 对应官方 release 1.2.3)* | 扁平化收纳 25 个生产级技能；排除未成熟/实验性项；增补 14 个以 `/matt-` 为前缀的中文命令。 |
 ---
 
 ## 二、 核心架构设计与工程规范
