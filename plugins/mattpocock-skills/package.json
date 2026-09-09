@@ -1,0 +1,16 @@
+{
+  "name": "@my-agent-kit/mattpocock-skills",
+  "version": "1.2.3",
+  "description": "Matt Pocock's agent skills for real engineering (grilling, spec/ticket flows, TDD, code review, domain modelling and more) adapted for Oh My Pi (omp).",
+  "keywords": [
+    "omp-plugin",
+    "pi-package",
+    "engineering",
+    "skills",
+    "tdd",
+    "code-review",
+    "grilling",
+    "mattpocock"
+  ],
+  "license": "MIT"
+}

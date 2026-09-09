@@ -8,6 +8,7 @@
 
 - **`caveman/`**：极简通信与工程规范套件（削减 65% 输出 Token，零废话）。
 - **`ponytail/`**：防过度工程化架构规范（贯彻梯子法则、YAGNI、单行优先）。
+- **`mattpocock-skills/`**：Matt Pocock 面向严谨工程实践的 Agent 技能套件（TDD、DDD、双轴代码审查与架构熵增治理）。
 
 ---
 
@@ -19,7 +20,7 @@
 
 ## 新增外部插件三步走标准 SOP
 
-当需要引入第 3 个外部 Agent/Tool 项目时，遵循以下闭环流程：
+当需要引入新的外部 Agent/Tool 项目时，遵循以下闭环流程：
 
 ### 第一步：配置本地上游镜像
 在 `scripts/sync-upstream.ps1` 和 `scripts/sync-upstream.sh` 中追加该项目的 Git 仓库 URL，运行脚本在本地 `.upstream/<project-name>` 进行浅克隆：

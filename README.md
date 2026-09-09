@@ -19,10 +19,12 @@ omp marketplace add kearril/my-agent-kit
 # 2. 按需安装插件套件
 omp plugin install caveman@my-agent-kit
 omp plugin install ponytail@my-agent-kit
+omp plugin install mattpocock-skills@my-agent-kit
 
 # 3. 以后更新插件
 omp plugin upgrade caveman@my-agent-kit
 omp plugin upgrade ponytail@my-agent-kit
+omp plugin upgrade mattpocock-skills@my-agent-kit
 ```
 
 ### 方式 B：本地开发软链（本地实时调试）
@@ -33,14 +35,17 @@ omp plugin upgrade ponytail@my-agent-kit
 # 方式 1：在当前仓库根目录下执行（推荐，相对路径，跨环境通用）
 omp plugin link ./plugins/caveman
 omp plugin link ./plugins/ponytail
+omp plugin link ./plugins/mattpocock-skills
 
 # 方式 2：使用绝对路径（在外部任何目录均可执行）
 omp plugin link "D:/MyProjects/my-agent-kit/plugins/caveman"
 omp plugin link "D:/MyProjects/my-agent-kit/plugins/ponytail"
+omp plugin link "D:/MyProjects/my-agent-kit/plugins/mattpocock-skills"
 
 # 解除软链
 omp plugin uninstall @my-agent-kit/caveman
 omp plugin uninstall @my-agent-kit/ponytail
+omp plugin uninstall @my-agent-kit/mattpocock-skills
 ```
 
 ---
@@ -79,7 +84,20 @@ npx skills add kearril/my-agent-kit --skill <skill-name> -g
 | `/ponytail-audit` | `ponytail` | 全仓库过度工程化与复杂度扫荡审计 |
 | `/ponytail-debt` | `ponytail` | 扫描代码中的 `ponytail:` 注释并生成技术债台账 |
 | `stop ponytail` | `ponytail` | 自然语言直接关闭 Ponytail 极简模式 |
-
+| `/ask-matt` | `mattpocock-skills` | 技能路由器与流程导航（根据现状推荐最适技能路线） |
+| `/grill-with-docs` | `mattpocock-skills` | 动工前反向提问澄清，实时更新 `CONTEXT.md` 统一词典与 ADR |
+| `/to-spec` | `mattpocock-skills` | 将讨论共识一键整理固化为正式不可篡改的 Spec 需求规范 |
+| `/to-tickets` | `mattpocock-skills` | 将 Spec 切割为垂直切片工单卡，显式标注 Blocking 依赖图 |
+| `/implement` | `mattpocock-skills` | 读取工单驱动实现，内嵌 TDD 红绿循环并在收工时驱动双轴审查 |
+| `/improve-codebase-architecture` | `mattpocock-skills` | 静态扫描模块深度（Deep Modules），输出 HTML 诊断报告 |
+| `/setup-matt-pocock-skills` | `mattpocock-skills` | 一次性初始化工程配置（工单系统类型、分拣标签字典等） |
+| `/triage` | `mattpocock-skills` | 按照状态机规则在工单系统中流转和分拣 Issue / PR |
+| `/wayfinder` | `mattpocock-skills` | 超大复杂工程探路：建立决策拓扑图并逐个决策推进 |
+| `/grill-me` | `mattpocock-skills` | 纯思路反向提问（不落盘文件，适用于无代码仓库思考） |
+| `/handoff` | `mattpocock-skills` | 将会话核心决策浓缩为交接文档，便于跨会话恢复上下文 |
+| `/teach` | `mattpocock-skills` | 以当前工作区为交互演练沙盒，跨会话分步讲解复杂概念 |
+| `/to-questionnaire` | `mattpocock-skills` | 将技术决策盲区转化为 Markdown 调查问卷异步收集反馈 |
+| `/wait-what` | `mattpocock-skills` | 紧急纠偏：结合项目 CONTEXT.md 词典与极简白话重新解释 |
 ---
 
 ## 收纳插件矩阵 (Plugins Matrix)
@@ -109,6 +127,14 @@ npx skills add kearril/my-agent-kit --skill <skill-name> -g
 
 ---
 
+### 3. Matt Pocock's Skills (`mattpocock-skills`)
+- **介绍**：
+  专注于**严谨工程规范与反向思维纪律**。提取自 `mattpocock/skills`（Total TypeScript 创始人）。针对凭感觉写代码（Vibe Coding）的顽疾，提供完整的 25 个生产级技能与 14 个快捷交互命令，涵盖反向需求拷问（Grilling）、领域统一词典维护（`CONTEXT.md` / ADR）、测试驱动开发（TDD）、双轴并行代码审查与架构深度巡检。
+- **核心主交付流**：
+  `/grill-with-docs`（反向澄清） $\to$ `/to-spec`（规范固化） $\to$ `/to-tickets`（切解工单） $\to$ `/implement`（TDD 实现） $\to$ `code-review`（双轴审查）。
+- **相关命令**：
+  包含 `/ask-matt`、`/grill-with-docs`、`/to-spec`、`/to-tickets`、`/implement`、`/improve-codebase-architecture`、`/setup-matt-pocock-skills`、`/triage`、`/wayfinder`、`/grill-me`、`/handoff`、`/teach`、`/to-questionnaire`、`/wait-what` 共 14 个 Slash Commands。
+
 ## 独立原子技能库 (Skills Catalog)
 
 收录于 `skills/` 下的独立技能，支持单点按需引用：
@@ -127,7 +153,8 @@ npx skills add kearril/my-agent-kit --skill <skill-name> -g
 ├── plugins/                # 成套提纯插件（原生 OMP 支持）
 │   ├── caveman/            # 极简通信与工程规范套件（削减 65% 输出 Token）
 │   ├── ponytail/           # 防过度工程化架构规范（梯子法则、YAGNI）
-│   └── README.md           # 插件清单与 3 步走接入 SOP
+│   ├── mattpocock-skills/  # 严谨工程实践套件（TDD、DDD、双轴审查、架构巡检）
+│   └── README.md           # 插件清单与接入 SOP
 ├── scripts/                # 本地维护与校验脚本
 │   ├── check.ps1           # PowerShell 扩展类型与语法校验
 │   ├── check.sh            # Bash 扩展类型与语法校验
