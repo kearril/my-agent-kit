@@ -24,10 +24,10 @@
 
 ### 1. 核心五步主交付流水线（Idea → Ship）
 
-1. **需求拷问与术语沉淀 (`/grill-with-docs`)**：动工前多轮反向提问，实时更新 `CONTEXT.md`（统一领域语言）与架构决策记录（ADR）。
-2. **规范固化 (`/to-spec`)**：将讨论共识一键整理为正式需求规范，拒绝口头模糊。
-3. **工单切解 (`/to-tickets`)**：切成垂直切片工单（Tracer Bullets），显式标注 Blocking 依赖图。
-4. **测试驱动编码 (`/implement` → `tdd`)**：逐个工单独立实现，强制走红灯测试 → 最小绿灯 → 重构循环。
+1. **需求拷问与术语沉淀 (`/matt-grill-with-docs`)**：动工前多轮反向提问，实时更新 `CONTEXT.md`（统一领域语言）与架构决策记录（ADR）。
+2. **规范固化 (`/matt-to-spec`)**：将讨论共识一键整理为正式需求规范，拒绝口头模糊。
+3. **工单切解 (`/matt-to-tickets`)**：切成垂直切片工单（Tracer Bullets），显式标注 Blocking 依赖图。
+4. **测试驱动编码 (`/matt-implement` → `tdd`)**：逐个工单独立实现，强制走红灯测试 → 最小绿灯 → 重构循环。
 5. **双轴代码审查 (`code-review`)**：提交前双 Agent 并行审查代码规范与需求还原度。
 
 ### 2. 完整技能资产清单 (`skills/` · 共 25 项)
@@ -60,23 +60,22 @@
   - `wait-what`：紧急纠偏（用极简白话结合项目词典重新解释）。
   - `writing-for-agents`：为 AI 编写技能与规则的工程规范。
 
-### 3. OMP Slash Commands (`commands/` · 14 个)
+### 3. OMP Slash Commands (`commands/` · 14 个，统一 `matt-` 顶级命名空间)
 
-- `/ask-matt`
-- `/grill-with-docs`
-- `/implement`
-- `/improve-codebase-architecture`
-- `/setup-matt-pocock-skills`
-- `/to-spec`
-- `/to-tickets`
-- `/triage`
-- `/wayfinder`
-- `/grill-me`
-- `/handoff`
-- `/teach`
-- `/to-questionnaire`
-- `/wait-what`
-
+- `/matt-ask-matt`：技能路由器与流程导航（根据现状推荐最适技能路线）。
+- `/matt-grill-with-docs`：动工前反向提问澄清，实时更新 `CONTEXT.md` 统一词典与 ADR。
+- `/matt-to-spec`：将讨论共识一键整理固化为正式不可篡改的 Spec 需求规范。
+- `/matt-to-tickets`：将 Spec 切割为垂直切片工单卡，显式标注 Blocking 依赖图。
+- `/matt-implement`：读取工单驱动实现，内嵌 TDD 红绿循环并在收工时驱动双轴审查。
+- `/matt-improve-codebase-architecture`：静态扫描模块深度（Deep Modules），输出 HTML 诊断报告。
+- `/matt-setup-matt-pocock-skills`：一次性初始化工程配置（工单系统类型、分拣标签字典等）。
+- `/matt-triage`：按照状态机规则在工单系统中流转和分拣 Issue / PR。
+- `/matt-wayfinder`：超大复杂工程探路：建立决策拓扑图并逐个决策推进。
+- `/matt-grill-me`：纯思路反向提问（不落盘文件，适用于无代码仓库思考）。
+- `/matt-handoff`：将会话核心决策浓缩为交接文档，便于跨会话恢复上下文。
+- `/matt-teach`：以当前工作区为交互演练沙盒，跨会话分步讲解复杂概念。
+- `/matt-to-questionnaire`：将技术决策盲区转化为 Markdown 调查问卷异步收集反馈。
+- `/matt-wait-what`：紧急纠偏：结合项目 CONTEXT.md 词典与极简白话重新解释。
 ---
 
 ## 维护铁律

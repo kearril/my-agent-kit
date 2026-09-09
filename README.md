@@ -81,20 +81,20 @@ npx skills add kearril/my-agent-kit --skill <skill-name> -g
 | `/ponytail [mode]` | `ponytail` | 防过度工程化梯子法则开关（`lite` / `full` / `ultra` / `off`） |
 | `/ponytail-debt` | `ponytail` | 扫描代码中的 `ponytail:` 注释并生成技术债台账 |
 | `stop ponytail` | `ponytail` | 自然语言直接关闭 Ponytail 极简模式 |
-| `/ask-matt` | `mattpocock-skills` | 技能路由器与流程导航（根据现状推荐最适技能路线） |
-| `/grill-with-docs` | `mattpocock-skills` | 动工前反向提问澄清，实时更新 `CONTEXT.md` 统一词典与 ADR |
-| `/to-spec` | `mattpocock-skills` | 将讨论共识一键整理固化为正式不可篡改的 Spec 需求规范 |
-| `/to-tickets` | `mattpocock-skills` | 将 Spec 切割为垂直切片工单卡，显式标注 Blocking 依赖图 |
-| `/implement` | `mattpocock-skills` | 读取工单驱动实现，内嵌 TDD 红绿循环并在收工时驱动双轴审查 |
-| `/improve-codebase-architecture` | `mattpocock-skills` | 静态扫描模块深度（Deep Modules），输出 HTML 诊断报告 |
-| `/setup-matt-pocock-skills` | `mattpocock-skills` | 一次性初始化工程配置（工单系统类型、分拣标签字典等） |
-| `/triage` | `mattpocock-skills` | 按照状态机规则在工单系统中流转和分拣 Issue / PR |
-| `/wayfinder` | `mattpocock-skills` | 超大复杂工程探路：建立决策拓扑图并逐个决策推进 |
-| `/grill-me` | `mattpocock-skills` | 纯思路反向提问（不落盘文件，适用于无代码仓库思考） |
-| `/handoff` | `mattpocock-skills` | 将会话核心决策浓缩为交接文档，便于跨会话恢复上下文 |
-| `/teach` | `mattpocock-skills` | 以当前工作区为交互演练沙盒，跨会话分步讲解复杂概念 |
-| `/to-questionnaire` | `mattpocock-skills` | 将技术决策盲区转化为 Markdown 调查问卷异步收集反馈 |
-| `/wait-what` | `mattpocock-skills` | 紧急纠偏：结合项目 CONTEXT.md 词典与极简白话重新解释 |
+| `/matt-ask-matt` | `mattpocock-skills` | 技能路由器与流程导航（根据现状推荐最适技能路线） |
+| `/matt-grill-with-docs` | `mattpocock-skills` | 动工前反向提问澄清，实时更新 `CONTEXT.md` 统一词典与 ADR |
+| `/matt-to-spec` | `mattpocock-skills` | 将讨论共识一键整理固化为正式不可篡改的 Spec 需求规范 |
+| `/matt-to-tickets` | `mattpocock-skills` | 将 Spec 切割为垂直切片工单卡，显式标注 Blocking 依赖图 |
+| `/matt-implement` | `mattpocock-skills` | 读取工单驱动实现，内嵌 TDD 红绿循环并在收工时驱动双轴审查 |
+| `/matt-improve-codebase-architecture` | `mattpocock-skills` | 静态扫描模块深度（Deep Modules），输出 HTML 诊断报告 |
+| `/matt-setup-matt-pocock-skills` | `mattpocock-skills` | 一次性初始化工程配置（工单系统类型、分拣标签字典等） |
+| `/matt-triage` | `mattpocock-skills` | 按照状态机规则在工单系统中流转和分拣 Issue / PR |
+| `/matt-wayfinder` | `mattpocock-skills` | 超大复杂工程探路：建立决策拓扑图并逐个决策推进 |
+| `/matt-grill-me` | `mattpocock-skills` | 纯思路反向提问（不落盘文件，适用于无代码仓库思考） |
+| `/matt-handoff` | `mattpocock-skills` | 将会话核心决策浓缩为交接文档，便于跨会话恢复上下文 |
+| `/matt-teach` | `mattpocock-skills` | 以当前工作区为交互演练沙盒，跨会话分步讲解复杂概念 |
+| `/matt-to-questionnaire` | `mattpocock-skills` | 将技术决策盲区转化为 Markdown 调查问卷异步收集反馈 |
+| `/matt-wait-what` | `mattpocock-skills` | 紧急纠偏：结合项目 CONTEXT.md 词典与极简白话重新解释 |
 ---
 
 ## 收纳插件矩阵 (Plugins Matrix)
@@ -128,9 +128,9 @@ npx skills add kearril/my-agent-kit --skill <skill-name> -g
 - **介绍**：
   专注于**严谨工程规范与反向思维纪律**。提取自 `mattpocock/skills`（Total TypeScript 创始人）。针对凭感觉写代码（Vibe Coding）的顽疾，提供完整的 25 个生产级技能与 14 个快捷交互命令，涵盖反向需求拷问（Grilling）、领域统一词典维护（`CONTEXT.md` / ADR）、测试驱动开发（TDD）、双轴并行代码审查与架构深度巡检。
 - **核心主交付流**：
-  `/grill-with-docs`（反向澄清） $\to$ `/to-spec`（规范固化） $\to$ `/to-tickets`（切解工单） $\to$ `/implement`（TDD 实现） $\to$ `code-review`（双轴审查）。
+  `/matt-grill-with-docs`（反向澄清） $\to$ `/matt-to-spec`（规范固化） $\to$ `/matt-to-tickets`（切解工单） $\to$ `/matt-implement`（TDD 实现） $\to$ `code-review`（双轴审查）。
 - **相关命令**：
-  包含 `/ask-matt`、`/grill-with-docs`、`/to-spec`、`/to-tickets`、`/implement`、`/improve-codebase-architecture`、`/setup-matt-pocock-skills`、`/triage`、`/wayfinder`、`/grill-me`、`/handoff`、`/teach`、`/to-questionnaire`、`/wait-what` 共 14 个 Slash Commands。
+  包含以 `/matt-` 为统一顶级命名空间的 14 个 Slash Commands（如 `/matt-ask-matt`、`/matt-grill-with-docs`、`/matt-to-spec`、`/matt-to-tickets`、`/matt-implement`、`/matt-improve-codebase-architecture` 等）。
 
 ## 独立原子技能库 (Skills Catalog)
 
