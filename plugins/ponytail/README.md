@@ -50,10 +50,10 @@ Ponytail 解决的核心痛点是 **AI Agent 过度工程化、滥用设计模�
 为确保插件长期稳定且便于吸收上游更新，必须遵循以下维护铁律：
 
 1. **隔离修改原则**：
-   - 上游镜像位于 `plugins/upstream/ponytail/`，**严格只读，禁止手动修改**。
+   - 上游镜像位于 `.upstream/ponytail/`（本地目录，不入远端库），**严格只读，禁止手动修改**。
    - 本地定制、审查边界划分与适配代码必须在 `plugins/ponytail/` 目录下进行。
 2. **上游吸收流**：
-   - 根目录 GitHub Actions 每日自动通过 `git subtree pull --squash` 将上游最新提交同步至 `plugins/upstream/ponytail/`。
+   - 本地通过 `scripts/sync-upstream.*` 脚本同步上游最新提交至 `.upstream/ponytail/`。
    - 上游有规则强化或新反模式归纳时，由维护者手动比对并吸收至 `plugins/ponytail/skills/`。
 3. **审查职责边界守则**：
    - `ponytail-review` 必须严守“只查复杂度与过度设计”的边界，**严禁越界审查业务逻辑 Bug**（代码正确性与运行时异常由 `/caveman-review` 专职处理）。

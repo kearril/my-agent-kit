@@ -49,10 +49,10 @@ Caveman 解决的核心痛点是 **AI Agent 啰嗦、套话多、输出 Token �
 为确保插件长期稳定且便于吸收上游更新，必须遵循以下维护铁律：
 
 1. **隔离修改原则**：
-   - 上游镜像位于 `plugins/upstream/caveman/`，**严格只读，禁止手动修改**。
+   - 上游镜像位于 `.upstream/caveman/`（本地目录，不入远端库），**严格只读，禁止手动修改**。
    - 所有本地定制、优化与适配必须在 `plugins/caveman/` 目录下进行。
 2. **上游吸收流**：
-   - 根目录 GitHub Actions 每日自动通过 `git subtree pull --squash` 将上游最新提交同步至 `plugins/upstream/caveman/`。
+   - 本地通过 `scripts/sync-upstream.*` 脚本同步上游最新提交至 `.upstream/caveman/`。
    - 当上游核心 Prompt（如新强度模式、压缩规则优化）有改进时，由维护者手动比对两目录，挑选优质改动合并至 `plugins/caveman/skills/`。
 3. **防倒灌原则**：
    - 严禁在上游同步时将已剔除的 Go 代码、Python 脚本或第三方 IDE 配置反向引入 `plugins/caveman/`。

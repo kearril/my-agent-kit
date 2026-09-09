@@ -128,7 +128,9 @@ npx skills add kearril/my-agent-kit --skill <skill-name> -g
 │   ├── caveman/            # 极简通信与工程规范套件（削减 65% 输出 Token）
 │   ├── ponytail/           # 防过度工程化架构规范（梯子法则、YAGNI）
 │   └── README.md           # 插件清单与 3 步走接入 SOP
-├── scripts/                # 本地维护与同步脚本
+├── scripts/                # 本地维护与校验脚本
+│   ├── check.ps1           # PowerShell 扩展类型与语法校验
+│   ├── check.sh            # Bash 扩展类型与语法校验
 │   ├── sync-upstream.ps1   # PowerShell 上游镜像同步
 │   └── sync-upstream.sh    # Bash 上游镜像同步
 ├── docs/                   # 实践笔记与参考手稿
