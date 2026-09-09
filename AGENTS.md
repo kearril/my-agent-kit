@@ -1,45 +1,66 @@
-# AGENTS.md — Repository Instructions & Constitution
+# AGENTS.md — Repository Operating Handbook & Conventions
 
-This repository (`my-agent-kit`) is a private Agent plugin marketplace and skills collection deeply tailored for **Oh My Pi (omp)**.
+This repository is a private plugin marketplace and capabilities integration kit tailored for **Oh My Pi (omp)** and Agent Skills ecosystems.
 
----
-
-## 1. Triad Synergy & Domain Boundaries
-
-Three core plugins coexist in `plugins/` without functional overlap:
-
-1. **`mattpocock-skills` (Top-level Engineering Authority)**:
-   - Owns full engineering lifecycle: `/matt-grill-with-docs` → `/matt-to-spec` → `/matt-to-tickets` → `/matt-implement`.
-   - Owns testing methodology (`tdd` red-green loop), two-axis review (`code-review`), and six-step bug diagnosis (`diagnosing-bugs`).
-2. **`ponytail` (Anti-Bloat Guardrail)**:
-   - Owns code-level simplicity: enforces "The Ladder" (YAGNI → reuse → stdlib first → native first → one line).
-   - Prevents speculative abstractions and unnecessary third-party dependencies. Tracks tech debt via `/ponytail-debt`.
-3. **`caveman` (Communication & Delivery Efficiency)**:
-   - Owns output compression: cuts ~65% verbose output tokens via runtime hook while preserving 100% technical accuracy.
-   - Owns delivery finalization (`/caveman-commit` 50-char intent commits), rollback protection (`migration`), and stopping discipline (`verify-and-stop`).
+This handbook establishes durable architectural invariants and operational rules for any AI Agent working in this repository.
 
 ---
 
-## 2. Inviolable Repository Rules
+## 1. Repository Structural Contracts
 
-When working in or modifying this repository, Agents MUST strictly obey these rules:
+The repository is partitioned into strictly bounded zones:
 
-1. **Upstream Isolation (`.upstream/` is strictly READ-ONLY)**:
-   - `.upstream/` contains local read-only mirrors managed via `scripts/sync-upstream.*` and ignored by git.
-   - **NEVER** edit files inside `.upstream/`. All adaptations, refinements, and commands MUST live in `plugins/<name>/`.
-2. **Language Separation Architecture**:
-   - **`skills/` (for AI)**: Must remain **100% original upstream English**, byte-for-byte identical where possible. NEVER translate `SKILL.md` frontmatter or body. This ensures zero merge conflict during upstream pulls.
-   - **`commands/` (for Humans)**: Frontmatter `description` MUST be concise, accurate Chinese for OMP slash command autocomplete.
-3. **OMP Command Naming Convention**:
-   - Commands in `plugins/<plugin>/commands/<cmd>.md` map directly to OMP slash commands (`/<cmd>`).
-   - Matt Pocock commands MUST use the `/matt-*` prefix (e.g. `/matt-grill-with-docs`, `/matt-implement`).
-   - Caveman commands use `/caveman-*`; Ponytail commands use `/ponytail-*`.
-   - **NEVER use colons `:` in command filenames** due to Windows NTFS filesystem constraints.
-4. **Flat Skill Directory Requirement**:
-   - OMP plugin loaders scan a single directory level: `plugins/<name>/skills/<skill-name>/SKILL.md`.
-   - Nested subcategories (e.g. `skills/engineering/tdd/`) MUST be flattened to `skills/tdd/`.
-5. **YAGNI on Runtime Extensions**:
-   - Do NOT add `extensions/index.ts` unless stateful runtime hooks, status bar indicators, or command toggles are strictly required.
-   - Pure prompt/workflow suites (like `mattpocock-skills`) MUST remain zero-runtime.
-6. **Mandatory Quality Gate**:
-   - Every modification MUST pass both `bash scripts/check.sh` and `powershell scripts/check.ps1` before committing.
+- **`plugins/<name>/`**: Packaged plugin suites designed for OMP extension mechanisms.
+  - `skills/<skill-name>/`: Skill definitions containing `SKILL.md` and optional supporting references.
+  - `commands/<cmd-name>.md`: Slash command definitions exposed to humans in the OMP interface.
+  - `extensions/index.ts` *(optional)*: TypeScript runtime extensions (hooks, status bars, mode switches).
+  - `package.json`: Package metadata and plugin extension declarations.
+  - `README.md`: Component catalog and domain boundaries.
+- **`skills/<name>/`**: Standalone atomic skills for modular usage via `npx skills`. Single-purpose only.
+- **`.upstream/<name>/`**: Local shallow-cloned upstream reference mirrors.
+- **`.omp-plugin/marketplace.json`**: Official marketplace registry listing all installable plugins.
+- **`scripts/`**: Automated mirror sync (`sync-upstream.*`) and validation checks (`check.*`).
+
+---
+
+## 2. Inviolable Operating Invariants
+
+When inspecting, modifying, or extending this repository, Agents MUST strictly obey these rules:
+
+### Rule 1: Upstream Isolation (Strictly Read-Only)
+- `.upstream/` contains local mirror clones managed by `scripts/sync-upstream.*` and is ignored by git.
+- **NEVER modify, format, or commit files in `.upstream/`.**
+- All extractions, adaptations, and secondary developments MUST reside under `plugins/<name>/` or `skills/<name>/`.
+
+### Rule 2: Dual-Layer Language Separation
+- **`skills/` (for Models) $\to$ 100% Upstream Original English**:
+  - `SKILL.md` files (both YAML frontmatter and body content) MUST remain in their original upstream English.
+  - NEVER translate skill descriptions or prompt rules.
+  - **Reason**: Preserves model semantic activation accuracy on native trigger words and guarantees zero merge conflicts during upstream synchronization.
+- **`commands/` (for Humans) $\to$ Localized Chinese Descriptions**:
+  - Command markdown files (`commands/*.md`) are user-facing entry points.
+  - Frontmatter `description` MUST be concise, accurate Chinese to provide clear guidance in the terminal autocomplete menu.
+
+### Rule 3: Single-Layer Skill Directory Requirement
+- OMP and standard Agent Skills loaders scan direct subdirectories only: `<root>/skills/<skill-name>/SKILL.md`.
+- Upstream repositories with nested categorization (e.g. `skills/category/name/`) MUST be flattened to `skills/<name>/` during extraction.
+
+### Rule 4: Command Naming & Cross-Platform Safety
+- Command files in `commands/<name>.md` define slash commands `/<name>`.
+- To avoid global namespace pollution, commands within a plugin SHOULD carry a plugin-level prefix (e.g., `<plugin>-<action>.md`).
+- **NEVER use colons `:` in command filenames** (e.g., `plugin:action.md` is invalid). Windows NTFS/FAT filesystems forbid colons in filenames. Always use hyphens `-`.
+
+### Rule 5: Minimal Runtime Overhead (YAGNI)
+- Do NOT create `extensions/index.ts` unless stateful runtime hooks, status bar indicators, or command toggles are strictly necessary.
+- Pure prompt, workflow, or documentation suites MUST remain zero-runtime (Markdown + JSON only).
+
+### Rule 6: Dual-Platform Quality Gate
+- Before committing any changes, run the validation scripts:
+  - Bash: `bash scripts/check.sh`
+  - PowerShell: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check.ps1`
+- Both scripts validate JSON schema integrity, file existence, and TypeScript build compatibility. Never commit on failing checks.
+
+### Rule 7: Commit Discipline
+- Follow Conventional Commits format: `<type>(<scope>): <imperative summary>`.
+- Subject line MUST be $\le 50$ characters, imperative mood, lowercase after type, no trailing period.
+- Emphasize *why* over *what*.
