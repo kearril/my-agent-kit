@@ -10,9 +10,9 @@
 
 | 本地插件 | 本地版本 | 上游仓库 URL | 上游精确基线 (Commit / 日期) | 核心提纯与裁剪裁决备忘 |
 |---|---|---|---|---|
-| **`caveman`** | `v1.0.2` | `https://github.com/JuliusBrussee/caveman.git` | `15581d1` *(2026-09-07)* | 剥离 Go 本地代理与二进制；审查排错与重构规程裁归 Matt；保留 4 技能 + 压缩引擎 + `/caveman-commit`。 |
-| **`ponytail`** | `v1.0.1` | `https://github.com/DietrichGebert/ponytail.git` | `356918e` *(2026-09-07)* | 剥离测试假数据与 IDE 配置；过度设计审查与全库巡检裁归 Matt；保留 2 技能 + 梯子引擎 + `/ponytail-debt`。 |
-| **`mattpocock-skills`** | `v1.0.0` | `https://github.com/mattpocock/skills.git` | `3cca18b` *(2026-09-04, 对应官方 release 1.2.3)* | 扁平化收纳 25 个生产级技能；排除未成熟/实验性项；增补 14 个以 `/matt-` 为前缀的中文命令。 |
+| **`caveman`** | `v1.0.2` | `https://github.com/JuliusBrussee/caveman.git` | `15581d1` *(2026-09-07)* | 剥离 Go 本地代理与二进制；审查排错与重构规程裁归 Matt；保留 4 技能 + 压缩引擎 + `/caveman:commit`。 |
+| **`ponytail`** | `v1.0.1` | `https://github.com/DietrichGebert/ponytail.git` | `356918e` *(2026-09-07)* | 剥离测试假数据与 IDE 配置；过度设计审查与全库巡检裁归 Matt；保留 2 技能 + 梯子引擎 + `/ponytail:debt`。 |
+| **`matt`** | `v1.0.0` | `https://github.com/mattpocock/skills.git` | `3cca18b` *(2026-09-04, 对应官方 release 1.2.3)* | 扁平化收纳 25 个生产级技能；排除未成熟/实验性项；提供 14 个 OMP 原生 `/matt:<command>` 中文命令。 |
 ---
 
 ## 二、 核心架构设计与工程规范
@@ -32,13 +32,12 @@
   - `commands/*.md` 是本地专属编写的 OMP 斜杠命令，上游无此目录。
   - Frontmatter `description` 必须提供精炼中文，方便人类在终端敲 `/` 时进行语义辨析与参数输入。
 
-### 3. 命令命名空间规范（Namespacing）
-- 所有由人类在终端主动调用的命令，文件名**必须携带顶级命名空间前缀**：
-  - `mattpocock-skills` $\to$ `/matt-*`（如 `/matt-grill-with-docs`, `/matt-implement`）
-  - `caveman` $\to$ `/caveman-*`（如 `/caveman-commit`）
-  - `ponytail` $\to$ `/ponytail-*`（如 `/ponytail-debt`）
-- **Windows 红线**：严禁在文件名中使用冒号 `:`（如 `matt:implement.md`），必须使用中划线 `-`。
-
+### 3. OMP 原生命令命名空间机制（Namespacing）
+- OMP 在解析插件命令时，底层会**自动为 `commands/*.md` 添加 `/<plugin>:<command>` 命名空间**。
+- 插件内部命令文件名保持简练（如 `commit.md`, `debt.md`, `grill-with-docs.md`），杜绝双重前缀截断：
+  - `plugins/caveman/commands/commit.md` $\to$ `/caveman:commit`
+  - `plugins/ponytail/commands/debt.md` $\to$ `/ponytail:debt`
+  - `plugins/matt/commands/grill-with-docs.md` $\to$ `/matt:grill-with-docs`
 ### 4. 技能扁平化要求（Flat Hierarchy）
 - OMP 技能加载器仅扫描一级子目录（`plugins/<plugin>/skills/<skill-name>/SKILL.md`）。
 - 若上游存在嵌套子分类（如 `skills/engineering/tdd/`），收纳时**必须拍平提取**为 `skills/tdd/`。
@@ -70,7 +69,7 @@ plugins/<plugin-name>/
 ```
 
 ### 第三步：编写面向人类的 Slash Commands
-针对上游配置了 `disable-model-invocation: true` 或需要人类主动发起的技能，在 `commands/` 下编写以 `<plugin>-` 为前缀的 `.md` 命令：
+针对上游配置了 `disable-model-invocation: true` 或需要人类主动发起的技能，在 `commands/` 下编写简练的 `<action>.md` 命令文件（OMP 会自动拼装为 `/<plugin>:<action>`）：
 ```markdown
 ---
 description: 中文功能概述与参数提示

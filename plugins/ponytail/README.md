@@ -37,7 +37,7 @@ Ponytail 解决的核心痛点是 **AI Agent 过度工程化、滥用设计模�
 - `ponytail-debt`：扫描代码库中的 `ponytail:` 注释，生成已跟踪的技术债台账，防止简化变烂尾。
 
 ### 2. OMP 斜杠命令 (`commands/`)
-- `ponytail-debt.md` (`/ponytail-debt`)：一键收集全库 `ponytail:` 注释至结构化台账。
+- `debt.md` (`/ponytail:debt`)：一键收集全库 `ponytail:` 注释至结构化台账。
 ### 3. OMP 原生扩展 (`extensions/index.ts`)
 - 注册 `/ponytail [lite|full|ultra|off|status]` 本地命令。
 - 终端状态栏显示模式指示灯（`🐴 ponytail: ⚡ FULL`）。

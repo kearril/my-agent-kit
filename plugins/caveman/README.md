@@ -32,7 +32,7 @@ Caveman 解决的核心痛点是 **AI Agent 啰嗦、套话多、输出 Token �
 - `verify-and-stop/`：验证达标即刻停手，严禁画蛇添足与范围无限蔓延。
 
 ### 2. OMP 斜杠命令 (`commands/`)
-- `caveman-commit.md` (`/caveman-commit`)：一键生成意图优先的 50 字符 Conventional Commits 消息。
+- `commit.md` (`/caveman:commit`)：一键生成意图优先的 50 字符 Conventional Commits 消息。
 ### 3. OMP 原生扩展 (`extensions/index.ts`)
 - 注册 `/caveman [lite|full|ultra|wenyan|off|status]` 本地命令。
 - 终端状态栏显示模式指示灯（`⚡ FULL` 等）。

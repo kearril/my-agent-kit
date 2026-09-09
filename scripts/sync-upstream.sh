@@ -24,6 +24,6 @@ sync_repo() {
 
 sync_repo "caveman" "https://github.com/JuliusBrussee/caveman.git"
 sync_repo "ponytail" "https://github.com/DietrichGebert/ponytail.git"
-sync_repo "mattpocock-skills" "https://github.com/mattpocock/skills.git"
+sync_repo "matt" "https://github.com/mattpocock/skills.git"
 echo ""
 echo "All upstream mirrors synced locally in $UPSTREAM_DIR."

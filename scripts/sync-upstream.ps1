@@ -10,7 +10,7 @@ $UpstreamDir = Join-Path $Root ".upstream"
 $Repos = @(
     @{ Name = "caveman";          Url = "https://github.com/JuliusBrussee/caveman.git" },
     @{ Name = "ponytail";         Url = "https://github.com/DietrichGebert/ponytail.git" },
-    @{ Name = "mattpocock-skills"; Url = "https://github.com/mattpocock/skills.git" }
+    @{ Name = "matt";             Url = "https://github.com/mattpocock/skills.git" }
 )
 
 if (-not (Test-Path $UpstreamDir)) {
