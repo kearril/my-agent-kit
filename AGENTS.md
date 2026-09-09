@@ -1,6 +1,6 @@
 # AGENTS.md — 仓库操作手册与 Agent 行为守则
 
-本仓库是专为 **Oh My Pi (omp)** 与 Agent Skills 生态深度定制的私有插件市场与能力集成库。
+本仓库是专为 **Oh My Pi (omp)** 与 Agent Skills 生态深度适配的开源插件市场与能力集成库。
 
 本手册为进入本仓库工作的所有 AI Agent 确立了长效、通用的架构约束与操作铁律。
 
@@ -11,7 +11,7 @@
 本仓库划分为明确且互不交叉的职责边界区域：
 
 - **`plugins/<name>/`**：为 OMP 扩展机制打包的成套插件区。
-  - `skills/<skill-name>/`：技能定义目录，包含 `SKILL.md` 及可选的私有参考文档或脚本。
+  - `skills/<skill-name>/`：技能定义目录，包含 `SKILL.md` 及可选的配套参考文档或脚本。
   - `commands/<cmd-name>.md`：暴露给人类在 OMP 交互终端中调用的斜杠命令定义。
   - `extensions/index.ts` *(可选)*：TypeScript 运行时扩展（用于生命周期 Hook、状态栏指示灯、模式开关等）。
   - `package.json`：包元数据与插件扩展清单声明。

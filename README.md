@@ -2,16 +2,16 @@
 
 [![CI](https://github.com/kearril/my-agent-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/kearril/my-agent-kit/actions/workflows/ci.yml)
 
-个人私有 Agent 插件市场与工程能力套件，专为 **Oh My Pi (omp)** 深度适配。
+面向 **Oh My Pi (omp)** 的 Agent 插件市场与工程能力套件。
 
 ---
 
-## 插件套件安装（Plugins）
+## 插件市场与安装 (Plugins Marketplace)
 
-直接添加本仓库作为私有插件市场源，一键远程安装与更新成套插件：
+添加本仓库为市场源，按需安装成套插件：
 
 ```bash
-# 1. 添加本仓库作为私有插件市场
+# 1. 添加插件市场源
 omp marketplace add kearril/my-agent-kit
 
 # 2. 按需安装插件套件
@@ -24,11 +24,12 @@ omp plugin upgrade caveman@my-agent-kit
 omp plugin upgrade ponytail@my-agent-kit
 omp plugin upgrade mattpocock-skills@my-agent-kit
 ```
+
 ---
 
-## 三大插件黄金协同流 (The Golden Loop)
+## 推荐工程交付流水线 (Recommended Workflow)
 
-本仓库将三大插件组合为一套**无死角、零废话的工程闭环流水线**：
+结合本仓库收录的插件，可以组合出一条端到端、严谨且零废话的工程闭环流水线：
 
 ```text
 ① /matt-grill-with-docs ──► 动工前反向拷问，沉淀 CONTEXT.md（统一词典）与 ADR
@@ -52,7 +53,7 @@ omp plugin upgrade mattpocock-skills@my-agent-kit
 
 ## 全局命令速查表 (Commands Cheatsheet)
 
-在 OMP 聊天终端中输入 `/` 即可触发自动补全。所有命令均带顶级前缀，规整分布：
+在 OMP 聊天终端中输入 `/` 即可触发自动补全。所有命令均带顶级前缀，按命名空间规整分布：
 
 | 斜杠命令 / 快捷调用 | 所属组件 | 功能与定位 |
 | :--- | :--- | :--- |
@@ -79,17 +80,17 @@ omp plugin upgrade mattpocock-skills@my-agent-kit
 
 ---
 
-## 插件矩阵定位 (Plugins Matrix)
+## 收录插件清单 (Plugins Catalog)
 
-三大插件正交协作，职能绝不踩踏：
+本仓库持续收录与提纯面向高质量工程实践的 Agent 插件：
 
-1. **`mattpocock-skills`（顶层主导 · 工程纪律与交付主线）**：
+1. **`mattpocock-skills`（工程纪律与全流程交付）**：
    - 全流程驱动从需求澄清到规范工单再到实现落地。
    - 内置 25 项原汁原味权威技能（TDD 红绿循环、六步排错、双轴审查、深模块架构词典）。
-2. **`ponytail`（底层守门 · 极简架构与防膨胀）**：
+2. **`ponytail`（极简架构底线与防膨胀守门）**：
    - 贯彻“梯子法则”：YAGNI → 标库优先 → 原生优先 → 单行解决。
    - 动态拦截未经审视的三方依赖与推测性抽象，配合债务台账防止偷工减料演变为烂尾。
-3. **`caveman`（底层交付 · 输出压缩与终点交付）**：
+3. **`caveman`（输出压缩与极简交付收尾）**：
    - 砍掉 65% 无效寒暄与套话自白，保持 100% 技术精度，大幅降低 Token 消耗。
    - 专职接管最后一步 50 字符极简提交、验证即停止损规程、以及生产级数据安全迁移保障。
 
@@ -107,7 +108,7 @@ omp plugin upgrade mattpocock-skills@my-agent-kit
 │   ├── caveman/            # 会话输出压缩与极简提交交付套件
 │   ├── ponytail/           # 防过度工程化与技术债治理套件
 │   ├── mattpocock-skills/  # 严谨工程实践与全流程交付套件
-│   └── README.md           # 插件架构设计与 3 步走接入 SOP
+│   └── README.md           # 插件架构设计与 5 步接入 SOP
 ├── skills/                 # 独立单体原子技能收纳区
 │   └── README.md           # 原子技能说明与独立安装指南
 ├── scripts/                # 自动化维护与校验脚本
