@@ -115,3 +115,26 @@ omp plugin upgrade mattpocock-skills@my-agent-kit
 │   └── sync-upstream.sh / .ps1 # 上游只读镜像一键同步
 └── docs/                   # 实践笔记与研究手稿
 ```
+
+---
+
+## 📚 文档导航 (Documentation)
+
+- **[Plugins 架构与维护白皮书](./plugins/README.md)**：成套插件收纳规范、上游精确 Commit 基线表与 5 步接入 SOP。
+- **[Skills 原子技能区](./skills/README.md)**：单一职责原子技能收纳边界与安装指南。
+- **[实践笔记与研究手稿](./docs/)**：外部 Agent 生态、OMP 原生机制与规范驱动开发调研笔记。
+
+---
+
+## 🙏 致谢与上游项目 (Acknowledgments)
+
+- **[mattpocock/skills](https://github.com/mattpocock/skills)** by [@mattpocock](https://github.com/mattpocock)
+- **[DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail)** by [@DietrichGebert](https://github.com/DietrichGebert)
+- **[JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)** by [@JuliusBrussee](https://github.com/JuliusBrussee)
+- **[Oh My Pi (omp)](https://github.com/canisminor1990/oh-my-pi)**
+
+---
+
+## 📄 开源许可 (License)
+
+本项目采用 [MIT License](./LICENSE) 协议开源。
