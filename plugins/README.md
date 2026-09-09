@@ -8,24 +8,23 @@
 
 - **`caveman/`**：极简通信与工程规范套件（削减 65% 输出 Token，零废话）。
 - **`ponytail/`**：防过度工程化架构规范（贯彻梯子法则、YAGNI、单行优先）。
-- **`upstream/`**：只读 Subtree 镜像区（保持上游纯净，支持每日自动化拉取同步）。
 
 ---
 
-## 目录分层架构（方案 A - 隔离改造）
+## 目录分层架构（本地隔离方案）
 
-- `upstream/<project>/`：Subtree 镜像区，**严格只读**，保持上游完整代码与最新 commit，随时 pull。
-- `<project>/`：本地提纯与二次开发区。只提取上游核心资产，剔除无效依赖和多余工具链，编写 OMP 原生适配层。
-
+- `.upstream/<project>/`：本地只读参考镜像（`.gitignore` 忽略，不推送到远端），通过 `scripts/sync-upstream.*` 维护最新代码。
+- `plugins/<project>/`：本地提纯与二次开发区。只提取上游核心资产，编写 OMP 原生适配层。
 ---
 
 ## 新增外部插件三步走标准 SOP
 
 当需要引入第 3 个外部 Agent/Tool 项目时，遵循以下闭环流程：
 
-### 第一步：引入上游镜像（使用 --squash 避免主库历史膨胀）
+### 第一步：配置本地上游镜像
+在 `scripts/sync-upstream.ps1` 和 `scripts/sync-upstream.sh` 中追加该项目的 Git 仓库 URL，运行脚本在本地 `.upstream/<project-name>` 进行浅克隆：
 ```bash
-git subtree add --prefix=plugins/upstream/<project-name> <git-url> <branch> --squash
+./scripts/sync-upstream.ps1  # 或 ./scripts/sync-upstream.sh
 ```
 
 ### 第二步：本地提纯与原生适配
@@ -37,5 +36,4 @@ git subtree add --prefix=plugins/upstream/<project-name> <git-url> <branch> --sq
    - `README.md`：记录项目定位、组件清单与维护铁律。
 
 ### 第三步：注册市场与纳入每日自动同步
-1. 在 `.omp-plugin/marketplace.json` 的 `plugins` 列表中追加该插件的相对路径声明。
-2. 在 `.github/workflows/sync-upstream.yml` 中追加该项目的 `sync_subtree` 调用，纳入每日自动同步流水线。
+在 `.omp-plugin/marketplace.json` 的 `plugins` 列表中追加该插件的相对路径声明。

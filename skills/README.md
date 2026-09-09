@@ -5,12 +5,7 @@
 ---
 
 ## 包含技能清单
-
-| 技能名称 | 核心能力与适用场景 | 入口文件 |
-| :--- | :--- | :--- |
-| **`codebase-design`** | **Deep Modules 与 Seam 架构设计**。设计深层模块（小接口大行为）、识别接缝（seams）、提升代码可测试性与 AI 可导航性。包含备选接口设计规范。 | `codebase-design/SKILL.md` |
-| **`tdd`** | **测试驱动开发规范**。严格贯彻 Red → Green Loop、优质集成测试判定准则与 Mock 隔离防反模式。 | `tdd/SKILL.md` |
-| **`grilling`** | **编码前深度探究与追问**。在复杂需求动工前对需求边界、架构权衡与技术选型进行多轮反问质询。 | `grilling/SKILL.md` |
+（当前暂无收录的原子技能）
 
 ---
 
@@ -23,18 +18,14 @@
 
 ```bash
 # 按需安装单个技能
-npx skills add kearril/my-agent-kit --skill tdd
-npx skills add kearril/my-agent-kit --skill codebase-design
-npx skills add kearril/my-agent-kit --skill grilling
+npx skills add kearril/my-agent-kit --skill <skill-name>
 ```
 
 ### 2. 全局安装（所有项目通用）
 如果希望该技能在当前机器的所有项目里都能被 OMP 调用，追加 `-g` 标志：
 
 ```bash
-npx skills add kearril/my-agent-kit --skill tdd -g
-npx skills add kearril/my-agent-kit --skill codebase-design -g
-npx skills add kearril/my-agent-kit --skill grilling -g
+npx skills add kearril/my-agent-kit --skill <skill-name> -g
 ```
 
 ---

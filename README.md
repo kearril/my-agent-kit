@@ -1,6 +1,5 @@
 # My Agent Kit
 
-[![Sync Upstream Mirrors](https://github.com/kearril/my-agent-kit/actions/workflows/sync-upstream.yml/badge.svg)](https://github.com/kearril/my-agent-kit/actions/workflows/sync-upstream.yml)
 
 个人私有 Agent 插件市场与能力集成库，专为 Oh My Pi (omp) 深度适配。
 ---
@@ -55,18 +54,14 @@ omp plugin uninstall @my-agent-kit/ponytail
 
 ```bash
 # 按需单独安装指定技能
-npx skills add kearril/my-agent-kit --skill tdd
-npx skills add kearril/my-agent-kit --skill codebase-design
-npx skills add kearril/my-agent-kit --skill grilling
+npx skills add kearril/my-agent-kit --skill <skill-name>
 ```
 
 ### 2. 全局安装（所有项目通用）
 如果希望某个技能全机所有项目都能调用，追加 `-g` 标志：
 
 ```bash
-npx skills add kearril/my-agent-kit --skill tdd -g
-npx skills add kearril/my-agent-kit --skill codebase-design -g
-npx skills add kearril/my-agent-kit --skill grilling -g
+npx skills add kearril/my-agent-kit --skill <skill-name> -g
 ```
 
 ---
@@ -117,10 +112,7 @@ npx skills add kearril/my-agent-kit --skill grilling -g
 ## 独立原子技能库 (Skills Catalog)
 
 收录于 `skills/` 下的独立技能，支持单点按需引用：
-
-- **`codebase-design`**：Deep Modules 与 Seam 架构设计。设计深层模块（小接口大行为）、识别代码接缝、提供备选接口设计机制。
-- **`tdd`**：测试驱动开发规范。严守 Red → Green Loop、优质集成测试判定准则与 Mock 防反模式。
-- **`grilling`**：需求动工前深度探究追问。针对不明确边界与潜在技术风险进行连续质询反问。
+（当前暂无独立收录的原子技能）
 
 ---
 
@@ -131,23 +123,29 @@ npx skills add kearril/my-agent-kit --skill grilling -g
 ├── .omp-plugin/
 │   └── marketplace.json    # OMP 插件市场清单定义（caveman, ponytail）
 ├── skills/                 # 独立原子技能收纳区（支持单点安装）
-│   ├── codebase-design/    # Deep Modules 与 Seam 架构设计
-│   ├── grilling/           # 编码前深度质疑与探究
-│   ├── tdd/                # 测试驱动开发与 Red-Green 规范
 │   └── README.md           # 技能清单与单点安装说明
 ├── plugins/                # 成套提纯插件（原生 OMP 支持）
 │   ├── caveman/            # 极简通信与工程规范套件（削减 65% 输出 Token）
 │   ├── ponytail/           # 防过度工程化架构规范（梯子法则、YAGNI）
-│   ├── upstream/           # 上游 Subtree 镜像（只读隔离）
-│   │   ├── caveman/
-│   │   └── ponytail/
 │   └── README.md           # 插件清单与 3 步走接入 SOP
-├── 文档/                    # 实践笔记与参考手稿
+├── scripts/                # 本地维护与同步脚本
+│   ├── sync-upstream.ps1   # PowerShell 上游镜像同步
+│   └── sync-upstream.sh    # Bash 上游镜像同步
+├── docs/                   # 实践笔记与参考手稿
 └── assets/                 # 静态媒体资产
 ```
 
 ---
+## 上游镜像与本地同步
 
-## 上游同步与自动化
+上游参考源码存放于本地 `.upstream/` 目录（已加入 `.gitignore`，不提交远端仓库，保持远端纯净）。
 
-仓库配置了自动化每日巡检 GitHub Actions（`.github/workflows/sync-upstream.yml`），自动通过 `git subtree pull --squash` 跟踪并吸收上游镜像的最新改动。
+如需拉取或更新最新上游源码，可运行本地同步脚本：
+
+```bash
+# PowerShell
+./scripts/sync-upstream.ps1
+
+# Bash
+./scripts/sync-upstream.sh
+```
