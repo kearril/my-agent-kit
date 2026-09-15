@@ -50,7 +50,7 @@ Caveman 解决的核心痛点是 **AI Agent 啰嗦、套话多、输出 Token �
    - 所有本地定制、优化与适配必须在 `plugins/caveman/` 目录下进行。
 2. **上游吸收流**：
    - 本地通过 `scripts/sync-upstream.*` 脚本同步上游最新提交至 `.upstream/caveman/`。
-   - 当上游核心 Prompt（如新强度模式、压缩规则优化）有改进时，由维护者手动比对两目录，挑选优质改动合并至 `plugins/caveman/skills/`。
+   - 上游已收纳技能有改进时，直接以对应上游文件整文件原样替换 `plugins/caveman/skills/` 中副本；禁止逐行摘改。未收纳技能与其他上游资产继续按提纯边界排除。
 3. **防倒灌原则**：
    - 严禁在上游同步时将已剔除的 Go 代码、Python 脚本或第三方 IDE 配置反向引入 `plugins/caveman/`。
 4. **语言分离原则**：

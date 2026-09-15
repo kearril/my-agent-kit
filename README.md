@@ -25,7 +25,7 @@ omp plugin upgrade caveman@my-agent-kit
 | :--- | :--- | :--- | :--- |
 | **`matt`** | `v1.0.1` | 强大无需多言 | `/matt:*` (14 项) |
 | **`ponytail`** | `v1.0.2` | 防过度工程化架构守门 | `/ponytail`, `/ponytail:debt` |
-| **`caveman`** | `v1.0.3` | 会话输出极简压缩 | `/caveman`, `/caveman:commit` |
+| **`caveman`** | `v1.0.4` | 会话输出极简压缩 | `/caveman`, `/caveman:commit` |
 
 ---
 
