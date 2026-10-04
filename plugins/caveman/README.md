@@ -26,18 +26,22 @@ Caveman 解决的核心痛点是 **AI Agent 啰嗦、套话多、输出 Token �
 ## 包含内容
 
 ### 1. 核心技能 (`skills/`)
-- `caveman/`：核心压缩说话模式（支持 `lite`、`full`、`ultra`、`wenyan` 系列等）。
+- `caveman/`：核心压缩说话模式（回答优先、9 条黄金法则、杜绝废话与人设漂移）。
+- `ultracave/`：极限制式压缩（语法剥离、单词表达、事实单次陈述）。
+- `megacave/`：文言文高密度压缩（文言典雅、字符数极致削减、技术实体原样保留）。
 - `caveman-commit/`：极简意图 Conventional Commits 规范（≤50 字符，强调 Why 而非重复 Diff）。
 - `migration/`：数据模型、Schema 与协议变更的可逆性保障与平滑过渡规程。
 - `verify-and-stop/`：验证达标即刻停手，严禁画蛇添足与范围无限蔓延。
 
 ### 2. OMP 斜杠命令 (`commands/`)
 - `commit.md` (`/caveman:commit`)：一键生成意图优先的 50 字符 Conventional Commits 消息。
+
 ### 3. OMP 原生扩展 (`extensions/index.ts`)
-- 注册 `/caveman [lite|full|ultra|wenyan|off|status]` 本地命令。
-- 终端状态栏显示模式指示灯（`⚡ FULL` 等）。
+- 注册 `/caveman [caveman|ultracave|megacave|off|status]` 及 `/ultracave`、`/megacave` 快捷指令。
+- 兼容旧版参数别名（`ultra` $\to$ `ultracave`，`wenyan*` $\to$ `megacave`）。
+- 终端状态栏显示模式指示灯（`⚡ CAVEMAN` / `🔥 ULTRACAVE` / `📜 MEGACAVE`）。
 - 监听 `input` 事件，输入 `stop caveman` 或 `normal mode` 自动退回关闭状态。
-- 在 `before_agent_start` 动态注入约 100 Token 的精简提示词约束，防长会话人设漂移。
+- 在 `before_agent_start` 动态注入精简提示词约束，并适配 OMP 提示词结构化缓存区段。
 
 ---
 

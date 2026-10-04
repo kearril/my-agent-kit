@@ -131,7 +131,14 @@ export default function ponytailExtension(omp: ExtensionAPI) {
       const trimmed = String(args || "").trim().toLowerCase();
 
       if (!trimmed) {
-        setMode(currentMode === "off" ? "full" : "off", ctx);
+        if (currentMode === "off") {
+          setMode("full", ctx);
+        } else {
+          ctx.ui.notify?.(
+            `Ponytail active: ${currentMode}. Use /ponytail off to disable.`,
+            "info"
+          );
+        }
         return;
       }
 
@@ -192,8 +199,29 @@ export default function ponytailExtension(omp: ExtensionAPI) {
 
   // Inject system prompt dynamically before each agent turn
   omp.on("before_agent_start", async (event) => {
-    if (currentMode === "off") return undefined;
+    const prompt = getPonytailPrompt(currentMode);
+    let sections: Record<string, string> | null = null;
+    if (event && typeof event === "object" && "systemPromptOptions" in event) {
+      const options = event.systemPromptOptions;
+      if (options && typeof options === "object" && "sections" in options) {
+        const rawSections = options.sections;
+        if (rawSections && typeof rawSections === "object") {
+          sections = rawSections as Record<string, string>;
+        }
+      }
+    }
 
+    if (currentMode === "off") {
+      if (sections) {
+        delete sections.ponytail;
+      }
+      return undefined;
+    }
+
+    if (sections) {
+      sections.ponytail = prompt;
+      return undefined;
+    }
     const existingList = Array.isArray(event?.systemPrompt)
       ? event.systemPrompt
       : typeof event?.systemPrompt === "string"
@@ -206,7 +234,7 @@ export default function ponytailExtension(omp: ExtensionAPI) {
     }
 
     return {
-      systemPrompt: [...existingList, getPonytailPrompt(currentMode)],
+      systemPrompt: [...existingList, prompt],
     };
   });
 }
