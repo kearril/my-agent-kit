@@ -10,36 +10,28 @@ omp marketplace add kearril/my-agent-kit
 
 # 安装插件
 omp plugin install matt@my-agent-kit
-omp plugin install ponytail@my-agent-kit
-omp plugin install caveman@my-agent-kit
 
 # 更新插件
 omp plugin upgrade matt@my-agent-kit
-omp plugin upgrade ponytail@my-agent-kit
-omp plugin upgrade caveman@my-agent-kit
 ```
 
 ## 已收录插件 (Plugins)
 
 | 插件 | 版本 | 核心定位 | 命令入口 |
 | :--- | :--- | :--- | :--- |
-| **`matt`** | `v1.0.1` | 强大无需多言 | `/matt:*` (14 项) |
-| **`ponytail`** | `v1.0.2` | 防过度工程化架构守门 | `/ponytail`, `/ponytail:debt` |
-| **`caveman`** | `v1.0.4` | 会话输出极简压缩 | `/caveman`, `/caveman:commit` |
+| **`matt`** | `v1.1.1` | 需求澄清、TDD 与双轴代码审查 | `/matt:*` (17 项) |
 
 ---
 
 ## 目录索引
 
-- `plugins/`：成套 OMP 插件源码（含 TS 扩展、命令与技能）
+- `plugins/`：成套 OMP 插件源码（命令与技能）
 - `skills/`：单体原子技能独立存放区
 - `docs/`：个人实践笔记与体系调研手稿
 
 ## 致谢 (Acknowledgments)
 
 - **[mattpocock/skills](https://github.com/mattpocock/skills)** by [@mattpocock](https://github.com/mattpocock)
-- **[DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail)** by [@DietrichGebert](https://github.com/DietrichGebert)
-- **[JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)** by [@JuliusBrussee](https://github.com/JuliusBrussee)
 - **[Oh My Pi (omp)](https://github.com/canisminor1990/oh-my-pi)**
 
 ## License

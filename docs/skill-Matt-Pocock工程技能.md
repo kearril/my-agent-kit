@@ -90,9 +90,9 @@ npx skills add mattpocock/skills -a universal
 | **异步反馈** | `/matt:to-questionnaire` | 决策分歧转问卷收集 | 将难以抉择的技术分歧转换为 Markdown 问卷，发给团队收集反馈 |
 | **紧急纠偏** | `/matt:wait-what` | 降维直白解释复杂决策 | 当 Agent 输出过于晦涩或跑偏时，强制其用直白大白话重新解释 |
 
-## 五、 端到端推荐交付流水线（三剑客实战联合）
+## 五、 端到端推荐交付流水线
 
-结合本仓库收录的 `matt`、`ponytail` 与 `caveman` 三大插件，可以构筑一套闭环严谨、杜绝过度设计且上下文高度纯净的软件交付工作流：
+使用本仓库收录的 `matt` 插件，可以组织从需求澄清、规范固化、工单切解到实现与审查的软件交付工作流：
 
 ```text
 ① /matt:grill-with-docs ──► 动工前反向拷问，沉淀 CONTEXT.md（统一词典）与 ADR
@@ -103,13 +103,8 @@ npx skills add mattpocock/skills -a universal
        │
        ▼  【核心实践：建议此时执行 /clear 或新开会话】
 ④ /matt:implement        ──► 读取工单驱动实现（底层自动走 tdd 红绿测试循环）
-   + 开启 /ponytail full  ──► 梯子法则守门：禁推测性抽象、标库与原生优先
        │
 ⑤ 底层自动 code-review    ──► 提交前双轴并行审查（规范基线 + 工单需求还原度）
-       │
-⑥ /caveman:commit        ──► 50 字符意图优先 Conventional Commits 极简落库
-       │
-⑦ /ponytail:debt         ──► 发布前全局排查，盘点刻意简化留下的技术债
 ```
 
 ### 流水线实战细节与心法
@@ -122,14 +117,10 @@ npx skills add mattpocock/skills -a universal
 3. **上下文物理截断（Context Decoupling）**：
    - **为什么在此刻建议 `/clear`？** 前期讨论需求、设计架构产生了大量对话上下文，若带着这些庞大历史直接进入编码，极易引发注意力漂移、Token 暴增甚至模型幻觉；
    - 清空会话后，只需让 Agent 读取刚生成的 `spec.md` 与工单卡，以绝对纯净的上下文执行编码。
-4. **防御性编码与极简守门（`/matt:implement` + `/ponytail full`）**：
+4. **测试驱动实现（`/matt:implement`）**：
    - `implement` 驱动底层的 `tdd` 技能，严格遵守“先写失败测试（红灯） $\to$ 编写最小代码通过测试（绿灯） $\to$ 消除坏味道（重构）”；
-   - 同时开启 `ponytail full`，防止模型在实现过程中过度发挥（如盲目引入重量级三方库、为单一功能编写工厂模式或多余接口）。
 5. **双轴并行审查（`code-review`）**：
    - 实现完成后，自动派生两个并行的审查子 Agent：一个对照代码坏味道清单审查规范，另一个对照工单验收准则审查还原度。
-6. **极简提交与债务盘点（`/caveman:commit` + `/ponytail:debt`）**：
-   - 采用 Caveman 压缩提交信息，只记录业务意图（Why over what），拒绝无意义的代码变动复述；
-   - 运行 `/ponytail:debt`，把代码中为了敏捷交付标记的 `# ponytail:` 简化点整理入台账，确保技术债可追踪。
 
 ## 六、 底层 25 项技能资产全景索引
 

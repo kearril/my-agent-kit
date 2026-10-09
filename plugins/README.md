@@ -10,9 +10,7 @@
 
 | 本地插件 | 本地版本 | 上游仓库 URL | 上游精确基线 (Commit / 日期) | 核心提纯与裁剪裁决备忘 |
 |---|---|---|---|---|
-| **`caveman`** | `v1.1.0` | `https://github.com/JuliusBrussee/caveman.git` | `6571943` *(2026-10-04, 对应官方 release 3.1.0)* | 剥离 Go 本地代理与二进制；跟进 3.1.0 三技能单模架构（新增 `ultracave`、`megacave`）；保留 6 技能 + 压缩引擎 + `/caveman:commit` + 原生状态机扩展。 |
-| **`ponytail`** | `v1.0.3` | `https://github.com/DietrichGebert/ponytail.git` | `c982cd4` *(2026-10-03, 对应官方 release 4.10.3)* | 剥离测试假数据与 IDE 配置；同步 `ponytail-debt` 正则强化；TS 扩展适配 OMP 提示词结构化缓存；保留 2 技能 + 梯子引擎 + `/ponytail:debt`。 |
-| **`matt`** | `v1.1.0` | `https://github.com/mattpocock/skills.git` | `24fe0ef` *(2026-10-04, 对应官方 release 1.3.1)* | 扁平化收纳 27 个生产级技能（转正收录 `implement-spec`、`pr`、`retro`，剔除废弃的 `resolving-merge-conflicts`）；跟进 `GLOSSARY` 规范；提供 17 个 OMP 原生 `/matt:<command>` 中文命令。 |
+| **`matt`** | `v1.1.1` | `https://github.com/mattpocock/skills.git` | `24fe0ef` *(2026-10-04, 对应官方 release 1.3.1)* | 扁平化收纳 27 个生产级技能（转正收录 `implement-spec`、`pr`、`retro`，剔除废弃的 `resolving-merge-conflicts`）；跟进 `GLOSSARY` 规范；提供 17 个 OMP 原生 `/matt:<command>` 中文命令。 |
 ---
 
 ## 二、 核心架构设计与工程规范
@@ -34,16 +32,14 @@
 
 ### 3. OMP 原生命令命名空间机制（Namespacing）
 - OMP 在解析插件命令时，底层会**自动为 `commands/*.md` 添加 `/<plugin>:<command>` 命名空间**。
-- 插件内部命令文件名保持简练（如 `commit.md`, `debt.md`, `grill-with-docs.md`），杜绝双重前缀截断：
-  - `plugins/caveman/commands/commit.md` $\to$ `/caveman:commit`
-  - `plugins/ponytail/commands/debt.md` $\to$ `/ponytail:debt`
+- 插件内部命令文件名保持简练（如 `grill-with-docs.md`），杜绝双重前缀截断：
   - `plugins/matt/commands/grill-with-docs.md` $\to$ `/matt:grill-with-docs`
 ### 4. 技能扁平化要求（Flat Hierarchy）
 - OMP 技能加载器仅扫描一级子目录（`plugins/<plugin>/skills/<skill-name>/SKILL.md`）。
 - 若上游存在嵌套子分类（如 `skills/engineering/tdd/`），收纳时**必须拍平提取**为 `skills/tdd/`。
 
 ### 5. 极简零运行时哲学（YAGNI）
-- 遵循 Ponytail 梯子法则：除非涉及会话级状态机、状态栏指示灯或输入拦截（如 `caveman`, `ponytail`），否则**绝不创建冗余的 `extensions/index.ts`**。
+- 除非涉及会话级状态机、状态栏指示灯或输入拦截，否则**绝不创建冗余的 `extensions/index.ts`**。
 - 纯 Prompt/Markdown 工作流套件保持零 TS 运行时，消除多余编译开销。
 
 ---
