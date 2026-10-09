@@ -10,7 +10,7 @@
 
 | 本地插件 | 本地版本 | 上游仓库 URL | 上游精确基线 (Commit / 日期) | 核心提纯与裁剪裁决备忘 |
 |---|---|---|---|---|
-| **`matt`** | `v1.1.1` | `https://github.com/mattpocock/skills.git` | `24fe0ef` *(2026-10-04, 对应官方 release 1.3.1)* | 扁平化收纳 27 个生产级技能（转正收录 `implement-spec`、`pr`、`retro`，剔除废弃的 `resolving-merge-conflicts`）；跟进 `GLOSSARY` 规范；提供 17 个 OMP 原生 `/matt:<command>` 中文命令。 |
+| **`matt`** | `v2.0.1` | `https://github.com/mattpocock/skills.git` | `24fe0ef` *(2026-10-04, 对应官方 release 1.3.1)* | 收纳 26 个生产级技能，仅裁剪异步问卷 `to-questionnaire` 及其命令；原样恢复 `triage` 与关联初始化配置，保留完整核心交付流程、任务状态标签与 `GLOSSARY` 规范；提供 16 个 OMP 原生 `/matt:<command>` 中文命令。 |
 ---
 
 ## 二、 核心架构设计与工程规范

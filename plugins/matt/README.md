@@ -11,16 +11,17 @@
 通过引入传统软件工程中沉淀的经典实践（测试驱动开发 TDD、领域驱动设计 DDD、深度模块封装 Deep Modules、代码坏味道巡检与双轴审查），引导 Agent 遵循严密工程纪律。
 
 ### 2. 架构适配决策
-- **单层扁平化收纳**：上游按 `engineering/` 与 `productivity/` 嵌套分类，由于 OMP 技能机制要求单层目录规范，本项目将官方 27 个生产级技能完全平铺收录至 `skills/<name>/`。
+- **单层扁平化收纳**：上游按 `engineering/` 与 `productivity/` 嵌套分类，本项目将 26 个生产级技能平铺收录至 `skills/<name>/`；仅裁剪异步问卷 `to-questionnaire`，保留外部反馈分拣 `triage` 与完整核心交付流程。
 - **保留私有资产完整性**：完整保留各技能私有的辅助规范文档（如 `tdd/tests.md`、`domain-modeling/ADR-FORMAT.md`、`teach/*.md` 等）与辅助脚本模板。
 - **双层调用映射**：
   - **11 个模型自调技能 (`skills/`)**：常驻 Agent 描述池，编码或分析时自主按需加载。
-  - **17 个用户显式命令 (`commands/`)**：为上游标记 `disable-model-invocation: true` 及用户主导工程流的技能建立 OMP 原生 Slash Command 映射，支持终端 `/` 快速补全并传递 CLI 参数。
+  - **16 个用户显式命令 (`commands/`)**：15 个仅用户发起的技能提供对应入口，模型可按需调用的 `pr` 也提供手动入口；支持终端 `/` 快速补全并传递 CLI 参数。
 - **极简零运行时**：全套能力均由高质量 Prompt、规范模板与工作流驱动，不设冗余 TS 扩展。
 
 ### 3. 版本与上游基准对齐
-- **本地插件版本**：`v1.1.1`（遵循本仓库版本自增规范）。
+- **本地插件版本**：`v2.0.1`（在 2.0.0 裁剪基础上原样恢复外部反馈分拣及关联配置）。
 - **上游精确基线**：基于官方 Commit `24fe0ef` *(2026-10-02, 对应官方 release 1.3.1)*。
+- **本地裁剪与适配**：仅移除 `to-questionnaire` 及其配套资产，`ask-matt` 仅清理该问卷入口；`triage`、对应命令及关联初始化文件从修剪前提交 `24fc92f` 原样恢复。其余技能与保留命令内容不变。
 ---
 
 ## 包含内容
@@ -33,7 +34,7 @@
 4. **测试驱动编码 (`/matt:implement` → `tdd`)**：逐个工单独立实现，强制走红灯测试 → 最小绿灯 → 重构循环。
 5. **双轴代码审查 (`code-review`)**：提交前双 Agent 并行审查代码规范与需求还原度。
 
-### 2. 完整技能资产清单 (`skills/` · 共 27 项)
+### 2. 完整技能资产清单 (`skills/` · 共 26 项)
 
 - **工程开发类（20 项）**：
   - `ask-matt`：技能路由器与流程导航。
@@ -53,19 +54,18 @@
   - `tdd`：测试驱动开发红绿循环。
   - `to-spec`：对话转需求规范。
   - `to-tickets`：规范转原子任务卡。
-  - `triage`：Issue / PR 状态机分拣。
+  - `triage`：验证与分拣外部 Issue／PR，补齐信息并形成 Agent 可执行简报。
   - `wayfinder`：超大超复杂工程决策拓扑探路。
   - `wizard`：交互式 Shell 向导（辅助人类完成云凭证与密钥配置）。
-- **效能与辅助类（7 项）**：
+- **效能与辅助类（6 项）**：
   - `grill-me`：纯思维反向提问（不落盘文件）。
   - `grilling`：底层通用反向提问引擎。
   - `handoff`：跨会话/跨 Harness 上下文交接文档生成。
   - `teach`：当前工作区沙盒化互动教学。
-  - `to-questionnaire`：技术决策盲区分歧转调查问卷。
   - `wait-what`：紧急纠偏（用极简白话结合项目词典重新解释）。
   - `writing-for-agents`：为 AI 编写技能与规则的工程规范。
 
-### 3. OMP Slash Commands (`commands/` · 17 个，终端原生 `/matt:<command>` 命名空间)
+### 3. OMP Slash Commands (`commands/` · 16 个，终端原生 `/matt:<command>` 命名空间)
 
 - `/matt:ask-matt`：技能路由器与流程导航（根据现状推荐最适技能路线）。
 - `/matt:grill-with-docs`：动工前反向提问澄清，实时更新 `GLOSSARY.md` 统一词典与 ADR。
@@ -77,17 +77,16 @@
 - `/matt:retro`：复盘编码会话中的工程卡点，生成环境或自动化检查改进方案。
 - `/matt:improve-codebase-architecture`：静态扫描模块深度（Deep Modules），输出 HTML 诊断报告。
 - `/matt:setup-matt-pocock-skills`：一次性初始化工程配置（工单系统类型、分拣标签字典等）。
-- `/matt:triage`：按照状态机规则在工单系统中流转和分拣 Issue / PR。
+- `/matt:triage`：在工单系统中验证、分拣外部反馈并形成可执行简报。
 - `/matt:wayfinder`：超大复杂工程探路：建立决策拓扑图并逐个决策推进。
 - `/matt:grill-me`：纯思路反向提问（不落盘文件，适用于无代码仓库思考）。
 - `/matt:handoff`：将会话核心决策浓缩为交接文档，便于跨会话恢复上下文。
 - `/matt:teach`：以当前工作区为交互演练沙盒，跨会话分步讲解复杂概念。
-- `/matt:to-questionnaire`：将技术决策盲区转化为 Markdown 调查问卷异步收集反馈。
 - `/matt:wait-what`：紧急纠偏：结合项目 GLOSSARY.md 词典与极简白话重新解释。
 ---
 
 ## 维护铁律
 
 1. **上游隔离原则**：本地上游镜像存放于 `.upstream/matt/`（`.gitignore` 忽略），只读不可改。
-2. **上游吸收流程**：运行 `scripts/sync-upstream.*` 自动更新镜像；新发布版本仅比对并提取官方认证技能至 `plugins/matt/skills/`，不引入 `deprecated/`、`in-progress/` 或未审查的实验性技能。
+2. **上游吸收流程**：运行 `scripts/sync-upstream.*` 自动更新镜像；新发布版本仅比对并提取官方认证技能至 `plugins/matt/skills/`，不引入 `deprecated/`、`in-progress/` 或未审查的实验性技能。不得重新收纳已裁剪的 `to-questionnaire`；同步 `ask-matt` 时必须保留问卷入口裁剪。`triage` 及关联初始化资产保持原始英文副本。
 3. **语言分离原则**：技能正文与专业工程描述保持原版英文，确保模型理解最精确；用户交互前端（Frontmatter 描述与 Slash Command 描述）保持中文。
