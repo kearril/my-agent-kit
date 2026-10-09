@@ -10,7 +10,7 @@
 
 | 本地插件 | 本地版本 | 上游仓库 URL | 上游精确基线 (Commit / 日期) | 核心提纯与裁剪裁决备忘 |
 |---|---|---|---|---|
-| **`matt`** | `v2.0.1` | `https://github.com/mattpocock/skills.git` | `24fe0ef` *(2026-10-04, 对应官方 release 1.3.1)* | 收纳 26 个生产级技能，仅裁剪异步问卷 `to-questionnaire` 及其命令；原样恢复 `triage` 与关联初始化配置，保留完整核心交付流程、任务状态标签与 `GLOSSARY` 规范；提供 16 个 OMP 原生 `/matt:<command>` 中文命令。 |
+| **`matt`** | `v2.0.2` | `https://github.com/mattpocock/skills.git` | `b0618bc` *(2026-10-08, 官方 package 1.3.1 后续 patch 提交)* | 收纳 26 个生产级技能，排除 `to-questionnaire`，保留 `triage` 与完整核心流程；提供 16 个中文命令。吸收现有技能修复，保持零 TS 运行时；`wizard` 仅生成 Bash 向导，Windows 需可用 Bash 环境，不提供原生 PowerShell 适配。 |
 ---
 
 ## 二、 核心架构设计与工程规范
