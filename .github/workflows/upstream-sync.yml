@@ -50,7 +50,7 @@ jobs:
         id: absorb
         run: node scripts/absorb.mjs --summary "$RUNNER_TEMP/summary.md"
 
-      - name: Open auto-merging PR
+      - name: Open PR and merge
         if: steps.absorb.outputs.changed != ''
         env:
           CHANGED: ${{ steps.absorb.outputs.changed }}
@@ -70,16 +70,13 @@ jobs:
           $(cat "$RUNNER_TEMP/summary.md")
           EOF
           git push -f origin "$BRANCH"
+          sha=$(git rev-parse HEAD)
           gh pr create --base main --head "$BRANCH" --title "$title" --body-file "$RUNNER_TEMP/body.md"
-          gh pr merge "$BRANCH" --auto --squash --delete-branch
-          gh workflow run ci.yml --ref "$BRANCH"
 
-      # Typically a new upstream user-only skill without a Chinese command wrapper.
-      # The PR stays open (CI fails) until a fix is pushed to its branch.
-      - name: Flag manual fix
-        if: steps.absorb.outputs.changed != ''
-        run: |
+          # Typically a new upstream user-only skill without a Chinese command wrapper.
+          # Auto-merge then fires once the owner pushes a fix (their push triggers CI normally).
           if ! bash scripts/check.sh > "$RUNNER_TEMP/check.log" 2>&1; then
+            gh pr merge "$BRANCH" --auto --squash --delete-branch
             {
               echo "@${{ github.repository_owner }} 校验未通过，需要手动处理后推送到本分支："
               echo
@@ -90,3 +87,15 @@ jobs:
             gh pr comment "$BRANCH" --body-file "$RUNNER_TEMP/comment.md"
             exit 1
           fi
+
+          # Check results from GITHUB_TOKEN-dispatched runs do not wake auto-merge,
+          # so wait for the required CI run here and merge directly.
+          gh workflow run ci.yml --ref "$BRANCH"
+          for _ in $(seq 30); do
+            run=$(gh run list --workflow ci.yml --event workflow_dispatch --commit "$sha" --json databaseId --jq '.[0].databaseId')
+            [ -n "$run" ] && break
+            sleep 5
+          done
+          [ -n "$run" ] || { echo "::error::CI run for $sha did not start"; exit 1; }
+          gh run watch "$run" --exit-status
+          gh pr merge "$BRANCH" --squash --delete-branch

@@ -19,7 +19,7 @@
 
 1. `scripts/sync-upstream.sh` 更新 `.upstream/` 镜像；
 2. `scripts/absorb.mjs` 按上表规则整体替换 `plugins/<name>/skills/` 等上游资产，有变化则从已提交版本递增 patch 版本，并同步 `marketplace.json` 与两张版本表；
-3. 推送 `auto/upstream-sync` 分支、开 PR 并开启 auto-merge，再手动派发 CI（`GITHUB_TOKEN` 开的 PR 不会自动触发 CI）；`main` 分支保护要求 `Validate Plugins` 通过，通过即 squash 合并。
+3. 推送 `auto/upstream-sync` 分支并开 PR，派发 CI（`GITHUB_TOKEN` 开的 PR 不会自动触发 CI，其检查结果也唤不醒 auto-merge），等待 `Validate Plugins` 通过后直接 squash 合并；`main` 分支保护要求该检查通过。
 
 sync PR 未合并期间，后续定时运行会跳过，避免覆盖分支上的手动修复。
 
