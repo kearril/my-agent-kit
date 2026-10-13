@@ -11,6 +11,7 @@
       "name": "matt",
       "description": "Matt Pocock 面向严谨工程实践的 Agent 技能套件（TDD、DDD、双轴代码审查与架构熵增治理）",
       "source": "./plugins/matt",
+      "version": "2.0.2",
       "category": "engineering"
     },
     {
