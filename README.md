@@ -25,7 +25,7 @@ omp config set marketplace.autoUpdate auto
 | 插件 | 版本 | 核心定位 | 命令入口 |
 | :--- | :--- | :--- | :--- |
 | **`matt`** | `v2.0.3` | 需求澄清、TDD 与双轴代码审查 | `/matt:*` |
-| **`hyperframes`** | `v1.0.0` | HTML 编写合成、渲染视频 | `/hyperframes:hyperframes` |
+| **`hyperframes`** | `v1.0.1` | HTML 编写合成、渲染视频 | `/hyperframes:hyperframes` |
 
 ---
 
