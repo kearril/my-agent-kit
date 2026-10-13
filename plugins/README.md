@@ -6,12 +6,34 @@
 
 ## 一、 包含插件清单与上游精确对齐基线
 
-所有插件均从对应开源上游的特定不可变 Commit 抽离提纯，本地初始版本统一由 `1.0.0` 起步递增：
+所有插件逐字收录上游正式发布的技能，本地只做 OMP 适配（中文命令、`package.json`、市场条目）。版本与基线两列由 `scripts/absorb.mjs` 自动维护，勿手改：
 
-| 本地插件 | 本地版本 | 上游仓库 URL | 上游精确基线 (Commit / 日期) | 核心提纯与裁剪裁决备忘 |
+| 本地插件 | 本地版本 | 上游仓库 URL | 上游基线 | 收纳规则 |
 |---|---|---|---|---|
-| **`matt`** | `v2.0.2` | `https://github.com/mattpocock/skills.git` | `b0618bc` *(2026-10-08, 官方 package 1.3.1 后续 patch 提交)* | 收纳 26 个生产级技能，排除 `to-questionnaire`，保留 `triage` 与完整核心流程；提供 16 个中文命令。吸收现有技能修复，保持零 TS 运行时；`wizard` 仅生成 Bash 向导，Windows 需可用 Bash 环境，不提供原生 PowerShell 适配。 |
-| **`hyperframes`** | `v1.0.0` | `https://github.com/heygen-com/hyperframes` | Release `v0.8.152` *(2026-10-13, 官方 `hyperframes-agent-plugin.zip`)* | 收纳 Release 插件包内全部 21 个技能及 `plugin.json`（内置启动器依赖其版本号固定 CLI），排除其他客户端清单与品牌素材；提供 1 个中文路由命令。上游仓库过大，`.upstream/` 镜像改为下载并校验 Release 插件包而非克隆。 |
+| **`matt`** | `v2.0.3` | `https://github.com/mattpocock/skills.git` | `49dd158` *(2026-10-09)* | 按上游 `.claude-plugin/plugin.json` 的 `skills` 清单拍平收录，不裁剪；`deprecated/`、`in-progress/`、`misc/` 不在清单内即不收。 |
+| **`hyperframes`** | `v1.0.0` | `https://github.com/heygen-com/hyperframes` | Release `v0.8.152` | 收录 Release 插件包 `hyperframes-agent-plugin.zip` 的全部技能目录及 `plugin.json`、`LICENSE`（启动器依赖 `plugin.json` 版本号固定 CLI）；上游仓库过大，镜像下载并校验 Release 包而非克隆。 |
+
+### 自动更新
+
+`.github/workflows/upstream-sync.yml` 每周一 01:00 UTC（亦可在 Actions 页手动触发）执行，仅用内置 `GITHUB_TOKEN`，无需额外 Secret：
+
+1. `scripts/sync-upstream.sh` 更新 `.upstream/` 镜像；
+2. `scripts/absorb.mjs` 按上表规则整体替换 `plugins/<name>/skills/` 等上游资产，有变化则从已提交版本递增 patch 版本，并同步 `marketplace.json` 与两张版本表；
+3. 推送 `auto/upstream-sync` 分支、开 PR 并开启 auto-merge，再手动派发 CI（`GITHUB_TOKEN` 开的 PR 不会自动触发 CI）；`main` 分支保护要求 `Validate Plugins` 通过，通过即 squash 合并。
+
+sync PR 未合并期间，后续定时运行会跳过，避免覆盖分支上的手动修复。
+
+唯一需人工介入的情形：上游新增 `disable-model-invocation: true` 的技能。此时 `check` 报 `user-only skill "<name>" has no commands/<name>.md`，工作流在 PR 上 @ 仓库所有者并标记失败。本地处理：
+
+```bash
+gh pr checkout auto/upstream-sync
+omp "按 AGENTS.md 为 check 报错的 user-only 技能补中文命令文件，运行 check 后提交并推送"
+```
+
+推送触发 CI，通过后自动合并。
+
+本地手动吸收同理：`bash scripts/sync-upstream.sh && node scripts/absorb.mjs`，再运行 `check` 并提交（`absorb.mjs` 已用 `git add -f` 暂存，规避上游技能自带 `.gitignore` 屏蔽其夹具文件）。
+
 ---
 
 ## 二、 核心架构设计与工程规范
@@ -55,15 +77,16 @@
 ./scripts/sync-upstream.sh  # 或 ./scripts/sync-upstream.ps1
 ```
 
-### 第二步：搭建标准目录与平铺提纯
-在 `plugins/<plugin-name>/` 下创建标准目录结构：
+### 第二步：配置收纳规则并搭建目录
+在 `scripts/absorb.mjs` 的 `RULES` 中声明该插件收录哪些上游技能目录与根文件、基线如何描述，并在 `plugins/<plugin-name>/` 下手写本地适配文件：
 ```text
 plugins/<plugin-name>/
-├── skills/                  # 平铺拷贝上游认证技能（保持纯英文，含私有参考文档）
+├── skills/                  # 由 absorb.mjs 生成，勿手改（保持纯英文，含私有参考文档）
 ├── commands/                # 针对模型不可见的技能编写中文斜杠命令映射
 ├── package.json             # 声明包名、版本号与 keywords
-└── README.md                # 记录项目定位、组件清单与维护铁律
+└── README.md                # 记录项目定位、适配决策与运行依赖
 ```
+在两张版本表中各加一行（`| **\`<plugin-name>\`** | ...`），完成第四步注册后运行 `node scripts/absorb.mjs <plugin-name>` 生成 `skills/`。
 
 ### 第三步：编写面向人类的 Slash Commands
 针对上游配置了 `disable-model-invocation: true` 或需要人类主动发起的技能，在 `commands/` 下编写简练的 `<action>.md` 命令文件（OMP 会自动拼装为 `/<plugin>:<action>`）：
@@ -75,12 +98,13 @@ Read skill://<skill-name> and execute workflow: $ARGUMENTS
 ```
 
 ### 第四步：注册市场源
-在根目录 `.omp-plugin/marketplace.json` 的 `plugins` 列表中追加该插件声明：
+在根目录 `.omp-plugin/marketplace.json` 的 `plugins` 列表中追加该插件声明。`version` 必须与 `package.json` 一致（`check` 校验），`omp plugin upgrade` 与 `marketplace.autoUpdate` 据此识别新版本：
 ```json
 {
   "name": "<plugin-name>",
   "description": "插件中文说明",
   "source": "./plugins/<plugin-name>",
+  "version": "1.0.0",
   "category": "productivity | engineering | architecture"
 }
 ```

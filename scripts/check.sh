@@ -15,6 +15,17 @@ node -e '
     if (!fs.existsSync(pkg)) throw new Error(`package.json missing in ${p.source}`);
     const version = JSON.parse(fs.readFileSync(pkg)).version;
     if (p.version && p.version !== version) throw new Error(`Catalog version ${p.version} != package.json version ${version} for ${p.name}`);
+    // Skills hidden from the model are only reachable through a Chinese command wrapper.
+    const skillsDir = path.join(src, "skills");
+    if (fs.existsSync(skillsDir)) {
+      for (const skill of fs.readdirSync(skillsDir)) {
+        const md = path.join(skillsDir, skill, "SKILL.md");
+        if (!fs.existsSync(md)) continue;
+        const fm = /^---\r?\n([\s\S]*?)\r?\n---/.exec(fs.readFileSync(md, "utf8"));
+        if (fm && /^disable-model-invocation:\s*true\s*$/m.test(fm[1]) && !fs.existsSync(path.join(src, "commands", `${skill}.md`)))
+          throw new Error(`${p.name}: user-only skill "${skill}" has no commands/${skill}.md`);
+      }
+    }
   }
 ' "$ROOT_DIR"
 echo "  [OK] marketplace.json & plugin package.json files valid"

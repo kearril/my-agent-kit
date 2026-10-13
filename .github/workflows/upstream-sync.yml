@@ -1,0 +1,92 @@
+name: Upstream Sync
+
+# Weekly: mirror upstreams, absorb them into plugins/, bump versions, and open an
+# auto-merging PR. CI ("Validate Plugins") is the required check that gates the merge.
+on:
+  schedule:
+    - cron: "0 1 * * 1" # Monday 01:00 UTC
+  workflow_dispatch:
+
+concurrency: upstream-sync
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write # dispatch CI: events from GITHUB_TOKEN pushes/PRs do not trigger workflows
+
+jobs:
+  sync:
+    name: Sync and absorb upstreams
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BRANCH: auto/upstream-sync
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # An open PR is either waiting for CI or for a manual fix pushed to its branch;
+      # rebuilding the branch would discard that fix.
+      - name: Skip while a sync PR is open
+        id: pending
+        run: |
+          if [ "$(gh pr view "$BRANCH" --json state --jq .state 2>/dev/null)" = OPEN ]; then
+            echo "::notice::Sync PR for $BRANCH is still open; skipping this run."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node.js
+        if: steps.pending.outputs.skip != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Mirror upstreams
+        if: steps.pending.outputs.skip != 'true'
+        run: bash scripts/sync-upstream.sh
+
+      - name: Absorb into plugins
+        if: steps.pending.outputs.skip != 'true'
+        id: absorb
+        run: node scripts/absorb.mjs --summary "$RUNNER_TEMP/summary.md"
+
+      - name: Open auto-merging PR
+        if: steps.absorb.outputs.changed != ''
+        env:
+          CHANGED: ${{ steps.absorb.outputs.changed }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$BRANCH"
+          title="chore(upstream): sync $CHANGED"
+          {
+            echo "Automated upstream absorb (scripts/absorb.mjs)."
+            echo
+            cat "$RUNNER_TEMP/summary.md"
+          } > "$RUNNER_TEMP/body.md"
+          git commit -q -F - <<EOF
+          $title
+
+          $(cat "$RUNNER_TEMP/summary.md")
+          EOF
+          git push -f origin "$BRANCH"
+          gh pr create --base main --head "$BRANCH" --title "$title" --body-file "$RUNNER_TEMP/body.md"
+          gh pr merge "$BRANCH" --auto --squash --delete-branch
+          gh workflow run ci.yml --ref "$BRANCH"
+
+      # Typically a new upstream user-only skill without a Chinese command wrapper.
+      # The PR stays open (CI fails) until a fix is pushed to its branch.
+      - name: Flag manual fix
+        if: steps.absorb.outputs.changed != ''
+        run: |
+          if ! bash scripts/check.sh > "$RUNNER_TEMP/check.log" 2>&1; then
+            {
+              echo "@${{ github.repository_owner }} 校验未通过，需要手动处理后推送到本分支："
+              echo
+              echo '```'
+              cat "$RUNNER_TEMP/check.log"
+              echo '```'
+            } > "$RUNNER_TEMP/comment.md"
+            gh pr comment "$BRANCH" --body-file "$RUNNER_TEMP/comment.md"
+            exit 1
+          fi

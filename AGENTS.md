@@ -19,7 +19,7 @@
 - **`skills/<name>/`**：单一职责的独立单体原子技能区（支持通过 `npx skills` 独立安装）。
 - **`.upstream/<name>/`**：本地浅克隆的上游官方参考镜像（只读）。
 - **`.omp-plugin/marketplace.json`**：官方插件市场索引清单，列出所有可安装插件。
-- **`scripts/`**：自动化镜像同步脚本（`sync-upstream.*`）与双平台质量校验脚本（`check.*`）。
+- **`scripts/`**：镜像同步脚本（`sync-upstream.*`）、上游吸收与版本递增脚本（`absorb.mjs`，由 `.github/workflows/upstream-sync.yml` 每周自动运行）与双平台质量校验脚本（`check.*`）。
 
 ---
 
@@ -30,7 +30,7 @@
 ### 铁律 1：上游绝对隔离（严格只读）
 - `.upstream/` 目录存放由 `scripts/sync-upstream.*` 管理的本地参考镜像，已被 `.gitignore` 忽略。
 - **严禁修改、格式化或提交 `.upstream/` 中的任何文件。**
-- 所有资产提纯、本土化二次开发与适配修改，**必须**在 `plugins/<name>/` 或 `skills/<name>/` 中进行。
+- OMP 适配修改（命令、`package.json`、README、市场条目）**必须**在 `plugins/<name>/` 或 `skills/<name>/` 中进行。插件内由 `scripts/absorb.mjs` 生成的上游资产（如 `plugins/<name>/skills/`）**严禁手改**，需调整收纳范围时改 `absorb.mjs` 的规则。
 
 ### 铁律 2：双层语言分离架构
 - **`skills/`（面向 AI 模型）$\to$ 100% 保持上游原版英文**：
@@ -66,5 +66,5 @@
 - 强调修改原因（Why over what），拒绝废话。
 
 ### 铁律 8：版本变更纪律（改动必自增）
-- 任何插件的代码、技能、命令或配置发生变更，提交前**必须在其 `package.json` 中递增版本号**（遵循 SemVer 规范，如 Patch 升级 `1.0.x`），并同步更新 `plugins/README.md` 的版本基线表。
+- 任何插件的代码、技能、命令或配置发生变更，提交前**必须在其 `package.json` 中递增版本号**（遵循 SemVer 规范，如 Patch 升级 `1.0.x`），并同步 `.omp-plugin/marketplace.json` 的 `version` 与 `plugins/README.md`、根 `README.md` 的版本表。上游吸收由 `scripts/absorb.mjs` 自动完成这些递增。
 - **原因**：OMP 依赖版本号判断插件升级（`omp plugin upgrade <name>@my-agent-kit`）。若不递增版本，远端安装用户将无法拉取最新的优化与修复。
