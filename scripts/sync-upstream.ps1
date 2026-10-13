@@ -9,9 +9,9 @@ $ProgressPreference = "SilentlyContinue"
 $Root = Split-Path -Parent $PSScriptRoot
 $UpstreamDir = Join-Path $Root ".upstream"
 
-# Git mirrors: shallow clone of the whole repository.
+# Git mirrors: shallow clone of the latest release tag (unreleased main commits are skipped).
 $Repos = @(
-    @{ Name = "matt";             Url = "https://github.com/mattpocock/skills.git" }
+    @{ Name = "matt"; Repo = "mattpocock/skills" }
 )
 
 # Release mirrors: verified release asset ZIP for repositories too large to clone.
@@ -26,17 +26,18 @@ if (-not (Test-Path $UpstreamDir)) {
 
 foreach ($repo in $Repos) {
     $target = Join-Path $UpstreamDir $repo.Name
-    Write-Host "==> Syncing $($repo.Name) ($($repo.Url))..." -ForegroundColor Cyan
-    if (Test-Path (Join-Path $target ".git")) {
-        git -C $target pull --ff-only
-        if ($LASTEXITCODE -ne 0) { throw "Git pull failed for $($repo.Name)" }
-    } else {
-        if (Test-Path $target) {
-            Remove-Item -Recurse -Force $target
-        }
-        git clone --depth 1 $repo.Url $target
-        if ($LASTEXITCODE -ne 0) { throw "Git clone failed for $($repo.Name)" }
+    $tagFile = Join-Path $target ".release-tag"
+    Write-Host "==> Syncing $($repo.Name) (latest release of $($repo.Repo))..." -ForegroundColor Cyan
+    $tag = (Invoke-RestMethod "https://api.github.com/repos/$($repo.Repo)/releases/latest" -Headers @{ "User-Agent" = "my-agent-kit-sync" }).tag_name
+    if ((Test-Path $tagFile) -and ((Get-Content -Raw $tagFile).Trim() -eq $tag)) {
+        Write-Host "Already at $tag"
+        continue
     }
+    if (Test-Path $target) { Remove-Item -Recurse -Force $target }
+    git -c advice.detachedHead=false clone -q --depth 1 --branch $tag "https://github.com/$($repo.Repo).git" $target
+    if ($LASTEXITCODE -ne 0) { throw "Git clone failed for $($repo.Name) $tag" }
+    Set-Content -Path $tagFile -Value $tag -NoNewline
+    Write-Host "Mirrored $tag"
 }
 
 foreach ($rel in $Releases) {

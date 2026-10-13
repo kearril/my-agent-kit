@@ -17,7 +17,7 @@
 - **极简零运行时**：不设 TS 扩展。
 
 ### 3. 版本与上游基线
-本地版本与上游 Release 基线见 [`plugins/README.md`](../README.md) 版本表，由每周自动同步维护（每吸收一个新 Release 递增 patch 版本）。市场条目声明 `version`，使 `omp plugin upgrade`（不带目标）与 `marketplace.autoUpdate: auto` 能识别新版本。
+插件版本即上游 Release 版本（与 `plugin.json` 一致），见 [`plugins/README.md`](../README.md) 版本表，由每日自动同步维护。市场条目声明 `version`，使 `omp plugin upgrade`（不带目标）与 `marketplace.autoUpdate: auto` 能识别新版本。本地命令改动随上游下一个 Release 发布。
 
 ### 4. 运行依赖
 - Node.js 22+ 与 npm（启动器首次调用会经 npm 下载固定版本 CLI）。
@@ -34,6 +34,6 @@
 ## 维护铁律
 
 1. **上游隔离原则**：本地上游镜像存放于 `.upstream/hyperframes/`（`.gitignore` 忽略，只读不可改），由 `scripts/sync-upstream.*` 下载最新 Release 插件包、校验 SHA-256 并解压；`.release-tag` 记录镜像对应的 Release。
-2. **自动吸收**：`.github/workflows/upstream-sync.yml` 每周运行 `scripts/absorb.mjs`，整体替换 `skills/`、`plugin.json`、`LICENSE` 并开自动合并 PR；本地手动执行 `bash scripts/sync-upstream.sh && node scripts/absorb.mjs hyperframes` 效果相同（脚本以 `git add -f` 暂存，规避上游技能自带 `.gitignore` 屏蔽其夹具文件）。
+2. **自动吸收**：`.github/workflows/upstream-sync.yml` 每日运行 `scripts/absorb.mjs`，上游有新 Release 时整体替换 `skills/`、`plugin.json`、`LICENSE` 并自动合并；本地手动执行 `bash scripts/sync-upstream.sh && node scripts/absorb.mjs hyperframes` 效果相同（脚本以 `git add -f` 暂存，规避上游技能自带 `.gitignore` 屏蔽其夹具文件）。
 3. **整包覆盖，不做裁剪**：技能目录保持与 Release 包逐字节一致；如需剔除技能，改 `scripts/absorb.mjs` 的收纳规则并在本文件记录理由。
 4. **语言分离原则**：技能 Frontmatter 与正文保持上游英文；命令 Frontmatter 的 `description` 使用中文。

@@ -8,17 +8,17 @@
 
 所有插件逐字收录上游正式发布的技能，本地只做 OMP 适配（中文命令、`package.json`、市场条目）。版本与基线两列由 `scripts/absorb.mjs` 自动维护，勿手改：
 
-| 本地插件 | 本地版本 | 上游仓库 URL | 上游基线 | 收纳规则 |
+| 本地插件 | 本地版本（= 上游 Release） | 上游仓库 URL | 上游基线 | 收纳规则 |
 |---|---|---|---|---|
-| **`matt`** | `v2.0.3` | `https://github.com/mattpocock/skills.git` | `49dd158` *(2026-10-09)* | 按上游 `.claude-plugin/plugin.json` 的 `skills` 清单拍平收录，不裁剪；`deprecated/`、`in-progress/`、`misc/` 不在清单内即不收。 |
-| **`hyperframes`** | `v1.0.1` | `https://github.com/heygen-com/hyperframes` | Release `v0.8.152` | 收录 Release 插件包 `hyperframes-agent-plugin.zip` 的全部技能目录及 `plugin.json`、`LICENSE`（启动器依赖 `plugin.json` 版本号固定 CLI）；上游仓库过大，镜像下载并校验 Release 包而非克隆。 |
+| **`matt`** | `v1.3.1` | `https://github.com/mattpocock/skills.git` | Release `v1.3.1` | 按上游 `.claude-plugin/plugin.json` 的 `skills` 清单拍平收录，不裁剪；`deprecated/`、`in-progress/`、`misc/` 不在清单内即不收。 |
+| **`hyperframes`** | `v0.8.152` | `https://github.com/heygen-com/hyperframes` | Release `v0.8.152` | 收录 Release 插件包 `hyperframes-agent-plugin.zip` 的全部技能目录及 `plugin.json`、`LICENSE`（启动器依赖 `plugin.json` 版本号固定 CLI）；上游仓库过大，镜像下载并校验 Release 包而非克隆。 |
 
 ### 自动更新
 
-`.github/workflows/upstream-sync.yml` 每周一 01:00 UTC（亦可在 Actions 页手动触发）执行，仅用内置 `GITHUB_TOKEN`，无需额外 Secret：
+`.github/workflows/upstream-sync.yml` 每日 01:00 UTC（亦可在 Actions 页手动触发）执行，仅用内置 `GITHUB_TOKEN`，无需额外 Secret：
 
-1. `scripts/sync-upstream.sh` 更新 `.upstream/` 镜像；
-2. `scripts/absorb.mjs` 按上表规则整体替换 `plugins/<name>/skills/` 等上游资产，有变化则从已提交版本递增 patch 版本，并同步 `marketplace.json` 与两张版本表；
+1. `scripts/sync-upstream.sh` 将 `.upstream/` 镜像更新到各上游**最新 Release**（不跟踪未发版的 main 提交）；
+2. `scripts/absorb.mjs` 按上表规则整体替换 `plugins/<name>/skills/` 等上游资产，插件版本直接采用上游 Release 版本，并同步 `marketplace.json` 与两张版本表；
 3. 推送 `auto/upstream-sync` 分支并开 PR，在同一任务内运行 `scripts/check.sh`，通过即 squash 合并（`GITHUB_TOKEN` 开的 PR 不会触发 CI，也唤不醒 auto-merge，故由任务自行校验并合并）。
 
 sync PR 未合并期间，后续定时运行会跳过，避免覆盖分支上的手动修复。
@@ -71,7 +71,7 @@ gh pr merge auto/upstream-sync --squash --delete-branch   # 推送触发的 CI �
 当需要将新的外部开源 Agent 项目引入本仓库时，必须严格执行以下流程：
 
 ### 第一步：配置本地上游镜像
-在 `scripts/sync-upstream.sh` 和 `scripts/sync-upstream.ps1` 的仓库列表中追加新源，运行脚本进行浅克隆：
+在 `scripts/sync-upstream.sh` 和 `scripts/sync-upstream.ps1` 的仓库列表中追加新源（上游必须发布 SemVer 标签的 GitHub Release，镜像与插件版本均以最新 Release 为准），运行脚本拉取：
 ```bash
 ./scripts/sync-upstream.sh  # 或 ./scripts/sync-upstream.ps1
 ```

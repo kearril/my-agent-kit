@@ -19,7 +19,7 @@
 - **极简零运行时**：不设 TS 扩展。
 
 ### 3. 版本与上游基线
-本地版本与上游 Commit 基线见 [`plugins/README.md`](../README.md) 版本表，由每周自动同步维护（每次吸收上游变化递增 patch 版本）。
+只跟随上游正式 Release（`v*` 标签），不收录 main 上未发版的提交；插件版本即上游 Release 版本，见 [`plugins/README.md`](../README.md) 版本表，由每日自动同步维护。本地命令改动随上游下一个 Release 发布。
 
 ## OMP Slash Commands（`/matt:<command>`）
 
@@ -46,6 +46,6 @@
 ## 维护铁律
 
 1. **上游隔离原则**：`.upstream/matt/` 为 `scripts/sync-upstream.*` 管理的只读浅克隆（`.gitignore` 忽略）。
-2. **自动吸收**：`.github/workflows/upstream-sync.yml` 每周运行 `scripts/absorb.mjs`，整体替换 `skills/` 并开自动合并 PR；本地手动执行 `bash scripts/sync-upstream.sh && node scripts/absorb.mjs matt` 效果相同。
+2. **自动吸收**：`.github/workflows/upstream-sync.yml` 每日运行 `scripts/absorb.mjs`，上游有新 Release 时整体替换 `skills/` 并自动合并；本地手动执行 `bash scripts/sync-upstream.sh && node scripts/absorb.mjs matt` 效果相同。
 3. **新增用户技能需补命令**：上游新增 `disable-model-invocation: true` 技能时 `check` 失败、PR 不会合并，在 PR 分支补 `commands/<name>.md`（中文 `description`）即可。
 4. **语言分离原则**：技能 Frontmatter 与正文保持上游英文；命令 Frontmatter 的 `description` 使用中文。

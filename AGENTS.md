@@ -19,7 +19,7 @@
 - **`skills/<name>/`**：单一职责的独立单体原子技能区（支持通过 `npx skills` 独立安装）。
 - **`.upstream/<name>/`**：本地浅克隆的上游官方参考镜像（只读）。
 - **`.omp-plugin/marketplace.json`**：官方插件市场索引清单，列出所有可安装插件。
-- **`scripts/`**：镜像同步脚本（`sync-upstream.*`）、上游吸收与版本递增脚本（`absorb.mjs`，由 `.github/workflows/upstream-sync.yml` 每周自动运行）与双平台质量校验脚本（`check.*`）。
+- **`scripts/`**：镜像同步脚本（`sync-upstream.*`，跟踪上游最新 Release）、上游吸收脚本（`absorb.mjs`，由 `.github/workflows/upstream-sync.yml` 每日自动运行）与双平台质量校验脚本（`check.*`）。
 
 ---
 
@@ -65,6 +65,7 @@
 - 标题必须 $\le 50$ 字符，祈使语气，类型后全小写，末尾不加句号。
 - 强调修改原因（Why over what），拒绝废话。
 
-### 铁律 8：版本变更纪律（改动必自增）
-- 任何插件的代码、技能、命令或配置发生变更，提交前**必须在其 `package.json` 中递增版本号**（遵循 SemVer 规范，如 Patch 升级 `1.0.x`），并同步 `.omp-plugin/marketplace.json` 的 `version` 与 `plugins/README.md`、根 `README.md` 的版本表。上游吸收由 `scripts/absorb.mjs` 自动完成这些递增。
-- **原因**：OMP 依赖版本号判断插件升级（`omp plugin upgrade <name>@my-agent-kit`）。若不递增版本，远端安装用户将无法拉取最新的优化与修复。
+### 铁律 8：版本变更纪律
+- **跟随上游的插件**（`scripts/absorb.mjs` 的 `RULES` 中登记者）：版本号**等于上游 Release 版本**，由 `absorb.mjs` 自动写入 `package.json`、`.omp-plugin/marketplace.json` 与两张版本表，**严禁手改**。本地适配改动（命令、README）不改版本，随上游下一个 Release 一并发布；需立即生效时，已安装用户执行 `omp plugin upgrade <name>@my-agent-kit` 强制重装。
+- **自研插件**：任何代码、技能、命令或配置变更，提交前**必须递增 `package.json` 版本号**（SemVer），并同步 `marketplace.json` 的 `version` 与版本表。
+- **原因**：OMP 对声明了 `version` 的条目仅在 SemVer 更新时自动升级（`omp plugin upgrade` 不带目标、`marketplace.autoUpdate: auto`）。

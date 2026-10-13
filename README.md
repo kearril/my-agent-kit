@@ -12,7 +12,7 @@ omp marketplace add kearril/my-agent-kit
 omp plugin install matt@my-agent-kit
 omp plugin install hyperframes@my-agent-kit
 
-# 更新插件（上游每周自动同步，见 plugins/README.md「自动更新」）
+# 更新插件（上游每日自动同步，见 plugins/README.md「自动更新」）
 omp plugin marketplace update my-agent-kit
 omp plugin upgrade
 
@@ -24,8 +24,8 @@ omp config set marketplace.autoUpdate auto
 
 | 插件 | 版本 | 核心定位 | 命令入口 |
 | :--- | :--- | :--- | :--- |
-| **`matt`** | `v2.0.3` | 需求澄清、TDD 与双轴代码审查 | `/matt:*` |
-| **`hyperframes`** | `v1.0.1` | HTML 编写合成、渲染视频 | `/hyperframes:hyperframes` |
+| **`matt`** | `v1.3.1` | 需求澄清、TDD 与双轴代码审查 | `/matt:*` |
+| **`hyperframes`** | `v0.8.152` | HTML 编写合成、渲染视频 | `/hyperframes:hyperframes` |
 
 ---
 

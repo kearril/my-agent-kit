@@ -1,11 +1,11 @@
 name: Upstream Sync
 
-# Weekly: mirror upstreams, absorb them into plugins/, bump versions, open a PR, and
+# Daily: mirror upstream releases, absorb them into plugins/, adopt their versions, open a PR, and
 # squash-merge it once scripts/check.sh passes in this job. GITHUB_TOKEN-created PRs
 # do not get CI or auto-merge reliably, so the job validates and merges itself.
 on:
   schedule:
-    - cron: "0 1 * * 1" # Monday 01:00 UTC
+    - cron: "0 1 * * *" # daily 01:00 UTC
   workflow_dispatch:
 
 concurrency: upstream-sync
