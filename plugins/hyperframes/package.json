@@ -1,6 +1,6 @@
 {
   "name": "@my-agent-kit/hyperframes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "HyperFrames by HeyGen agent skills (write HTML, render video) mirrored from the official release plugin bundle for Oh My Pi (omp).",
   "keywords": [
     "omp-plugin",
