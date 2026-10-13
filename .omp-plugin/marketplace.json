@@ -12,6 +12,13 @@
       "description": "Matt Pocock 面向严谨工程实践的 Agent 技能套件（TDD、DDD、双轴代码审查与架构熵增治理）",
       "source": "./plugins/matt",
       "category": "engineering"
+    },
+    {
+      "name": "hyperframes",
+      "description": "HeyGen HyperFrames 视频创作技能套件（HTML 编写合成、确定性渲染 MP4；宣传片、讲解、字幕、动效、幻灯片）",
+      "source": "./plugins/hyperframes",
+      "version": "1.0.0",
+      "category": "productivity"
     }
   ]
 }

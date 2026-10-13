@@ -11,6 +11,7 @@
 | 本地插件 | 本地版本 | 上游仓库 URL | 上游精确基线 (Commit / 日期) | 核心提纯与裁剪裁决备忘 |
 |---|---|---|---|---|
 | **`matt`** | `v2.0.2` | `https://github.com/mattpocock/skills.git` | `b0618bc` *(2026-10-08, 官方 package 1.3.1 后续 patch 提交)* | 收纳 26 个生产级技能，排除 `to-questionnaire`，保留 `triage` 与完整核心流程；提供 16 个中文命令。吸收现有技能修复，保持零 TS 运行时；`wizard` 仅生成 Bash 向导，Windows 需可用 Bash 环境，不提供原生 PowerShell 适配。 |
+| **`hyperframes`** | `v1.0.0` | `https://github.com/heygen-com/hyperframes` | Release `v0.8.152` *(2026-10-13, 官方 `hyperframes-agent-plugin.zip`)* | 收纳 Release 插件包内全部 21 个技能及 `plugin.json`（内置启动器依赖其版本号固定 CLI），排除其他客户端清单与品牌素材；提供 1 个中文路由命令。上游仓库过大，`.upstream/` 镜像改为下载并校验 Release 插件包而非克隆。 |
 ---
 
 ## 二、 核心架构设计与工程规范

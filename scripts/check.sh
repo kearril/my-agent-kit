@@ -13,7 +13,8 @@ node -e '
     if (!fs.existsSync(src)) throw new Error(`Plugin source not found: ${p.source}`);
     const pkg = path.join(src, "package.json");
     if (!fs.existsSync(pkg)) throw new Error(`package.json missing in ${p.source}`);
-    JSON.parse(fs.readFileSync(pkg));
+    const version = JSON.parse(fs.readFileSync(pkg)).version;
+    if (p.version && p.version !== version) throw new Error(`Catalog version ${p.version} != package.json version ${version} for ${p.name}`);
   }
 ' "$ROOT_DIR"
 echo "  [OK] marketplace.json & plugin package.json files valid"

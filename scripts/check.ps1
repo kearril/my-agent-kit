@@ -23,7 +23,10 @@ foreach ($plugin in $Marketplace.plugins) {
     if (-not (Test-Path $pkg)) {
         throw "package.json missing in $($plugin.source)"
     }
-    Get-Content -Raw -Encoding utf8 $pkg | ConvertFrom-Json | Out-Null
+    $pkgJson = Get-Content -Raw -Encoding utf8 $pkg | ConvertFrom-Json
+    if ($plugin.version -and $plugin.version -ne $pkgJson.version) {
+        throw "Catalog version $($plugin.version) != package.json version $($pkgJson.version) for $($plugin.name)"
+    }
 }
 Write-Host "  [OK] marketplace.json & plugin package.json files valid" -ForegroundColor Green
 

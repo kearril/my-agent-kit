@@ -10,9 +10,11 @@ omp marketplace add kearril/my-agent-kit
 
 # 安装插件
 omp plugin install matt@my-agent-kit
+omp plugin install hyperframes@my-agent-kit
 
 # 更新插件
 omp plugin upgrade matt@my-agent-kit
+omp plugin upgrade hyperframes@my-agent-kit
 ```
 
 ## 已收录插件 (Plugins)
@@ -20,6 +22,7 @@ omp plugin upgrade matt@my-agent-kit
 | 插件 | 版本 | 核心定位 | 命令入口 |
 | :--- | :--- | :--- | :--- |
 | **`matt`** | `v2.0.2` | 需求澄清、TDD 与双轴代码审查 | `/matt:*` (16 项) |
+| **`hyperframes`** | `v1.0.0` | HTML 编写合成、渲染视频 | `/hyperframes:hyperframes` |
 
 ---
 
@@ -32,6 +35,7 @@ omp plugin upgrade matt@my-agent-kit
 ## 致谢 (Acknowledgments)
 
 - **[mattpocock/skills](https://github.com/mattpocock/skills)** by [@mattpocock](https://github.com/mattpocock)
+- **[heygen-com/hyperframes](https://github.com/heygen-com/hyperframes)** by [HeyGen](https://github.com/heygen-com)
 - **[Oh My Pi (omp)](https://github.com/canisminor1990/oh-my-pi)**
 
 ## License
