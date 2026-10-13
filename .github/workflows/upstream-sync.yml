@@ -1,7 +1,8 @@
 name: Upstream Sync
 
-# Weekly: mirror upstreams, absorb them into plugins/, bump versions, and open an
-# auto-merging PR. CI ("Validate Plugins") is the required check that gates the merge.
+# Weekly: mirror upstreams, absorb them into plugins/, bump versions, open a PR, and
+# squash-merge it once scripts/check.sh passes in this job. GITHUB_TOKEN-created PRs
+# do not get CI or auto-merge reliably, so the job validates and merges itself.
 on:
   schedule:
     - cron: "0 1 * * 1" # Monday 01:00 UTC
@@ -12,7 +13,6 @@ concurrency: upstream-sync
 permissions:
   contents: write
   pull-requests: write
-  actions: write # dispatch CI: events from GITHUB_TOKEN pushes/PRs do not trigger workflows
 
 jobs:
   sync:
@@ -70,13 +70,11 @@ jobs:
           $(cat "$RUNNER_TEMP/summary.md")
           EOF
           git push -f origin "$BRANCH"
-          sha=$(git rev-parse HEAD)
           gh pr create --base main --head "$BRANCH" --title "$title" --body-file "$RUNNER_TEMP/body.md"
 
           # Typically a new upstream user-only skill without a Chinese command wrapper.
-          # Auto-merge then fires once the owner pushes a fix (their push triggers CI normally).
+          # The PR stays open until the owner pushes a fix and merges it.
           if ! bash scripts/check.sh > "$RUNNER_TEMP/check.log" 2>&1; then
-            gh pr merge "$BRANCH" --auto --squash --delete-branch
             {
               echo "@${{ github.repository_owner }} 校验未通过，需要手动处理后推送到本分支："
               echo
@@ -88,14 +86,4 @@ jobs:
             exit 1
           fi
 
-          # Check results from GITHUB_TOKEN-dispatched runs do not wake auto-merge,
-          # so wait for the required CI run here and merge directly.
-          gh workflow run ci.yml --ref "$BRANCH"
-          for _ in $(seq 30); do
-            run=$(gh run list --workflow ci.yml --event workflow_dispatch --commit "$sha" --json databaseId --jq '.[0].databaseId')
-            [ -n "$run" ] && break
-            sleep 5
-          done
-          [ -n "$run" ] || { echo "::error::CI run for $sha did not start"; exit 1; }
-          gh run watch "$run" --exit-status
           gh pr merge "$BRANCH" --squash --delete-branch

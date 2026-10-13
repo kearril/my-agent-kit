@@ -19,7 +19,7 @@
 
 1. `scripts/sync-upstream.sh` 更新 `.upstream/` 镜像；
 2. `scripts/absorb.mjs` 按上表规则整体替换 `plugins/<name>/skills/` 等上游资产，有变化则从已提交版本递增 patch 版本，并同步 `marketplace.json` 与两张版本表；
-3. 推送 `auto/upstream-sync` 分支并开 PR，派发 CI（`GITHUB_TOKEN` 开的 PR 不会自动触发 CI，其检查结果也唤不醒 auto-merge），等待 `Validate Plugins` 通过后直接 squash 合并；`main` 分支保护要求该检查通过。
+3. 推送 `auto/upstream-sync` 分支并开 PR，在同一任务内运行 `scripts/check.sh`，通过即 squash 合并（`GITHUB_TOKEN` 开的 PR 不会触发 CI，也唤不醒 auto-merge，故由任务自行校验并合并）。
 
 sync PR 未合并期间，后续定时运行会跳过，避免覆盖分支上的手动修复。
 
@@ -28,9 +28,8 @@ sync PR 未合并期间，后续定时运行会跳过，避免覆盖分支上的
 ```bash
 gh pr checkout auto/upstream-sync
 omp "按 AGENTS.md 为 check 报错的 user-only 技能补中文命令文件，运行 check 后提交并推送"
+gh pr merge auto/upstream-sync --squash --delete-branch   # 推送触发的 CI 通过后执行
 ```
-
-推送触发 CI，通过后自动合并。
 
 本地手动吸收同理：`bash scripts/sync-upstream.sh && node scripts/absorb.mjs`，再运行 `check` 并提交（`absorb.mjs` 已用 `git add -f` 暂存，规避上游技能自带 `.gitignore` 屏蔽其夹具文件）。
 
