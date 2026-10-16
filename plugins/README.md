@@ -11,7 +11,7 @@
 | 本地插件 | 本地版本（= 上游 Release） | 上游仓库 URL | 上游基线 | 收纳规则 |
 |---|---|---|---|---|
 | **`matt`** | `v1.3.1` | `https://github.com/mattpocock/skills.git` | Release `v1.3.1` | 按上游 `.claude-plugin/plugin.json` 的 `skills` 清单拍平收录，不裁剪；`deprecated/`、`in-progress/`、`misc/` 不在清单内即不收。 |
-| **`hyperframes`** | `v0.8.159` | `https://github.com/heygen-com/hyperframes` | Release `v0.8.159` | 收录 Release 插件包 `hyperframes-agent-plugin.zip` 的全部技能目录及 `plugin.json`、`LICENSE`（启动器依赖 `plugin.json` 版本号固定 CLI）；上游仓库过大，镜像下载并校验 Release 包而非克隆。 |
+| **`hyperframes`** | `v0.8.163` | `https://github.com/heygen-com/hyperframes` | Release `v0.8.163` | 收录 Release 插件包 `hyperframes-agent-plugin.zip` 的全部技能目录及 `plugin.json`、`LICENSE`（启动器依赖 `plugin.json` 版本号固定 CLI）；上游仓库过大，镜像下载并校验 Release 包而非克隆。 |
 
 ### 自动更新
 
