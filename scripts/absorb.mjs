@@ -21,14 +21,6 @@ const RULES = {
     skills: (up) => readJson(path.join(up, ".claude-plugin/plugin.json")).skills.map((p) => path.join(up, p)),
     files: [],
   },
-  hyperframes: {
-    skills: (up) =>
-      fs.readdirSync(path.join(up, "skills"), { withFileTypes: true })
-        .filter((d) => d.isDirectory())
-        .map((d) => path.join(up, "skills", d.name)),
-    // plugin.json pins the launcher's CLI version; see plugins/hyperframes/README.md.
-    files: ["plugin.json", "LICENSE"],
-  },
 };
 
 const args = process.argv.slice(2);
