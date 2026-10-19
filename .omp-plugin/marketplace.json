@@ -18,7 +18,7 @@
       "name": "hyperframes",
       "description": "HeyGen HyperFrames 视频创作技能套件（HTML 编写合成、确定性渲染 MP4；宣传片、讲解、字幕、动效、幻灯片）",
       "source": "./plugins/hyperframes",
-      "version": "0.8.169",
+      "version": "0.8.174",
       "category": "productivity"
     }
   ]
