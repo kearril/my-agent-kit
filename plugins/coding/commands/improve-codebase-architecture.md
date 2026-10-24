@@ -1,4 +1,5 @@
 ---
-description: 静态扫描代码库的模块深度（Deep Modules），生成可视化 HTML 诊断报告并辅助重构
+description: 扫描代码库浅模块与架构熵增，产出 HTML 诊断报告
+argument-hint: "[指定扫描的子模块目录或留空全仓扫描]"
 ---
-Read skill://improve-codebase-architecture. Scan the codebase for deepening opportunities and surface architectural friction: 
+Read skill://improve-codebase-architecture. Scan the codebase for deepening opportunities, generate an HTML report, and surface architectural friction: $ARGUMENTS

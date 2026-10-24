@@ -1,4 +1,5 @@
 ---
-description: 按照状态机规则在工单系统中分拣流转 Issue 和外部 PR，输出 Agent 可执行的简报
+description: 按照状态机规则在工单系统中分拣流转 Issue 与外部 PR
+argument-hint: "[待分拣的 Issue/PR 编号或链接]"
 ---
-Read skill://triage. Move issues on the project issue tracker through the state machine of triage roles: 
+Read skill://triage. Move issues or external PRs on the project tracker through the state machine of triage roles: $ARGUMENTS

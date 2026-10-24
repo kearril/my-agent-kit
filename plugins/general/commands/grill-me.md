@@ -1,4 +1,5 @@
 ---
-description: 纯思路与方案层面的反向提问（不落盘文件，适用于无代码仓库的思考场景）
+description: 高强度质询推演，通过决策树反问逼出思维盲点
+argument-hint: "[方案、课题或构想概述]"
 ---
-Read skill://grill-me and skill://grilling. Conduct a relentless interview to sharpen the plan or design: 
+Read skill://grilling. Conduct a relentless interview to stress-test and sharpen the plan or idea. If an argument is provided, start round 1 on it immediately; otherwise, ask the user what they want to grill: $ARGUMENTS

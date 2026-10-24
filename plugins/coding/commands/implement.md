@@ -1,6 +1,5 @@
 ---
-description: 根据需求规范或工单集驱动编码实现（串联 TDD 循环与提交前双轴审查）
+description: 实施 Ticket 或 Spec 编码（驱动 TDD 并完成双轴审查）
+argument-hint: "<Ticket 编号/标题 或 Spec 路径>"
 ---
-Read skill://implement. In OMP, an instruction to call the Skill tool means reading the named skill:// resource and following it; do not assume a separate Skill tool is available.
-
-Implement the work described in the spec or tickets. Use skill://tdd where possible, and run skill://code-review once done:
+Read skill://implement. Implement the work specified by the argument. Call skill://tdd where possible at pre-agreed seams, and run skill://code-review once done: $ARGUMENTS

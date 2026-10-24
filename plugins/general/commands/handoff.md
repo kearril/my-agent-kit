@@ -1,4 +1,5 @@
 ---
-description: 将当前会话核心决策与进展浓缩为交接文档，便于在新会话或跨 Harness 中恢复上下文
+description: 跨会话状态交接，压缩当前核心结论并打包存盘
+argument-hint: "[下一阶段工作的重点或目标]"
 ---
-Read skill://handoff. Write a compact handoff document summarising the current conversation to the system temporary directory: 
+Read skill://handoff. Write a compact handoff document summarising the current conversation to the system temporary directory. If an argument is provided, tailor the next session goals accordingly: $ARGUMENTS

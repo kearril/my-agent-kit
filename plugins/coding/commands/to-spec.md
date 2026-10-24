@@ -1,4 +1,5 @@
 ---
-description: 将当前对话共识一键凝练为不可篡改的正式需求规范（Spec），同步发布至工单系统
+description: 对话共识一键结构化凝练为需求规格说明书 (Spec)
+argument-hint: "[Spec 目标主题或留空从当前对话提炼]"
 ---
-Read skill://to-spec. Turn the current conversation context and codebase understanding into a spec. Do NOT interview me; synthesize what is already agreed: 
+Read skill://to-spec. Turn the current conversation context and codebase understanding into a formal spec. Do NOT interview the user; synthesize what is already agreed: $ARGUMENTS

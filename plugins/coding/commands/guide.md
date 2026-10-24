@@ -1,4 +1,5 @@
 ---
-description: 研发全流程导航，根据当前工程研发阶段推荐适用的流程与技能
+description: 研发导航领航：按当前研发阶段推荐最适用的流程与技能
+argument-hint: "[当前遇到的工程处境或疑问]"
 ---
-Read skill://guide and execute workflow: $ARGUMENTS
+Read skill://guide. Help the user navigate the engineering workflow and pick the right skill for their situation: $ARGUMENTS

@@ -1,4 +1,5 @@
 ---
-description: 以当前工作区为交互演练沙盒，跨会话分步讲解复杂技术概念
+description: 体系化交互式教学，在当前工作区学习新技能或概念
+argument-hint: "<想要系统学习的技能或概念>"
 ---
-Read skill://teach. Teach the requested concept within this workspace: 
+Read skill://teach. Teach the requested concept within this workspace. Initialize or resume the teaching files (MISSION.md, lessons, resources): $ARGUMENTS
