@@ -16,7 +16,7 @@
 | `/coding:improve-codebase-architecture` | `improve...` | **代码库架构扫描与治理**：扫描浅模块与架构熵增，产出 HTML 报告并引导重构 |
 | `/coding:triage` | `triage` | **缺陷与需求分流状态机**：处理外部 Issue/PR 并推进至可交付状态 |
 | `/coding:pr` | `pr` | **Pull Request 描述规范**：强制提供前后对比视觉佐证、单双向门决策与影响面 |
-| `/coding:retro` | `retro` | **工程会话复盘**：分析编程踩坑，提出针对 Linter、CI、Git 守卫与编码规范的改进 |
+| `/coding:retro` | `code-retro` | **工程会话复盘**：分析编程踩坑，提出针对 Linter、CI、Git 守卫与编码规范的改进 |
 | `/coding:setup-matt-pocock-skills` | `setup...` | **项目初始化向导**：配置项目的 Issue Tracker 与标签词汇表 |
 
 ## 内聚模型驱动技能（Model-invoked）
