@@ -1,0 +1,16 @@
+{
+  "name": "@my-agent-kit/coding",
+  "version": "1.0.0",
+  "description": "严肃软件工程套件：涵盖需求拆解(Spec/Tickets)、TDD、代码实现、双轴审查、架构治理与 Bug 诊断闭环。",
+  "keywords": [
+    "omp-plugin",
+    "pi-package",
+    "coding",
+    "engineering",
+    "skills",
+    "tdd",
+    "code-review",
+    "domain-modeling"
+  ],
+  "license": "MIT"
+}

@@ -1,17 +1,24 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "my-agent-kit",
-  "description": "个人收集整理的面向 Oh My Pi (omp) 的 Agent 插件市场与工程能力套件。",
+  "description": "面向 Oh My Pi (omp) 的多场景 Agent 技能插件市场（通用元能力底座与严肃工程套件）。",
   "owner": {
     "name": "kearril",
     "url": "https://github.com/kearril"
   },
   "plugins": [
     {
-      "name": "matt",
-      "description": "Matt Pocock 面向严谨工程实践的 Agent 技能套件（TDD、DDD、双轴代码审查与架构熵增治理）",
-      "source": "./plugins/matt",
-      "version": "1.3.1",
+      "name": "general",
+      "description": "全局常驻通用元能力底座（苏格拉底式质询、白话叫停澄清、跨会话交接、课题深度调研、教学与会话复盘）",
+      "source": "./plugins/general",
+      "version": "1.0.0",
+      "category": "productivity"
+    },
+    {
+      "name": "coding",
+      "description": "严肃软件工程专业套件（Spec规格化、Tickets拆解、TDD红绿循环、双轴代码审查、架构治理与Bug诊断）",
+      "source": "./plugins/coding",
+      "version": "1.0.0",
       "category": "engineering"
     }
   ]

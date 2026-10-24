@@ -1,37 +1,39 @@
 # My Agent Kit
 
-个人面向 **Oh My Pi (omp)** 的 Agent 插件市场与能力集成库。
+个人面向 **Oh My Pi (omp)** 的 Agent 插件市场与能力套件库。
 
-## 安装与更新 (Install & Update)
+采用「**通用元能力常驻 + 垂直领域插件按需挂载**」架构，面向日常讨论、科研调研、办公协同与严谨软件工程。
+
+## 安装与使用 (Install & Usage)
 
 ```bash
 # 添加市场源
 omp marketplace add kearril/my-agent-kit
 
-# 安装插件
-omp plugin install matt@my-agent-kit
+# 推荐全局常驻安装通用底座
+omp plugin install general@my-agent-kit
 
-# 更新插件（上游每日自动同步，见 plugins/README.md「自动更新」）
+# 进入代码工程项目按需安装
+omp plugin install coding@my-agent-kit
+
+# 更新插件
 omp plugin marketplace update my-agent-kit
 omp plugin upgrade
-
-# 或让 omp 启动时自动升级
-omp config set marketplace.autoUpdate auto
 ```
 
 ## 已收录插件 (Plugins)
 
-| 插件 | 版本 | 核心定位 | 命令入口 |
-| :--- | :--- | :--- | :--- |
-| **`matt`** | `v1.3.1` | 需求澄清、TDD 与双轴代码审查 | `/matt:*` |
+| 插件 | 版本 | 核心定位 | 命令入口 | 适用场景 |
+| :--- | :--- | :--- | :--- | :--- |
+| **`general`** | `v1.0.0` | 思维质询、白话澄清、交接、一手调研与会话复盘 | `/general:*` | 全局常驻（日常聊天、科研、调研、办公协作） |
+| **`coding`** | `v1.0.0` | 需求规格化、任务拆解、TDD、架构治理与双轴代码审查 | `/coding:*` | 软件研发工程项目（按需挂载） |
 
 ---
 
 ## 目录索引
 
-- `plugins/`：成套 OMP 插件源码（命令与技能）
-- `skills/`：单体原子技能独立存放区
-- `docs/`：个人实践笔记与体系调研手稿
+- `plugins/general/`：常驻通用元能力插件（9 个技能，7 个斜杠命令）
+- `plugins/coding/`：专业软件工程研发插件（18 个技能，12 个斜杠命令）
 
 ## 致谢 (Acknowledgments)
 
