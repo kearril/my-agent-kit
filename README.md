@@ -16,6 +16,9 @@ omp plugin install general@my-agent-kit
 # 进入代码工程项目按需安装
 omp plugin install coding@my-agent-kit
 
+# 学术科研与文献管理项目按需安装
+omp plugin install academic@my-agent-kit
+
 # 更新插件
 omp plugin marketplace update my-agent-kit
 omp plugin upgrade
@@ -27,6 +30,7 @@ omp plugin upgrade
 | :--- | :--- | :--- | :--- | :--- |
 | **`general`** | `v1.0.1` | 思维质询、白话澄清、交接、一手调研与会话复盘 | `/general:*` | 全局常驻（日常聊天、科研、调研、办公协作） |
 | **`coding`** | `v1.0.1` | 需求规格化、任务拆解、TDD、架构治理与双轴代码审查 | `/coding:*` | 软件研发工程项目（按需挂载） |
+| **`academic`** | `v1.0.0` | 本地 Zotero 联动、文献检索、PDF 研读、笔记提取与引文导出 | `/academic:*` | 学术文献研读与论文写作（按需挂载） |
 
 ---
 
@@ -34,6 +38,7 @@ omp plugin upgrade
 
 - `plugins/general/`：常驻通用元能力插件（9 个技能，7 个斜杠命令）
 - `plugins/coding/`：专业软件工程研发插件（18 个技能，12 个斜杠命令）
+- `plugins/academic/`：学术科研与文献管理插件（1 个技能，1 个斜杠命令）
 
 ## 致谢 (Acknowledgments)
 

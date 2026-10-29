@@ -4,7 +4,7 @@
 
 ---
 
-## 一、 插件架构设计：双层场景分离
+## 一、 插件架构设计：分层场景解耦
 
 本仓库采用**「通用元能力常驻 + 垂直领域插件按需挂载」**架构，针对不同场景隔离 Context，避免模型上下文污染与 Token 浪费：
 
@@ -12,6 +12,7 @@
 | :--- | :--- | :--- | :--- |
 | **`general`** | `v1.0.1` | **全局常驻通用元能力底座**：苏格拉底式质询、消除黑话大白话澄清、跨会话交接、课题深度调研、教学与会话复盘 | `/general:grill-me`<br>`/general:wait-what`<br>`/general:handoff`<br>`/general:research`<br>`/general:teach`<br>`/general:to-questionnaire`<br>`/general:retro` |
 | **`coding`** | `v1.0.1` | **严肃软件工程专业套件**：Spec 规格化、Tickets 拆解、TDD 红绿循环、双轴代码审查、架构治理与 Bug 诊断闭环 | `/coding:guide`<br>`/coding:to-spec`<br>`/coding:to-tickets`<br>`/coding:implement`<br>`/coding:implement-spec`<br>`/coding:improve-codebase-architecture`<br>`/coding:retro`<br>`/coding:pr` |
+| **`academic`** | `v1.0.0` | **学术科研与文献管理套件**：本地 Zotero 联动、文献检索、PDF 研读、高亮笔记提取、安全打标归类与引文导出 | `/academic:zotero` |
 
 ---
 

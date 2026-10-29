@@ -1,0 +1,16 @@
+{
+  "name": "@my-agent-kit/academic",
+  "version": "1.0.0",
+  "description": "学术科研与文献管理套件：深度联动本地 Zotero 桌面端，实现文献检索、PDF 研读、笔记提取、打标归档与引文导出。",
+  "keywords": [
+    "omp-plugin",
+    "pi-package",
+    "academic",
+    "research",
+    "skills",
+    "zotero",
+    "literature",
+    "citation"
+  ],
+  "license": "MIT"
+}
