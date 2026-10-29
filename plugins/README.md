@@ -10,8 +10,8 @@
 
 | 插件 | 当前版本 | 核心定位 | 常用命令入口 |
 | :--- | :--- | :--- | :--- |
-| **`general`** | `v1.0.0` | **全局常驻通用元能力底座**：苏格拉底式质询、消除黑话大白话澄清、跨会话交接、课题深度调研、教学与会话复盘 | `/general:grill-me`<br>`/general:wait-what`<br>`/general:handoff`<br>`/general:research`<br>`/general:teach`<br>`/general:to-questionnaire`<br>`/general:retro` |
-| **`coding`** | `v1.0.0` | **严肃软件工程专业套件**：Spec 规格化、Tickets 拆解、TDD 红绿循环、双轴代码审查、架构治理与 Bug 诊断闭环 | `/coding:guide`<br>`/coding:to-spec`<br>`/coding:to-tickets`<br>`/coding:implement`<br>`/coding:implement-spec`<br>`/coding:improve-codebase-architecture`<br>`/coding:retro`<br>`/coding:pr` |
+| **`general`** | `v1.0.1` | **全局常驻通用元能力底座**：苏格拉底式质询、消除黑话大白话澄清、跨会话交接、课题深度调研、教学与会话复盘 | `/general:grill-me`<br>`/general:wait-what`<br>`/general:handoff`<br>`/general:research`<br>`/general:teach`<br>`/general:to-questionnaire`<br>`/general:retro` |
+| **`coding`** | `v1.0.1` | **严肃软件工程专业套件**：Spec 规格化、Tickets 拆解、TDD 红绿循环、双轴代码审查、架构治理与 Bug 诊断闭环 | `/coding:guide`<br>`/coding:to-spec`<br>`/coding:to-tickets`<br>`/coding:implement`<br>`/coding:implement-spec`<br>`/coding:improve-codebase-architecture`<br>`/coding:retro`<br>`/coding:pr` |
 
 ---
 
