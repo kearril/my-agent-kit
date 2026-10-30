@@ -1,10 +1,12 @@
 # My Agent Kit
 
-个人面向 **Oh My Pi (omp)** 的 Agent 插件市场与能力套件库。
+个人面向 **Oh My Pi (omp)** 的 Agent 插件市场与能力套件库，同时兼容 **Claude Code**。
 
 采用「**通用元能力常驻 + 垂直领域插件按需挂载**」架构，面向日常讨论、科研调研、办公协同与严谨软件工程。
 
 ## 安装与使用 (Install & Usage)
+
+### Oh My Pi (omp)
 
 ```bash
 # 添加市场源
@@ -23,6 +25,17 @@ omp plugin install academic@my-agent-kit
 omp plugin marketplace update my-agent-kit
 omp plugin upgrade
 ```
+
+### Claude Code
+
+```bash
+claude plugin marketplace add kearril/my-agent-kit
+claude plugin install general@my-agent-kit
+claude plugin install coding@my-agent-kit
+claude plugin install academic@my-agent-kit
+```
+
+Claude Code 不加载 `commands/`，直接以技能作为斜杠入口（`/<plugin>:<skill>`，如 `/general:grill-me`、`/coding:code-retro`），补全提示为技能的英文描述。
 
 ## 已收录插件 (Plugins)
 

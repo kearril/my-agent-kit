@@ -1,0 +1,32 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "my-agent-kit",
+  "description": "面向 Claude Code 与 Oh My Pi (omp) 的多场景 Agent 技能插件市场（通用元能力底座、严肃工程与学术科研套件）。",
+  "owner": {
+    "name": "kearril",
+    "url": "https://github.com/kearril"
+  },
+  "plugins": [
+    {
+      "name": "general",
+      "description": "全局常驻通用元能力底座（苏格拉底式质询、白话叫停澄清、跨会话交接、课题深度调研、教学与会话复盘）",
+      "source": "./plugins/general",
+      "version": "1.0.1",
+      "category": "productivity"
+    },
+    {
+      "name": "coding",
+      "description": "严肃软件工程专业套件（Spec规格化、Tickets拆解、TDD红绿循环、双轴代码审查、架构治理与Bug诊断）",
+      "source": "./plugins/coding",
+      "version": "1.0.1",
+      "category": "engineering"
+    },
+    {
+      "name": "academic",
+      "description": "学术科研与文献管理套件（本地Zotero联动、文献检索、PDF研读、高亮笔记提取与引文导出）",
+      "source": "./plugins/academic",
+      "version": "1.0.0",
+      "category": "academic"
+    }
+  ]
+}

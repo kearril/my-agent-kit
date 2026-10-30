@@ -30,6 +30,7 @@
 
 ### 3. OMP 原生命名空间机制
 * OMP 会自动为插件命令拼装命名空间（`/<plugin>:<command>`），如 `plugins/general/commands/grill-me.md` 对应 `/general:grill-me`。
+* Claude Code 经 `.claude-plugin/plugin.json` 的 `"commands": []` 屏蔽 `commands/`，同名入口 `/general:grill-me` 直接指向 `skills/grill-me/`（详见根目录 `AGENTS.md` 准则 7）。
 
 ### 4. 极简零运行时哲学（YAGNI）
 * 纯 Markdown / Prompt 工作流套件，保持零 TS/JS 运行时依赖，消除一切多余的编译与自动化脚本负担。

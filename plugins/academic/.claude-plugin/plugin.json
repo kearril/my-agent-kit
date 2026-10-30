@@ -1,0 +1,10 @@
+{
+  "name": "academic",
+  "description": "学术科研与文献管理套件：深度联动本地 Zotero 桌面端，实现文献检索、PDF 研读、笔记提取、打标归档与引文导出。",
+  "author": {
+    "name": "kearril",
+    "url": "https://github.com/kearril"
+  },
+  "license": "MIT",
+  "commands": []
+}

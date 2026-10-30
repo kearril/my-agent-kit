@@ -1,0 +1,10 @@
+{
+  "name": "general",
+  "description": "通用元能力套件：涵盖思维质询、沟通澄清、交接、课题调研、教学与会话复盘，适合全场景全局常驻。",
+  "author": {
+    "name": "kearril",
+    "url": "https://github.com/kearril"
+  },
+  "license": "MIT",
+  "commands": []
+}

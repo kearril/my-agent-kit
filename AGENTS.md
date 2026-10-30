@@ -1,6 +1,6 @@
 # AGENTS.md — 仓库操作手册与 Agent 行为守则
 
-本仓库是专为 **Oh My Pi (omp)** 与 Agent Skills 生态深度适配的开源插件市场与能力集成库。
+本仓库是以 **Oh My Pi (omp)** 为主、同时兼容 **Claude Code** 的 Agent Skills 开源插件市场与能力集成库。
 
 本手册为进入本仓库工作的所有 AI Agent 确立了长效、通用的架构约束与操作准则。
 
@@ -14,9 +14,11 @@
   - `skills/<skill-name>/`：技能定义目录，包含 `SKILL.md` 及可选的配套参考文档。
   - `commands/<cmd-name>.md`：暴露给人类在 OMP 交互终端中调用的斜杠命令定义（中文描述）。
   - `package.json`：包元数据与插件扩展清单声明。
+  - `.claude-plugin/plugin.json`：Claude Code 插件清单，仅用于屏蔽 `commands/`（见准则 7）。
   - `README.md`：组件清单、定位说明与维护规范。
 - **`.upstream/<name>/`**：本地浅克隆的上游官方参考镜像（只读，已被 `.gitignore` 忽略）。
-- **`.omp-plugin/marketplace.json`**：官方插件市场索引清单，列出所有可安装插件。
+- **`.omp-plugin/marketplace.json`**：OMP 插件市场索引清单（OMP 优先读取）。
+- **`.claude-plugin/marketplace.json`**：Claude Code 插件市场索引清单，`plugins` 列表须与 OMP 清单保持一致。
 
 ---
 
@@ -45,3 +47,10 @@
 ### 准则 6：提交规范
 - 严格遵循 Conventional Commits 规范：`<type>(<scope>): <imperative summary>`。
 - 标题 $\le 50$ 字符，祈使语气，类型后全小写，末尾不加句号。
+
+### 准则 7：双平台入口（OMP 命令 + Claude Code 技能）
+- **`skills/` 双平台共用**：`SKILL.md` 中禁止使用平台专有写法（如 `skill://`）。
+- **`commands/` 仅供 OMP**：命令正文可使用 `skill://`；Claude Code 侧不加载命令，直接以技能作为斜杠入口（如 `/general:grill-me`）。
+- **屏蔽机制**：各插件 `.claude-plugin/plugin.json` 必须保持 `"commands": []`。Claude Code 声明 `commands` 即替换默认 `commands/` 扫描，空数组即不加载任何命令；OMP 同样读取该文件，但空数组会回退到默认 `commands/*.md`。不得改为非空、字符串或对象映射，否则会改变 OMP 的命令加载。
+- **版本号**：`plugin.json` 中不写 `version`（两个平台都会以它覆盖市场清单中的版本）。发版时同步修改 `package.json` 与两份 `marketplace.json`。
+- **回归检查**：以上依赖两个平台对空 `commands` 的实测行为（OMP v18.14.0 / Claude Code 2026-10）。升级任一平台后，确认 OMP 中 `/general:grill-me` 仍为中文命令、Claude Code 中仍只出现技能。

@@ -1,0 +1,10 @@
+{
+  "name": "coding",
+  "description": "严肃软件工程套件：涵盖需求拆解(Spec/Tickets)、TDD、代码实现、双轴审查、架构治理与 Bug 诊断闭环。",
+  "author": {
+    "name": "kearril",
+    "url": "https://github.com/kearril"
+  },
+  "license": "MIT",
+  "commands": []
+}
